@@ -4,70 +4,70 @@ var Map = cc.Node.extend({
         this.WIDTH = 10;
         this.HEIGHT = 8;
         this.MAP = [
-            '__________',
-            '__________',
-            '__________',
-            '#_________',
-            '####______',
-            '__________',
-            '______####',
-            '##########',
+            '__________#________##',
+            '___________________##',
+            '_______###_________##',
+            '#_____________##___##',
+            '####_______________##',
+            '_______________######',
+            '______####_______####',
+            '###########________##',
         ];
-
-        // this.dMAP = [
-        //     [],
-        //     [],
-        //     [],
-        //     [],
-        //     [],
-        //     [],
-        //     [],
-        //     [],
-        // ];
         this.setAnchorPoint( cc.p( 0, 0 ) );
-        var scale = 120.0 / 512;
-        for ( var r = 0; r < this.HEIGHT; r++ ) {
-            for ( var c = 0; c < this.WIDTH; c++ ) {
+        
+        this.scale = 120.0 / 512;
+
+        this.shiftValueRow = 0;
+        this.shiftValueColumn = 0;
+        this.children = [];
+        this.plotMap();
+
+ 
+    },
+
+    shiftMap: function( diffRow, diffColumn ) {
+        
+        for ( var i = 0; i < this.children.length; i++ ) {
+            // console.log( child );
+            this.removeChild( this.children[ i ] );
+            // console.log("rm");
+        }
+        this.children = [];
+        this.shiftValueRow += diffRow;
+        this.shiftValueColumn += diffColumn;
+        this.plotMap();
+    },
+
+    plotMap: function() {
+        for ( var r = this.shiftValueRow; r < this.HEIGHT + this.shiftValueRow; r++ ) {
+            for ( var c = this.shiftValueColumn; c < this.WIDTH + this.shiftValueColumn; c++ ) {
                 if ( this.MAP[ r ][ c ] == '#' ) {
                     var source;
-                    if ( this.MAP[ r - 1 ][ c ] == "#" ) {
+
+                    if ( r == 0 ) {
+                        source = 'images/dirt1.png';
+                    } else if ( this.MAP[ r - 1 ][ c ] == "#" ) {
                         source = 'images/dirt0.png';
                     } else {
                         source = 'images/dirt1.png';
                     }
-
                     var s = cc.Sprite.create( source );
-                    s.setScale( scale );
+                    s.setScale( this.scale );
                     s.setAnchorPoint( cc.p( 0, 0 ) );
-                    s.setPosition( cc.p( c * 120, (this.HEIGHT - r - 1) * 120 ) );
+                    s.setPosition( cc.p( ( c - this.shiftValueColumn ) * 120, (this.HEIGHT - (r - this.shiftValueRow ) - 1) * 120 ) );
                     this.addChild( s );
-                } else if ( this.MAP[ r ][ c ] == '_' ) {
-                    // var d = new Dot();
-                    // d.setPosition( cc.p( c * 120 + 20, (this.HEIGHT -r - 1) * 120 + 20 ) );
-                    // this.addChild( d );
-                    // this.dMAP[ r ][ c ] = d;
+                    this.children.push ( s );
                 }
             }
         }
- 
     },
-    // getDot: function( blockX, blockY ) {
-    //     var r = this.HEIGHT - blockY - 1;
-    //     var c = blockX;
-    //     return this.dMAP[ r ][ c ];
-    // },
-
-    // removeDot: function( blockX, blockY, dot ) {
-    //     var r = this.HEIGHT - blockY - 1;
-    //     var c = blockX;
-    //     this.MAP[ r ][ c ] = ' ';
-    //     this.removeChild( dot );
-    // },
     
     isGround: function( blockX , blockY ) {
         var r = this.HEIGHT - blockY - 1;
+        r += this.shiftValueRow;
         var c = blockX;
-        if ( r < 0 || c < 0 || r >= this.HEIGHT || c >= this.WIDTH) {
+        c += this.shiftValueColumn;
+        if ( r < this.shiftValueRow || c < this.shiftValueColumn || r >= ( this.HEIGHT + this.shiftValueRow ) || c >= ( this.WIDTH + this.shiftValueColumn ) ) {
             return true;
         }
         return this.MAP[ r ][ c ] == '#';

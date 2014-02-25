@@ -1,10 +1,9 @@
 var GameLayer = cc.LayerColor.extend({
     init: function() {
-        this.state = GameLayer.STATES.STARTED;
 
         this.debugLabel = cc.LabelTTF.create( '0', 'Arial', 40 );
         this.debugLabel.setPosition( new cc.Point( screenWidth / 2, screenHeight - 30 ) );
-        this.addChild( this.debugLabel );
+        this.addChild( this.debugLabel, 2 );
 
         this.map = new Map();
         this.map.setPosition( new cc.Point(0, 0));
@@ -18,7 +17,7 @@ var GameLayer = cc.LayerColor.extend({
         this.addChild( this.player, 1 );
         this.player.setMap( this.map );
 
-        // this.scheduleUpdate();
+        this.scheduleUpdate();
         this.startGame();
         this.setKeyboardEnabled( true );
         this.player.scheduleUpdate();
@@ -37,51 +36,49 @@ var GameLayer = cc.LayerColor.extend({
         this.pillarPair.scheduleUpdate();
     },
     onKeyDown: function( e ) {
-        // if ( this.state == GameLayer.STATES.FRONT ) {
-            // this.startGame();
-            // this.state = GameLayer.STATES.STARTED;
-            // <--- some code to tell the player to start falling (TO BE ADDED LATER)
-        // } else
-         // if ( this.state == GameLayer.STATES.STARTED ) {
-            if ( e == cc.KEY.space ) {
-                this.player.jump();
-            }
+        if ( e == cc.KEY.space ) {
+            this.player.jump();
+        }
 
-            if ( e == cc.KEY.right ) {
-                this.player.goRight();
-            }
+        if ( e == cc.KEY.right ) {
+            this.player.goRight();
+        }
 
-            if ( e == cc.KEY.left ) {
-                this.player.goLeft();
-            }
+        if ( e == cc.KEY.left ) {
+            this.player.goLeft();
+        }
 
-            if ( e == cc.KEY.e ) {
-                this.debugLabel.setString(Math.round(this.player.getPositionX()/3/40) + ", " + (Math.round(this.player.getPositionY()/3/40)-1) );
-            }
-        // }
+        if ( e == cc.KEY.e ) {
+            this.debugLabel.setString(Math.round(this.player.getPositionX()/3/40) + ", " + (Math.round(this.player.getPositionY()/3/40)-1) );
+        }
+
+        if ( e == cc.KEY.d ) {
+            this.map.shiftMap( 0, 1 );
+            this.player.setPositionX( this.player.getPositionX() - 120 );
+        }
+
+        if ( e == cc.KEY.a ) {
+            this.map.shiftMap( 0, -1 );
+            this.player.setPositionX( this.player.getPositionX() + 120 );
+        }
     },
     onKeyUp: function( e ) {
-        // if ( this.state == GameLayer.STATES.STARTED ) {
+        if ( e == cc.KEY.right ) {
+            this.player.stopRight();
+        }
 
-            if ( e == cc.KEY.right ) {
-                this.player.stopRight();
-            }
-
-            if ( e == cc.KEY.left ) {
-                this.player.stopLeft();
-            }
-        // }
+        if ( e == cc.KEY.left ) {
+            this.player.stopLeft();
+        }
     },
-    update: function( dt ) {
-        // if ( this.state == GameLayer.STATES.STARTED ) {
-        //     // console.log(this.pillarPair.hit( this.player ));
-        //     // console.log(this.pillarPair);
-        //     // if ( this.pillarPair && this.pillarPair.hit( this.player ) ) {
-        //     //     console.log("HIT!");
-        //     //     this.endGame();
-        //     //     this.state = GameLayer.STATES.DEAD;
-        //     // }
-        // }
+    update: function() {
+        if ( this.player.getPositionX() >= screenWidth * 5.0 / 6 ) {
+            this.map.shiftMap( 0, 1 );
+            this.player.setPositionX( this.player.getPositionX() - 120 );
+        } else if ( this.player.getPositionX() <= screenWidth / 5.0 ) {
+            this.map.shiftMap( 0, -1 );
+            this.player.setPositionX( this.player.getPositionX() + 120 );
+        }
     },
 
 });
@@ -94,9 +91,3 @@ var StartScene = cc.Scene.extend({
         this.addChild( layer );
     }
 });
-
-GameLayer.STATES = {
-    FRONT: 1,
-    STARTED: 2,
-    DEAD: 3
-};
