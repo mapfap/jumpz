@@ -2,7 +2,6 @@ var Player = cc.Sprite.extend({
     ctor: function() {
         this.started = false;
         this._super();
-        this.initWithFile( img_dot );
         this.canJump = true;
         // this.delayTime = 10; //frames
         // this.waitToJump = 0; //frames
@@ -24,10 +23,27 @@ var Player = cc.Sprite.extend({
 
         this.vy = Player.STARTING_VELOCITY;
         this.vx = 0;
+
+        this.setScale(3);
+        // this.setFlippedX( true );
+        // this.setFlippedX( true );
+
+        var animation = new cc.Animation.create();
+        animation.addSpriteFrameWithFile( 'images/poring0.png' );
+        animation.addSpriteFrameWithFile( 'images/poring1.png' );
+        animation.addSpriteFrameWithFile( 'images/poring2.png' );
+        animation.addSpriteFrameWithFile( 'images/poring1.png' );
+        animation.addSpriteFrameWithFile( 'images/poring0.png' );
+        animation.setDelayPerUnit( 0.1 );
+
+        // var movingAction = cc.Animate.create( animation );
+        var movingAction = cc.RepeatForever.create( cc.Animate.create( animation ) );
+        this.runAction( movingAction );
     },
 
     goRight: function() {
         this.holdRight = true;
+        this.setFlippedX( true );
         // this.directionStack.push( this.DIRECTION.RIGHT );
         // console.log( directionStack );
 
@@ -39,6 +55,7 @@ var Player = cc.Sprite.extend({
         this.vx = Physics.WALKING_SPEED;
     },
     goLeft: function() {
+        this.setFlippedX( false );
         this.holdLeft = true;
         // this.directionStack.push( this.DIRECTION.LEFT );
         // console.log( directionStack );
@@ -130,7 +147,7 @@ var Player = cc.Sprite.extend({
         // if ( ! this.waitToJump ) {
         if ( this.jumpStep < this.maxJump ) {
             this.vy = Physics.JUMPING_VELOCITY[ this.jumpStep ];
-            console.log(this.vy);
+            // console.log(this.vy);
             if ( this.getPositionY() == Physics.FLOOR ) {
                 this.setPositionY( Physics.FLOOR + 0.1 );
             }

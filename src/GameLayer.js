@@ -1,6 +1,7 @@
 var GameLayer = cc.LayerColor.extend({
     init: function() {
-        this.state = GameLayer.STATES.FRONT;
+        this.state = GameLayer.STATES.STARTED;
+
 
         this._super( new cc.Color4B( 127, 127, 127, 255 ) );
         this.setPosition( new cc.Point( 0, 0 ) );
@@ -12,6 +13,7 @@ var GameLayer = cc.LayerColor.extend({
 
         // this.scheduleUpdate();
         this.setKeyboardEnabled( true );
+        this.startGame();
         return true;
     },
     startGame: function() {
@@ -27,11 +29,12 @@ var GameLayer = cc.LayerColor.extend({
         this.pillarPair.scheduleUpdate();
     },
     onKeyDown: function( e ) {
-        if ( this.state == GameLayer.STATES.FRONT ) {
-            this.startGame();
-            this.state = GameLayer.STATES.STARTED;
+        // if ( this.state == GameLayer.STATES.FRONT ) {
+            // this.startGame();
+            // this.state = GameLayer.STATES.STARTED;
             // <--- some code to tell the player to start falling (TO BE ADDED LATER)
-        } else if ( this.state == GameLayer.STATES.STARTED ) {
+        // } else
+         if ( this.state == GameLayer.STATES.STARTED ) {
             if ( e == cc.KEY.space ) {
                 this.player.jump();
             }
