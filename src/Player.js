@@ -144,19 +144,14 @@ var Player = cc.Sprite.extend({
         }
 
         var floor = this.convertBlockToPixel( this.convertPixelToBlock( this.getPositionY() ) );
-        if ( ! this.isInTheAir() ) {
+        if ( ! this.isInTheAir() ) {  // on the ground
             this.jumpStep = 0;
             this.setPosition( new cc.Point( newPosX , floor ) );
 
-            // console.log(1)
         } else if ( this.started ) {
-            // console.log(2)
             this.vy += Player.G;
             var newPosY = pos.y + this.vy;
             pos.x + this.vx
-            // if ( newPosY <= floor ) {
-                // newPosY = floor;
-            // }
             this.setPosition( new cc.Point( newPosX , newPosY ) );
         }
         
