@@ -1,17 +1,17 @@
 var Map = cc.Node.extend({
     ctor: function() {
         this._super();
-        this.WIDTH = 20;
+        this.WIDTH = 10;
         this.HEIGHT = 8;
         this.MAP = [
-            '____________________',
-            '____________________',
-            '____________________',
-            '#___________________',
-            '####________________',
-            '___________#########',
-            '______##############',
-            '####################',
+            '__________',
+            '__________',
+            '__________',
+            '#_________',
+            '####______',
+            '__________',
+            '______####',
+            '##########',
         ];
 
         // this.dMAP = [
@@ -29,7 +29,7 @@ var Map = cc.Node.extend({
         for ( var r = 0; r < this.HEIGHT; r++ ) {
             for ( var c = 0; c < this.WIDTH; c++ ) {
                 if ( this.MAP[ r ][ c ] == '#' ) {
-                    var s = cc.Sprite.create( 'images/dirt2.png' );
+                    var s = cc.Sprite.create( 'images/dirt1.png' );
                     s.setScale( scale );
                     s.setAnchorPoint( cc.p( 0, 0 ) );
                     s.setPosition( cc.p( c * 120, (this.HEIGHT - r - 1) * 120 ) );
@@ -60,6 +60,9 @@ var Map = cc.Node.extend({
     isGround: function( blockX , blockY ) {
         var r = this.HEIGHT - blockY - 1;
         var c = blockX;
+        if ( r < 0 || c < 0 || r >= this.HEIGHT || c >= this.WIDTH) {
+            return true;
+        }
         return this.MAP[ r ][ c ] == '#';
     },
 });
