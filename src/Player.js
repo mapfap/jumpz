@@ -95,7 +95,7 @@ var Player = cc.Sprite.extend({
 
 
         if ( this.decreaseSpeedRight && this.vx >= 0 ) {
-            this.vx -= 5;
+            this.vx -= Physics.DECREASE_VELOCITY;
             if ( this.vx <= 0) {
                 this.decreaseSpeedRight = false;
                 this.vx = 0;
@@ -103,7 +103,7 @@ var Player = cc.Sprite.extend({
         }
 
         if ( this.decreaseSpeedLeft && this.vx <= 0 ) {
-            this.vx += 5;
+            this.vx += Physics.DECREASE_VELOCITY;
             if ( this.vx >= 0) {
                 this.decreaseSpeedLeft = false;
                 this.vx = 0;
