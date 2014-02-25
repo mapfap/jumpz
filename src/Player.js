@@ -83,6 +83,9 @@ var Player = cc.Sprite.extend({
             this.decreaseSpeedLeft = true;
         }
     },
+    isInTheAir: function() {
+        return this.vy > 0;
+    },
     update: function() {
 
         if ( this.holdLeft && ( ! this.holdRight ) ) {
@@ -95,7 +98,13 @@ var Player = cc.Sprite.extend({
 
 
         if ( this.decreaseSpeedRight && this.vx >= 0 ) {
-            this.vx -= Physics.DECREASE_VELOCITY;
+
+            if ( this.isInTheAir() ) {
+                console.log("glide");
+                this.vx -= Physics.AIR_FRICTION;
+            } else {
+                this.vx -= Physics.FLOOR_FRICTION;
+            }
             if ( this.vx <= 0) {
                 this.decreaseSpeedRight = false;
                 this.vx = 0;
@@ -103,7 +112,14 @@ var Player = cc.Sprite.extend({
         }
 
         if ( this.decreaseSpeedLeft && this.vx <= 0 ) {
-            this.vx += Physics.DECREASE_VELOCITY;
+
+            if ( this.isInTheAir() ) {
+                console.log("glide");
+                this.vx += Physics.AIR_FRICTION;
+            } else {
+                this.vx += Physics.FLOOR_FRICTION;
+            }
+
             if ( this.vx >= 0) {
                 this.decreaseSpeedLeft = false;
                 this.vx = 0;
@@ -132,14 +148,20 @@ var Player = cc.Sprite.extend({
         // }
 
         var pos = this.getPosition();
+        var newPosX = pos.x + this.vx;
 
         if ( this.getPositionY() <= Physics.FLOOR ) {
             this.jumpStep = 0;
-            this.setPosition( new cc.Point( pos.x + this.vx , Physics.FLOOR ) );
+            this.setPosition( new cc.Point( newPosX , Physics.FLOOR ) );
 
         } else if ( this.started ) {
             this.vy += Player.G;
-            this.setPosition( new cc.Point( pos.x + this.vx , pos.y + this.vy ) );
+            var newPosY = pos.y + this.vy;
+            pos.x + this.vx
+            if ( newPosY <= Physics.FLOOR ) {
+                newPosY = Physics.FLOOR;
+            }
+            this.setPosition( new cc.Point( newPosX , newPosY ) );
         }
         
     },

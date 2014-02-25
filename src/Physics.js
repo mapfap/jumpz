@@ -3,5 +3,6 @@ var Physics = {
     FLOOR: 30,
     WALKING_SPEED: 20,
     JUMPING_VELOCITY: [60, 50],
-    DECREASE_VELOCITY: 2,
+    AIR_FRICTION: 0,
+    FLOOR_FRICTION: 2,
 }
