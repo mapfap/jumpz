@@ -29,7 +29,14 @@ var Map = cc.Node.extend({
         for ( var r = 0; r < this.HEIGHT; r++ ) {
             for ( var c = 0; c < this.WIDTH; c++ ) {
                 if ( this.MAP[ r ][ c ] == '#' ) {
-                    var s = cc.Sprite.create( 'images/dirt1.png' );
+                    var source;
+                    if ( this.MAP[ r - 1 ][ c ] == "#" ) {
+                        source = 'images/dirt0.png';
+                    } else {
+                        source = 'images/dirt1.png';
+                    }
+
+                    var s = cc.Sprite.create( source );
                     s.setScale( scale );
                     s.setAnchorPoint( cc.p( 0, 0 ) );
                     s.setPosition( cc.p( c * 120, (this.HEIGHT - r - 1) * 120 ) );
