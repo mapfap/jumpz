@@ -12,12 +12,25 @@ var Player = cc.Sprite.extend({
         this.decreaseSpeedLeft = false;
 
         this.goingRight = false;
+        // this.DIRECTION = {
+        //     RIGHT: 1,
+        //     LEFT: -1
+        // };
+        // this.directionStack = [];
+
+        this.holdRight = false;
+        this.holdLeft = false;
+
 
         this.vy = Player.STARTING_VELOCITY;
         this.vx = 0;
     },
 
     goRight: function() {
+        this.holdRight = true;
+        // this.directionStack.push( this.DIRECTION.RIGHT );
+        // console.log( directionStack );
+
         this.goingRight = true; //need this: in case, did not keyup the left BUT click right it will lag
         // if ( this.goingLeft ) {
         //     this.goingLeft = false;
@@ -26,23 +39,44 @@ var Player = cc.Sprite.extend({
         this.vx = Physics.WALKING_SPEED;
     },
     goLeft: function() {
+        this.holdLeft = true;
+        // this.directionStack.push( this.DIRECTION.LEFT );
+        // console.log( directionStack );
+
         this.goingLeft = true;
         decreaseSpeedRight = false;
         this.vx = - Physics.WALKING_SPEED;
     },
     stopRight: function() {
+
+        this.holdRight = false;
+
+        // this.directionStack.push( this.DIRECTION.LEFT );
+        // console.log( directionStack );
         this.goingRight = false;
         if ( ! this.goingLeft ) {
             this.decreaseSpeedRight = true;
         }
     },
     stopLeft: function() {
+
+        this.holdLeft = false;
         this.goingLeft = false;
         if ( ! this.goingRight ) {
             this.decreaseSpeedLeft = true;
         }
     },
     update: function() {
+
+        if ( this.holdLeft && ( ! this.holdRight ) ) {
+            this.goLeft();
+        }
+
+        if ( this.holdRight && ( ! this.holdLeft ) ) {
+            this.goRight();
+        }
+
+
         if ( this.decreaseSpeedRight && this.vx >= 0 ) {
             this.vx -= 5;
             if ( this.vx <= 0) {
