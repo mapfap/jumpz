@@ -3,19 +3,13 @@ var Player = cc.Sprite.extend({
         this.started = false;
         this._super();
         this.canJump = true;
-        // this.delayTime = 10; //frames
-        // this.waitToJump = 0; //frames
+        
         this.jumpStep = 0;
         this.maxJump = 2;
         this.decreaseSpeedRight = false;
         this.decreaseSpeedLeft = false;
 
         this.goingRight = false;
-        // this.DIRECTION = {
-        //     RIGHT: 1,
-        //     LEFT: -1
-        // };
-        // this.directionStack = [];
 
         this.holdRight = false;
         this.holdLeft = false;
@@ -25,8 +19,6 @@ var Player = cc.Sprite.extend({
         this.vx = 0;
 
         this.setScale(3);
-        // this.setFlippedX( true );
-        // this.setFlippedX( true );
 
         var animation = new cc.Animation.create();
         animation.addSpriteFrameWithFile( 'images/poring0.png' );
@@ -44,21 +36,15 @@ var Player = cc.Sprite.extend({
     goRight: function() {
         this.holdRight = true;
         this.setFlippedX( true );
-        // this.directionStack.push( this.DIRECTION.RIGHT );
-        // console.log( directionStack );
 
         this.goingRight = true; //need this: in case, did not keyup the left BUT click right it will lag
-        // if ( this.goingLeft ) {
-        //     this.goingLeft = false;
-        // }
+
         decreaseSpeedLeft = false;
         this.vx = Physics.WALKING_SPEED;
     },
     goLeft: function() {
         this.setFlippedX( false );
         this.holdLeft = true;
-        // this.directionStack.push( this.DIRECTION.LEFT );
-        // console.log( directionStack );
 
         this.goingLeft = true;
         decreaseSpeedRight = false;
@@ -67,9 +53,6 @@ var Player = cc.Sprite.extend({
     stopRight: function() {
 
         this.holdRight = false;
-
-        // this.directionStack.push( this.DIRECTION.LEFT );
-        // console.log( directionStack );
         this.goingRight = false;
         if ( ! this.goingLeft ) {
             this.decreaseSpeedRight = true;
@@ -126,27 +109,6 @@ var Player = cc.Sprite.extend({
             }
         }
 
-        // if ( this.waitToJump ) {
-        //     this.waitToJump -= 1;
-        // }
-        // var posX = this.getPositionX();
-
-        // if ( ( ! this.goLeft ) && ( ! this.vx ) ) {
-
-        // }
-
-
-        // if ( this.goRight && ( ! this.goLeft ) ) {
-        //     this.vx += 1;
-        //     // this.setPositionX( posX + Physics.WALKING_SPEED );
-        // }
-
-
-        // if ( this.goLeft && ( ! this.goRight ) ) {
-        //     this.vx -= 1;
-        //     // this.setPositionX( posX - Physics.WALKING_SPEED );
-        // }
-
         var pos = this.getPosition();
         var newPosX = pos.x + this.vx;
 
@@ -166,15 +128,12 @@ var Player = cc.Sprite.extend({
         
     },
     jump: function() {
-        // if ( ! this.waitToJump ) {
         if ( this.jumpStep < this.maxJump ) {
             this.vy = Physics.JUMPING_VELOCITY[ this.jumpStep ];
-            // console.log(this.vy);
             if ( this.getPositionY() == Physics.FLOOR ) {
                 this.setPositionY( Physics.FLOOR + 0.1 );
             }
             this.jumpStep += 1;
-            // this.waitToJump = this.delayTime;
         }
     },
     start: function() {
