@@ -90,6 +90,14 @@ var Player = cc.Sprite.extend({
         return ! this.map.isGround( posX, posY );
     },
 
+    canFallTo: function( dt ) {
+        var isFloor = dt < 0;
+        var posX = this.convertPixelToBlock( this.getPositionX(), isFloor );
+        var posY = this.convertPixelToBlock( this.getPositionY() + dt, isFloor );
+        return ! this.map.isGround( posX, posY );
+    },
+
+
     canWalkTo: function( dt ) {
         var isFloor = dt < 0;
         var posX = this.convertPixelToBlock( this.getPositionX() + dt, isFloor );
@@ -138,31 +146,35 @@ var Player = cc.Sprite.extend({
         }
 
         var pos = this.getPosition();
+
         var newPosX = pos.x;
+        
         if ( this.canWalkTo( this.vx ) ) {
             newPosX += this.vx;
+        } else {
+            // newPosX = this.convertBlockToPixel( this.convertPixelToBlock( this.getPositionX() , this.vx < 0) );
         }
 
-        var floor = this.convertBlockToPixel( this.convertPixelToBlock( this.getPositionY() ) );
+        var newPosY = pos.y;
+        if ( this.canFallTo( this.vy ) ) {
+            newPosY += this.vy;
+        } else {
+            newPosY = this.convertBlockToPixel( this.convertPixelToBlock( this.getPositionY() , this.vy < 0) );
+        }
+
         if ( ! this.isInTheAir() ) {  // on the ground
             this.jumpStep = 0;
-            this.setPosition( new cc.Point( newPosX , floor ) );
-
-        } else if ( this.started ) {
+        } else {
             this.vy += Player.G;
-            var newPosY = pos.y + this.vy;
-            pos.x + this.vx
-            this.setPosition( new cc.Point( newPosX , newPosY ) );
         }
         
+        this.setPosition( new cc.Point( newPosX , newPosY ) );
     },
     jump: function() {
-        // var floor = this.convertBlockToPixel( this.convertPixelToBlock( this.getPositionY() ) );
-        
+
         if ( this.jumpStep < this.maxJump ) {
 
             this.vy = Physics.JUMPING_VELOCITY[ this.jumpStep ];
-            console.log( ! this.isInTheAir() );  
             if ( ! this.isInTheAir() ) {
                 this.setPositionY( this.getPositionY() + (120) );
             }
