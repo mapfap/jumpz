@@ -4,13 +4,13 @@ var Map = cc.Node.extend({
         this.WIDTH = 20;
         this.HEIGHT = 8;
         this.MAP = [
-            '####################',
-            '####################',
-            '####################',
-            '####################',
-            '####################',
-            '####################',
-            '####################',
+            '____________________',
+            '____________________',
+            '____________________',
+            '#___________________',
+            '####________________',
+            '___________#########',
+            '______##############',
             '####################',
         ];
 
@@ -25,19 +25,19 @@ var Map = cc.Node.extend({
         //     [],
         // ];
         this.setAnchorPoint( cc.p( 0, 0 ) );
- 
+        var scale = 120.0 / 512;
         for ( var r = 0; r < this.HEIGHT; r++ ) {
             for ( var c = 0; c < this.WIDTH; c++ ) {
                 if ( this.MAP[ r ][ c ] == '#' ) {
-                    var s = cc.Sprite.create( 'images/wall.png' );
-                    s.setScale( 3 );
+                    var s = cc.Sprite.create( 'images/dirt2.png' );
+                    s.setScale( scale );
                     s.setAnchorPoint( cc.p( 0, 0 ) );
                     s.setPosition( cc.p( c * 120, (this.HEIGHT - r - 1) * 120 ) );
                     this.addChild( s );
-                } else if ( this.MAP[ r ][ c ] == '.' ) {
+                } else if ( this.MAP[ r ][ c ] == '_' ) {
                     // var d = new Dot();
-                    d.setPosition( cc.p( c * 120 + 20, (this.HEIGHT -r - 1) * 120 + 20 ) );
-                    this.addChild( d );
+                    // d.setPosition( cc.p( c * 120 + 20, (this.HEIGHT -r - 1) * 120 + 20 ) );
+                    // this.addChild( d );
                     // this.dMAP[ r ][ c ] = d;
                 }
             }

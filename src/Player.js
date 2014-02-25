@@ -84,7 +84,7 @@ var Player = cc.Sprite.extend({
         }
     },
     isInTheAir: function() {
-        return this.vy > 0;
+        return this.getPositionY() > Physics.FLOOR;
     },
     update: function() {
 
