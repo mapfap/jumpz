@@ -2,6 +2,10 @@ var GameLayer = cc.LayerColor.extend({
     init: function() {
         this.state = GameLayer.STATES.STARTED;
 
+        this.debugLabel = cc.LabelTTF.create( '0', 'Arial', 40 );
+        this.debugLabel.setPosition( new cc.Point( screenWidth / 2, screenHeight - 30 ) );
+        this.addChild( this.debugLabel );
+
         this.map = new Map();
         this.map.setPosition( new cc.Point(0, 0));
         this.addChild( this.map );
@@ -12,6 +16,7 @@ var GameLayer = cc.LayerColor.extend({
         this.player = new Player();
         this.player.setPosition( new cc.Point( 100, 100 ) );
         this.addChild( this.player, 1 );
+        this.player.setMap( this.map );
 
         // this.scheduleUpdate();
         this.startGame();
@@ -48,6 +53,10 @@ var GameLayer = cc.LayerColor.extend({
 
             if ( e == cc.KEY.left ) {
                 this.player.goLeft();
+            }
+
+            if ( e == cc.KEY.e ) {
+                this.debugLabel.setString(Math.round(this.player.getPositionX()/3/40) + ", " + (Math.round(this.player.getPositionY()/3/40)-1) );
             }
         // }
     },

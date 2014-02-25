@@ -49,6 +49,7 @@ var Map = cc.Node.extend({
     //     var c = blockX;
     //     return this.dMAP[ r ][ c ];
     // },
+
     // removeDot: function( blockX, blockY, dot ) {
     //     var r = this.HEIGHT - blockY - 1;
     //     var c = blockX;
@@ -56,9 +57,9 @@ var Map = cc.Node.extend({
     //     this.removeChild( dot );
     // },
     
-    // isWall: function(blockX , blockY ) {
-    //     var r = this.HEIGHT - blockY - 1;
-    //     var c = blockX;
-    //     return this.MAP[ r ][ c ] == '#';
-    // },
+    isGround: function( blockX , blockY ) {
+        var r = this.HEIGHT - blockY - 1;
+        var c = blockX;
+        return this.MAP[ r ][ c ] == '#';
+    },
 });

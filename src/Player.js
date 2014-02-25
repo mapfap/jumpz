@@ -3,7 +3,8 @@ var Player = cc.Sprite.extend({
         this.started = false;
         this._super();
         this.canJump = true;
-        
+        this.map = null;
+
         this.jumpStep = 0;
         this.maxJump = 2;
         this.decreaseSpeedRight = false;
@@ -31,6 +32,10 @@ var Player = cc.Sprite.extend({
         // var movingAction = cc.Animate.create( animation );
         var movingAction = cc.RepeatForever.create( cc.Animate.create( animation ) );
         this.runAction( movingAction );
+    },
+
+    setMap: function(map) {
+        this.map = map;
     },
 
     goRight: function() {
@@ -66,8 +71,30 @@ var Player = cc.Sprite.extend({
             this.decreaseSpeedLeft = true;
         }
     },
+
+    convertPixelToBlock: function( coordinate, isFloor ) {
+        if ( isFloor ) {
+            return Math.floor( coordinate / 3 / 40 );
+        }
+
+        return Math.ceil( coordinate / 3 / 40 );
+    },
+
+    convertBlockToPixel: function( coordinate ) {
+        return coordinate * 3 * 40;
+    },
+
     isInTheAir: function() {
-        return this.getPositionY() > Physics.FLOOR;
+        var posX = this.convertPixelToBlock( this.getPositionX(), false );
+        var posY = this.convertPixelToBlock( this.getPositionY(), false ) - 1;
+        return ! this.map.isGround( posX, posY );
+    },
+
+    canWalkTo: function( dt ) {
+        var isFloor = dt < 0;
+        var posX = this.convertPixelToBlock( this.getPositionX() + dt, isFloor );
+        var posY = this.convertPixelToBlock( this.getPositionY(), isFloor );
+        return ! this.map.isGround( posX, posY );
     },
     update: function() {
 
@@ -80,6 +107,7 @@ var Player = cc.Sprite.extend({
         }
 
 
+        // friction
         if ( this.decreaseSpeedRight && this.vx >= 0 ) {
 
             if ( this.isInTheAir() ) {
@@ -110,28 +138,38 @@ var Player = cc.Sprite.extend({
         }
 
         var pos = this.getPosition();
-        var newPosX = pos.x + this.vx;
+        var newPosX = pos.x;
+        if ( this.canWalkTo( this.vx ) ) {
+            newPosX += this.vx;
+        }
 
+        var floor = this.convertBlockToPixel( this.convertPixelToBlock( this.getPositionY() ) );
         if ( ! this.isInTheAir() ) {
             this.jumpStep = 0;
-            this.setPosition( new cc.Point( newPosX , Physics.FLOOR ) );
+            this.setPosition( new cc.Point( newPosX , floor ) );
 
+            // console.log(1)
         } else if ( this.started ) {
+            // console.log(2)
             this.vy += Player.G;
             var newPosY = pos.y + this.vy;
             pos.x + this.vx
-            if ( newPosY <= Physics.FLOOR ) {
-                newPosY = Physics.FLOOR;
-            }
+            // if ( newPosY <= floor ) {
+                // newPosY = floor;
+            // }
             this.setPosition( new cc.Point( newPosX , newPosY ) );
         }
         
     },
     jump: function() {
+        // var floor = this.convertBlockToPixel( this.convertPixelToBlock( this.getPositionY() ) );
+        
         if ( this.jumpStep < this.maxJump ) {
+
             this.vy = Physics.JUMPING_VELOCITY[ this.jumpStep ];
-            if ( this.getPositionY() == Physics.FLOOR ) {
-                this.setPositionY( Physics.FLOOR + 0.1 );
+            console.log( ! this.isInTheAir() );  
+            if ( ! this.isInTheAir() ) {
+                this.setPositionY( this.getPositionY() + (120) );
             }
             this.jumpStep += 1;
         }
