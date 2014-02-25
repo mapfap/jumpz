@@ -100,7 +100,7 @@ var Player = cc.Sprite.extend({
         if ( this.decreaseSpeedRight && this.vx >= 0 ) {
 
             if ( this.isInTheAir() ) {
-                console.log("glide");
+                // console.log("glide");
                 this.vx -= Physics.AIR_FRICTION;
             } else {
                 this.vx -= Physics.FLOOR_FRICTION;
@@ -114,7 +114,7 @@ var Player = cc.Sprite.extend({
         if ( this.decreaseSpeedLeft && this.vx <= 0 ) {
 
             if ( this.isInTheAir() ) {
-                console.log("glide");
+                // console.log("glide");
                 this.vx += Physics.AIR_FRICTION;
             } else {
                 this.vx += Physics.FLOOR_FRICTION;
@@ -150,7 +150,7 @@ var Player = cc.Sprite.extend({
         var pos = this.getPosition();
         var newPosX = pos.x + this.vx;
 
-        if ( this.getPositionY() <= Physics.FLOOR ) {
+        if ( ! this.isInTheAir() ) {
             this.jumpStep = 0;
             this.setPosition( new cc.Point( newPosX , Physics.FLOOR ) );
 
