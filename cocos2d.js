@@ -16,7 +16,6 @@
             'src/Physics.js',
             'src/GameLayer.js',
             'src/Player.js',
-            'src/coldetect.js',
             'src/Map.js',
             'src/Block.js',
         ]
