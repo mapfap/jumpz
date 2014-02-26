@@ -45,16 +45,17 @@ var Map = cc.Node.extend({
                     var source;
 
                     if ( r == 0 ) {
-                        source = 'images/dirt1.png';
+                        source = 'images/block_grass.png';
                     } else if ( this.MAP[ r - 1 ][ c ] == "#" ) {
-                        source = 'images/dirt0.png';
+                        source = 'images/block_dirt.png';
                     } else {
-                        source = 'images/dirt1.png';
+                        source = 'images/block_grass.png';
                     }
-                    var s = cc.Sprite.create( source );
-                    s.setScale( this.scale );
-                    s.setAnchorPoint( cc.p( 0, 0 ) );
-                    s.setPosition( cc.p( ( c - this.shiftValueColumn ) * 120, (this.HEIGHT - (r - this.shiftValueRow ) - 1) * 120 ) );
+
+                    var s = new Block( source );
+                    var posX = ( c - this.shiftValueColumn ) * 120; 
+                    var posY = ( this.HEIGHT - (r - this.shiftValueRow ) - 1 ) * 120; 
+                    s.setPosition( new cc.Point( posX, posY) );
                     this.addChild( s );
                     this.children.push ( s );
                 }

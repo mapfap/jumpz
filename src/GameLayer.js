@@ -5,6 +5,9 @@ var GameLayer = cc.LayerColor.extend({
         this.debugLabel.setPosition( new cc.Point( screenWidth / 2, screenHeight - 30 ) );
         this.addChild( this.debugLabel, 2 );
 
+        // this.blocks = [];
+        // this.createBlocks();
+
         this.map = new Map();
         this.map.setPosition( new cc.Point(0, 0));
         this.addChild( this.map );
@@ -23,6 +26,20 @@ var GameLayer = cc.LayerColor.extend({
         this.player.scheduleUpdate();
         return true;
     },
+    // createBlocks: function() {
+        // var groundBlock = new Block( 0, 0, 120, 120 );
+        // this.blocks.push( groundBlock );
+
+        // var middleBlock = new Block( 0, 200, 400, 250 );
+        // this.blocks.push( middleBlock );
+
+        // var topBlock = new Block( 600, 400, 800, 450 );
+        // this.blocks.push( topBlock );
+
+        // this.blocks.forEach( function( b ) {
+            // this.addChild( b );
+        // }, this );
+    // },
     startGame: function() {
         this.player.start();
     },
