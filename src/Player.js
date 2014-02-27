@@ -5,6 +5,9 @@ var Player = cc.Sprite.extend({
         this.canJump = true;
         this.map = null;
 
+        this.hp = 100;
+        this.sp = 100;
+
         this.jumpStep = 0;
         this.maxJump = 2;
         this.decreaseSpeedRight = false;
@@ -20,6 +23,12 @@ var Player = cc.Sprite.extend({
         this.vx = 0;
 
         this.setScale(3);
+
+
+        this.MAX_HP = 500;
+        this.MAX_SP = 180;
+        this.hp = 100;
+        this.sp = 100;
 
         this.healthBar = null;
 
@@ -39,8 +48,8 @@ var Player = cc.Sprite.extend({
     setHealthBar: function( healthBar ) {
         this.healthBar = healthBar;
         this.healthBar.setScale( 0.3 );
-        // this.healthBar.setPosition( -4, -14 );
-        this.healthBar.setPosition( -4, 45 );
+        this.healthBar.setPosition( -4, -14 );
+        // this.healthBar.setPosition( -4, 45 );
         this.addChild( this.healthBar );
 
     },
@@ -192,6 +201,10 @@ var Player = cc.Sprite.extend({
             if ( ! this.isInTheAir() ) {
                 this.setPositionY( this.getPositionY() + (120) );
             }
+            this.sp -= 15
+            this.healthBar.setSP( this.sp * 100 / this.MAX_SP );
+
+
             this.jumpStep += 1;
         }
     },

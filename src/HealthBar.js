@@ -10,19 +10,21 @@ var HealthBar = cc.Node.extend({
         this.barBG.setPosition( new cc.Point( 0, 0 ) );
         this.addChild( this.barBG );
 
-        this.hp = cc.Sprite.create( 'images/hp_green.png' );
-        this.hp.setScaleY(3);
-        this.hp.setScaleX(4);
-        this.hp.setAnchorPoint( new cc.Point( 0, 0 ) );
-        this.hp.setPosition( new cc.Point( 0, 12 ) );
-        this.addChild( this.hp );
+        this.DEFAULT_SCALE_X = 4;
+
+        this.hpBar = cc.Sprite.create( 'images/hp_green.png' );
+        this.hpBar.setScaleY(3);
+        this.hpBar.setScaleX( this.DEFAULT_SCALE_X );
+        this.hpBar.setAnchorPoint( new cc.Point( 0, 0 ) );
+        this.hpBar.setPosition( new cc.Point( 0, 12 ) );
+        this.addChild( this.hpBar );
      
-        this.sp = cc.Sprite.create( 'images/sp.png' );
-        this.sp.setScaleY(3);
-        this.sp.setScaleX(4);
-        this.sp.setAnchorPoint( new cc.Point( 0, 0 ) );
-        this.sp.setPosition( new cc.Point( 0, 0 ) );
-        this.addChild( this.sp );
+        this.spBar = cc.Sprite.create( 'images/sp.png' );
+        this.spBar.setScaleY(3);
+        this.spBar.setScaleX( this.DEFAULT_SCALE_X );
+        this.spBar.setAnchorPoint( new cc.Point( 0, 0 ) );
+        this.spBar.setPosition( new cc.Point( 0, 0 ) );
+        this.addChild( this.spBar );
 
         this.barBoarder = cc.Sprite.create( 'images/bar_border.png' );
         this.barBoarder.setScaleY(3);
@@ -32,7 +34,17 @@ var HealthBar = cc.Node.extend({
         this.addChild( this.barBoarder );
 
     },
-    update: function( dt ) {
+
+    setHP: function( percent ) {
+        console.log( this.DEFAULT_SCALE_X * percent / 100 )
+        this.hpBar.setScaleX( this.DEFAULT_SCALE_X * percent / 100 );
+    },
+
+    setSP: function( percent ) {
+        console.log( this.DEFAULT_SCALE_X * percent / 100 )
+        this.spBar.setScaleX( this.DEFAULT_SCALE_X * percent / 100 );
+    },
+    // update: function( dt ) {
 
         // var posX = this.getPositionX();
         // if ( posX < - 30 ) {
@@ -42,5 +54,5 @@ var HealthBar = cc.Node.extend({
         //     this.setPositionX( this.getPositionX() - 5 );
         // }
         
-    },
+    // },
 });
