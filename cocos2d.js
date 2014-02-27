@@ -18,6 +18,7 @@
             'src/Player.js',
             'src/Map.js',
             'src/Block.js',
+            'src/HealthBar.js',
         ]
     };
 

@@ -21,6 +21,8 @@ var Player = cc.Sprite.extend({
 
         this.setScale(3);
 
+        this.healthBar = null;
+
         var animation = new cc.Animation.create();
         animation.addSpriteFrameWithFile( 'images/poring0.png' );
         animation.addSpriteFrameWithFile( 'images/poring1.png' );
@@ -32,6 +34,15 @@ var Player = cc.Sprite.extend({
         // var movingAction = cc.Animate.create( animation );
         var movingAction = cc.RepeatForever.create( cc.Animate.create( animation ) );
         this.runAction( movingAction );
+    },
+
+    setHealthBar: function( healthBar ) {
+        this.healthBar = healthBar;
+        this.healthBar.setScale( 0.3 );
+        // this.healthBar.setPosition( -4, -14 );
+        this.healthBar.setPosition( -4, 45 );
+        this.addChild( this.healthBar );
+
     },
 
     setMap: function(map) {
@@ -73,6 +84,9 @@ var Player = cc.Sprite.extend({
     },
 
     convertPixelToBlock: function( coordinate, isFloor ) {
+        if ( isFloor == null ) {
+            return Math.round( coordinate / 3 / 40 );
+        }
         if ( isFloor ) {
             return Math.floor( coordinate / 3 / 40 );
         }
@@ -100,7 +114,7 @@ var Player = cc.Sprite.extend({
 
     canWalkTo: function( dt ) {
         var isFloor = dt < 0;
-        var posX = this.convertPixelToBlock( this.getPositionX() + dt, isFloor );
+        var posX = this.convertPixelToBlock( this.getPositionX() + dt, isFloor);
         var posY = this.convertPixelToBlock( this.getPositionY(), isFloor );
         return ! this.map.isGround( posX, posY );
     },

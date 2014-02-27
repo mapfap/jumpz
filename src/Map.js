@@ -15,7 +15,7 @@ var Map = cc.Node.extend({
         ];
         this.setAnchorPoint( cc.p( 0, 0 ) );
         
-        this.scale = 120.0 / 512;
+        // this.scale = 120.0 / 512;
 
         this.shiftValueRow = 0;
         this.shiftValueColumn = 0;
@@ -28,9 +28,7 @@ var Map = cc.Node.extend({
     shiftMap: function( diffRow, diffColumn ) {
         
         for ( var i = 0; i < this.children.length; i++ ) {
-            // console.log( child );
             this.removeChild( this.children[ i ] );
-            // console.log("rm");
         }
         this.children = [];
         this.shiftValueRow += diffRow;
@@ -41,6 +39,9 @@ var Map = cc.Node.extend({
     plotMap: function() {
         for ( var r = this.shiftValueRow; r < this.HEIGHT + this.shiftValueRow; r++ ) {
             for ( var c = this.shiftValueColumn; c < this.WIDTH + this.shiftValueColumn; c++ ) {
+                
+                // if ( r < 0 || r >= this.MAP.length || c < 0 || c >= this.MAP[0].length ) ;
+                
                 if ( this.MAP[ r ][ c ] == '#' ) {
                     var source;
 

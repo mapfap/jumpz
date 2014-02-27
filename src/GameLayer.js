@@ -5,8 +5,7 @@ var GameLayer = cc.LayerColor.extend({
         this.debugLabel.setPosition( new cc.Point( screenWidth / 2, screenHeight - 30 ) );
         this.addChild( this.debugLabel, 2 );
 
-        // this.blocks = [];
-        // this.createBlocks();
+        
 
         this.map = new Map();
         this.map.setPosition( new cc.Point(0, 0));
@@ -15,12 +14,15 @@ var GameLayer = cc.LayerColor.extend({
         this._super( new cc.Color4B( 127, 127, 127, 255 ) );
         this.setPosition( new cc.Point( 0, 0 ) );
 
+        // this.bar.setPosition( new cc.Point( 300, 300 ) );
+
         this.player = new Player();
+        this.player.setHealthBar( new HealthBar() );
         this.player.setPosition( new cc.Point( 100, 100 ) );
         this.addChild( this.player, 1 );
         this.player.setMap( this.map );
 
-        this.scheduleUpdate();
+        // this.scheduleUpdate();
         this.startGame();
         this.setKeyboardEnabled( true );
         this.player.scheduleUpdate();
