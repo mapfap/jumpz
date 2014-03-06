@@ -5,9 +5,6 @@ var Player = cc.Sprite.extend({
         this.canJump = true;
         this.map = null;
 
-        this.hp = 100;
-        this.sp = 100;
-
         this.jumpStep = 0;
         this.maxJump = 2;
         this.decreaseSpeedRight = false;
@@ -18,17 +15,16 @@ var Player = cc.Sprite.extend({
         this.holdRight = false;
         this.holdLeft = false;
 
-
         this.vy = Player.STARTING_VELOCITY;
         this.vx = 0;
 
-        this.setScale(3);
+        this.setScale( 3 );
 
 
         this.MAX_HP = 500;
         this.MAX_SP = 180;
-        this.hp = 100;
-        this.sp = 100;
+        this.hp = this.MAX_HP;
+        this.sp = this.MAX_SP;
 
         this.healthBar = null;
 
@@ -43,6 +39,14 @@ var Player = cc.Sprite.extend({
         // var movingAction = cc.Animate.create( animation );
         var movingAction = cc.RepeatForever.create( cc.Animate.create( animation ) );
         this.runAction( movingAction );
+
+        // this.alertLabel = new DimLabel();//.create( '0', 'Arial', 13 );
+        this.alertLabel = cc.DimLabel.create( '0', 'Arial', 13 );
+        this.addChild( this.alertLabel );
+        this.alertLabel.setPosition( new cc.Point(0, 50));
+        this.alertLabel.setString( "Not enough SP" );
+        // this.alertLabel.setOpacity( 220 );
+        // this.alertLabel.setString(this.alertLabel.getOpacity());
     },
 
     setHealthBar: function( healthBar ) {
@@ -182,7 +186,7 @@ var Player = cc.Sprite.extend({
         if ( this.canFallTo( this.vy ) ) {
             newPosY += this.vy;
         } else {
-            newPosY = this.convertBlockToPixel( this.convertPixelToBlock( this.getPositionY() , this.vy < 0) );
+            newPosY = this.convertBlockToPixel( this.convertPixelToBlock( this.getPositionY(), this.vy < 0 ) );
         }
 
         if ( ! this.isInTheAir() ) {  // on the ground
@@ -195,14 +199,21 @@ var Player = cc.Sprite.extend({
     },
     jump: function() {
 
+        if ( this.sp == 0) {
+            
+            this.alertLabel.dim( 255, 0, 8 );
+            return 0;
+        }
+
         if ( this.jumpStep < this.maxJump ) {
 
             this.vy = Physics.JUMPING_VELOCITY[ this.jumpStep ];
             if ( ! this.isInTheAir() ) {
-                this.setPositionY( this.getPositionY() + (120) );
+                this.setPositionY( this.getPositionY() + 120 );
             }
-            this.sp -= 15
-            this.healthBar.setSP( this.sp * 100 / this.MAX_SP );
+            this.sp -= 40
+            if ( this.sp <= 0 ) this.sp = 0;
+            this.healthBar.setSP( (this.sp / this.MAX_SP)*100 );
 
 
             this.jumpStep += 1;

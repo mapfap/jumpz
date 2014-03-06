@@ -19,6 +19,7 @@
             'src/Map.js',
             'src/Block.js',
             'src/HealthBar.js',
+            'src/DimLabel.js',
         ]
     };
 

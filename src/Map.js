@@ -55,7 +55,7 @@ var Map = cc.Node.extend({
 
                     var s = new Block( source );
                     var posX = ( c - this.shiftValueColumn ) * 120; 
-                    var posY = ( this.HEIGHT - (r - this.shiftValueRow ) - 1 ) * 120; 
+                    var posY = ( this.HEIGHT - ( r - this.shiftValueRow ) - 1 ) * 120; 
                     s.setPosition( new cc.Point( posX, posY) );
                     this.addChild( s );
                     this.children.push ( s );
@@ -69,7 +69,10 @@ var Map = cc.Node.extend({
         r += this.shiftValueRow;
         var c = blockX;
         c += this.shiftValueColumn;
-        if ( r < this.shiftValueRow || c < this.shiftValueColumn || r >= ( this.HEIGHT + this.shiftValueRow ) || c >= ( this.WIDTH + this.shiftValueColumn ) ) {
+        if ( r < this.shiftValueRow 
+            || c < this.shiftValueColumn 
+            || r >= ( this.HEIGHT + this.shiftValueRow ) 
+            || c >= ( this.WIDTH + this.shiftValueColumn ) ) {
             return true;
         }
         return this.MAP[ r ][ c ] == '#';

@@ -4,8 +4,8 @@ var HealthBar = cc.Node.extend({
 
         this._super();
         this.barBG = cc.Sprite.create( 'images/bar_bg.png' );
-        this.barBG.setScaleY(3);
-        this.barBG.setScaleX(2);
+        this.barBG.setScaleY( 3 );
+        this.barBG.setScaleX( 2 );
         this.barBG.setAnchorPoint( new cc.Point( 0, 0 ) );
         this.barBG.setPosition( new cc.Point( 0, 0 ) );
         this.addChild( this.barBG );
@@ -20,15 +20,15 @@ var HealthBar = cc.Node.extend({
         this.addChild( this.hpBar );
      
         this.spBar = cc.Sprite.create( 'images/sp.png' );
-        this.spBar.setScaleY(3);
+        this.spBar.setScaleY( 3 );
         this.spBar.setScaleX( this.DEFAULT_SCALE_X );
         this.spBar.setAnchorPoint( new cc.Point( 0, 0 ) );
         this.spBar.setPosition( new cc.Point( 0, 0 ) );
         this.addChild( this.spBar );
 
         this.barBoarder = cc.Sprite.create( 'images/bar_border.png' );
-        this.barBoarder.setScaleY(3);
-        this.barBoarder.setScaleX(2);
+        this.barBoarder.setScaleY( 3 );
+        this.barBoarder.setScaleX( 2 );
         this.barBoarder.setAnchorPoint( new cc.Point( 0, 0 ) );
         this.barBoarder.setPosition( new cc.Point( 0, 0 ) );
         this.addChild( this.barBoarder );
@@ -42,7 +42,7 @@ var HealthBar = cc.Node.extend({
 
     setSP: function( percent ) {
         console.log( this.DEFAULT_SCALE_X * percent / 100 )
-        this.spBar.setScaleX( this.DEFAULT_SCALE_X * percent / 100 );
+        this.spBar.setScaleX( 4 * (percent/100.0) );
     },
     // update: function( dt ) {
 
