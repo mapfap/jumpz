@@ -100,21 +100,32 @@ cc.DimLabel = cc.Sprite.extend(/** @lends cc.DimLabel# */{
 
         this._setColorsString();
         this.setOpacity( 0 );
+        this.STATE = {
+            HIDE:0,
+            SHOW:1,
+        };
+
+        this.state = this.STATE.HIDE;
     },
 
     dim: function( startOpacity, stopOpacity, duration ) {
-     this.setOpacity( startOpacity );
-     this.step = (startOpacity - stopOpacity) / duration;
-      this.scheduleOnce(function(){
-        this.schedule(function(){
-          var newOpacity = this.getOpacity() - this.step;  
-          this.setOpacity( this.getOpacity() - this.step );
-          console.log(this.getOpacity())
-          if ( newOpacity <= 0 ) {
-            console.log("stop")
-          }
-        }, 1.0/45 );
-      }, 0.5)
+        if ( this.state == this.STATE.HIDE ) {
+            // this.state = this.STATE.SHOW;
+            this.setOpacity( startOpacity );
+            this.step = (startOpacity - stopOpacity) / duration;
+            this.scheduleOnce(function(){
+                this.schedule(function(){
+                    var newOpacity = this.getOpacity() - this.step;  
+                    this.setOpacity( this.getOpacity() - this.step );
+                    console.log(this.getOpacity())
+                    if ( newOpacity <= 0 ) {
+                        this.getScheduler().unscheduleAllCallbacksForTarget( this );
+                        console.log("stop")
+                        this.state = this.STATE.HIDE;
+                    }
+                }, 1.0/45 );
+            }, 0.5)
+        }
     },
 
     init:function () {

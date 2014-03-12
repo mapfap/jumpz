@@ -20,7 +20,6 @@ var Player = cc.Sprite.extend({
 
         this.setScale( 3 );
 
-
         this.MAX_HP = 500;
         this.MAX_SP = 180;
         this.hp = this.MAX_HP;
@@ -43,10 +42,24 @@ var Player = cc.Sprite.extend({
         // this.alertLabel = new DimLabel();//.create( '0', 'Arial', 13 );
         this.alertLabel = cc.DimLabel.create( '0', 'Arial', 13 );
         this.addChild( this.alertLabel );
-        this.alertLabel.setPosition( new cc.Point(0, 50));
+        this.alertLabel.setPosition( new cc.Point(10, 50));
         this.alertLabel.setString( "Not enough SP" );
         // this.alertLabel.setOpacity( 220 );
         // this.alertLabel.setString(this.alertLabel.getOpacity());
+
+        this.amountLabel = cc.DimLabel.create( '0', 'Arial', 13 );
+        this.addChild( this.amountLabel );
+        this.amountLabel.setPosition( new cc.Point(20, 50));
+        this.amountLabel.setString("+20");
+    },
+
+    increaseSP: function( amount ) {
+        this.sp += amount;
+        if ( this.sp >= this.MAX_SP ) {
+            this.sp = this.MAX_SP;
+        }
+        if ( this.sp <= 0 ) this.sp = 0;
+        this.healthBar.setSP( (this.sp / this.MAX_SP)*100 );
     },
 
     setHealthBar: function( healthBar ) {
@@ -200,7 +213,6 @@ var Player = cc.Sprite.extend({
     jump: function() {
 
         if ( this.sp == 0) {
-            
             this.alertLabel.dim( 255, 0, 8 );
             return 0;
         }
@@ -211,9 +223,8 @@ var Player = cc.Sprite.extend({
             if ( ! this.isInTheAir() ) {
                 this.setPositionY( this.getPositionY() + 120 );
             }
-            this.sp -= 40
-            if ( this.sp <= 0 ) this.sp = 0;
-            this.healthBar.setSP( (this.sp / this.MAX_SP)*100 );
+
+            this.increaseSP( -40 );
 
 
             this.jumpStep += 1;

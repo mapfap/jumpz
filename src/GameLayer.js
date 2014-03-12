@@ -86,6 +86,11 @@ var GameLayer = cc.LayerColor.extend({
             this.map.shiftMap( 0, -1 );
             this.player.setPositionX( this.player.getPositionX() + 120 );
         }
+
+        if ( e == cc.KEY.r ) {
+            this.player.amountLabel.dim( 255, 0, 8 );
+            this.player.increaseSP( 20 );
+        }
     },
     onKeyUp: function( e ) {
         if ( e == cc.KEY.right ) {
