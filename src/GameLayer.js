@@ -28,7 +28,7 @@ var GameLayer = cc.LayerColor.extend({
         // this.addChild( this.player2, 1 );
         // this.player2.setMap( this.map );
 
-        // this.scheduleUpdate();
+        this.scheduleUpdate();
         this.startGame();
         this.setKeyboardEnabled( true );
         this.player.scheduleUpdate();
