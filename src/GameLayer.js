@@ -79,12 +79,13 @@ var GameLayer = cc.LayerColor.extend({
 
         if ( e == cc.KEY.d ) {
             this.map.shiftMap( 0, 1 );
-            this.player.setPositionX( this.player.getPositionX() - 120 );
+
+            this.player.setPosition( new cc.Point( this.player.getPositionX() - 120, this.player.getPositionY() ) );
         }
 
         if ( e == cc.KEY.a ) {
             this.map.shiftMap( 0, -1 );
-            this.player.setPositionX( this.player.getPositionX() + 120 );
+            this.player.setPosition( new cc.Point( this.player.getPositionX() + 120, this.player.getPositionY() ) );
         }
 
         if ( e == cc.KEY.r ) {
@@ -104,10 +105,10 @@ var GameLayer = cc.LayerColor.extend({
     update: function() {
         if ( this.player.getPositionX() >= screenWidth * 5.0 / 6 ) {
             this.map.shiftMap( 0, 1 );
-            this.player.setPositionX( this.player.getPositionX() - 120 );
+            this.player.setPosition( new cc.Point( this.player.getPositionX() - 120, this.player.getPositionY() ) );
         } else if ( this.player.getPositionX() <= screenWidth / 5.0 ) {
             this.map.shiftMap( 0, -1 );
-            this.player.setPositionX( this.player.getPositionX() + 120 );
+            this.player.setPosition( new cc.Point( this.player.getPositionX() + 120, this.player.getPositionY() ) );
         }
     },
 
