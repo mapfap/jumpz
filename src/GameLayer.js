@@ -14,13 +14,16 @@ var GameLayer = cc.LayerColor.extend({
 		this._super( new cc.Color4B( 127, 127, 127, 255 ) );
 		this.setPosition( new cc.Point( 0, 0 ) );
 
-		// this.bar.setPosition( new cc.Point( 300, 300 ) );
-
 		this.player = new Player();
 		this.player.setHealthBar( new HealthBar() );
-		this.player.setPosition( new cc.Point( 100, 100 ) );
+		this.player.setPosition( new cc.Point( 200, 200 ) );
 		this.addChild( this.player, 1 );
 		this.player.setMap( this.map );
+
+		this.highLightBlock = new Block( 'images/green.png' );
+		this.highLightBlock.setPosition( new cc.Point( 300, 300 ) );
+		this.addChild( this.highLightBlock );
+
 
 		// this.player2 = new Player();
 		// this.player2.setHealthBar( new HealthBar() );
@@ -99,6 +102,9 @@ var GameLayer = cc.LayerColor.extend({
 	},
 
 	update: function() {
+
+		this.highLightBlock.setPosition( this.player.getCoordinate() );
+
 		if ( this.player.getPositionX() >= screenWidth * 5.0 / 6 ) {
 			this.map.shiftMap( 0, 1 );
 			this.player.setPosition( new cc.Point( this.player.getPositionX() - 120,
