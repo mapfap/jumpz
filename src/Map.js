@@ -98,11 +98,13 @@ var Map = cc.Node.extend({
 				} else if ( this.MAP[ r ][ c ] == '#' ) {
 
 					if ( r == 0 ) { // prevent from r - 1
-						source = 'images/block_grass.png';
+						// source = 'images/block_grass.png';
+						source = 'images/block_dirt.png';
 					} else if ( this.MAP[r - 1][c] == "#" ) {
 						source = 'images/block_dirt.png';
 					} else {
-						source = 'images/block_grass.png';
+						// source = 'images/block_grass.png';
+						source = 'images/block_dirt.png';
 					}
 				} else if ( this.MAP[ r ][ c ] == '_' ) {
 					if ( this.MAP[ r + 1 ][ c ] == '#' ) {
