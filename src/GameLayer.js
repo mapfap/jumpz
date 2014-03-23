@@ -22,7 +22,7 @@ var GameLayer = cc.LayerColor.extend({
 
 		this.crosshair = new Block( 'images/crosshair.png' );
 		this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
-		this.addChild( this.crosshair );
+		this.addChild( this.crosshair, 3 );
 
 		this.player = new Player();
 		this.player.setCrosshair( this.crosshair );
@@ -41,7 +41,7 @@ var GameLayer = cc.LayerColor.extend({
 
 		this.bomb = new Block( 'images/crosshair.png' );
 		this.bomb.setPosition( -1000, 0)
-		this.addChild( this.bomb );
+		this.addChild( this.bomb, 4);
 
 
 		// this.player2 = new Player();
