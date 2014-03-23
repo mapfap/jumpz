@@ -41,7 +41,11 @@ var Player = cc.Sprite.extend({
 			[ 3, 3 ],
 		];
 
+		this.isAiming = false;
 
+		this.aimedPixel = null;
+		this.aimedBlockX = 0;
+		this.aimedBlockY = 0;
 		this.healthBar = null;
 
 		var animation = new cc.Animation.create();
@@ -121,15 +125,25 @@ var Player = cc.Sprite.extend({
 		// aim left = negative x-axis , -1
 		for ( var i = 0; i < this.aimOrders.length; i++ ) {
 	  	var aim = this.aimOrders[i];
-	  	var aimX = aim[ 0 ] * 120 * direction + this.reducePixel( this.getPositionX() );
-	  	var aimY = aim[ 1 ] * 120 + this.reducePixel( this.getPositionY() );
+	  	var aimPixelX = aim[ 0 ] * 120 * direction + this.reducePixel( this.getPositionX() );
+	  	var aimPixelY = aim[ 1 ] * 120 + this.reducePixel( this.getPositionY() );
 
-	  	if ( this.map.isAimable( this.convertPixelToBlock( aimX ), this.convertPixelToBlock( aimY ) ) ) {
-		    this.crosshair.setPosition( new cc.Point( aimX, aimY ) );  		
+	  	this.aimedBlockX = this.convertPixelToBlock( aimPixelX );
+	  	this.aimedBlockY = this.convertPixelToBlock( aimPixelY );
+
+	  	if ( this.map.isAimable( this.aimedBlockX, this.aimedBlockY ) ) {
+		    this.aimedPixel = new cc.Point( aimPixelX, aimPixelY );
+		    this.crosshair.setPosition( this.aimedPixel ); 
+		    this.isAiming = true;
 	  		break;
 	  	}
 	  	this.crosshair.setPosition( new cc.Point( -1000, 0));
+	    this.isAiming = false;
 	  }
+	},
+
+	fireBomb: function() {
+
 	},
 
 	goRight: function() {
@@ -295,22 +309,14 @@ var Player = cc.Sprite.extend({
 	},
 
 	jump: function() {
-
 		if ( this.sp == 0 ) {
 			this.alertLabel.dim( 255, 0, 8 );
 			return 0;
 		}
 
 		if ( this.jumpStep < this.maxJump ) {
-
-			this.vy = Physics.JUMPING_VELOCITY[this.jumpStep];
-			if ( !this.isInTheAir() ) {
-				// this.setPositionY( this.getPositionY() + 120 );
-				// this.forceToJump = true;
-			}
-
+			this.vy = Physics.JUMPING_VELOCITY[ this.jumpStep ];
 			// this.increaseSP( -10 );
-
 			this.jumpStep += 1;
 		}
 	},

@@ -5,6 +5,12 @@ var Map = cc.Node.extend({
 		this.WIDTH = 10;
 		this.HEIGHT = 8;
 		this.MAP = [
+			'_____________________',
+			'_____________________',
+			'_____________________',
+			'_____________________',
+			'_____________________',
+			'_____________________',
 			'__________#________##',
 			'___________________##',
 			'_______###_________##',
@@ -24,12 +30,45 @@ var Map = cc.Node.extend({
 
 	},
 
-	shiftMap: function( diffRow, diffColumn ) {
+	setBlock: function( r, c, value ) {
+		var newRow = "";
 
-		for ( var i = 0; i < this.children.length; i++ ) {
-			this.removeChild( this.children[i] );
+		for ( var k = 0; k < this.WIDTH; k++ ) {
+			if ( k == c ) {
+				newRow += value;
+			} else {
+				newRow += this.MAP[ r ][ k ];
+			}
 		}
-		this.children = [];
+
+		this.MAP[ r ] = newRow;
+	},
+
+	hitBlock: function( blockX, blockY ) {
+		var r = this.HEIGHT - blockY - 1;
+		r += this.shiftValueRow;
+		var c = blockX;
+		c += this.shiftValueColumn;
+		console.log( r + ",," + c );
+
+		// r and c is for the real array index access
+		this.setBlock( r, c, '_' );
+
+		// var newPosition = null;
+		// for ( var l = r; l < this.HEIGHT ; l++ ) {
+		// 	if ( this.MAP[ l ][ c ] == '#' ) {
+		// 		// console.log( newPosition )
+		// 		newPosition = this.HEIGHT - l - 2;
+		// 		break;
+		// 	}
+		// }
+
+		// this.setBlock( newPosition, c, '#' );
+
+		this.plotMap();
+	},
+
+	shiftMap: function( diffRow, diffColumn ) {
 		this.shiftValueRow += diffRow;
 		this.shiftValueColumn += diffColumn;
 		this.plotMap();
@@ -41,6 +80,11 @@ var Map = cc.Node.extend({
 	},
 
 	plotMap: function() {
+		for ( var i = 0; i < this.children.length; i++ ) {
+			this.removeChild( this.children[i] );
+		}
+		this.children = [];
+
 		for ( var r = this.shiftValueRow; r < this.HEIGHT + this.shiftValueRow; r++ ) {
 			for ( var c = this.shiftValueColumn; c < this.WIDTH
 			+ this.shiftValueColumn; c++ ) {
@@ -49,7 +93,7 @@ var Map = cc.Node.extend({
 				// console.log( "r"+r +"...c"+c);
 				if ( this.isOutOfBound( r, c ) ) {
 					source = 'images/block_dirt.png';
-				} else if ( this.MAP[r][c] == '#' ) {
+				} else if ( this.MAP[ r ][ c ] == '#' ) {
 
 					if ( r == 0 ) { // prevent from r - 1
 						source = 'images/block_grass.png';
@@ -83,7 +127,7 @@ var Map = cc.Node.extend({
 		if ( this.isOutOfBound( r, c ) ) {
 			return true;
 		}
-		return this.MAP[r][c] == '#';
+		return this.MAP[ r ][ c ] == '#';
 	},
 
 	isAimable: function( blockX, blockY ) {
@@ -94,7 +138,7 @@ var Map = cc.Node.extend({
 		if ( this.isOutOfBound( r, c ) ) {
 			return false;
 		}
-		return this.MAP[r][c] == '#';
+		return this.MAP[ r ][ c ] == '#';
 	},
 
 });

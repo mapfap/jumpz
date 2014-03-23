@@ -26,12 +26,16 @@ var GameLayer = cc.LayerColor.extend({
 		this.addChild( this.player, 1 );
 		this.player.setMap( this.map );
 
-		this.highLightBlock = new Block( 'images/green.png' );
-		this.highLightBlock.setPosition( new cc.Point( 300, 300 ) );
-		this.addChild( this.highLightBlock );
+		// this.highLightBlock = new Block( 'images/green.png' );
+		// this.highLightBlock.setPosition( new cc.Point( 300, 300 ) );
+		// this.addChild( this.highLightBlock );
 
 		this.accumulateColumn = 0;
 		this.accumulateRow = 0;
+
+		this.bomb = new Block( 'images/crosshair.png' );
+		this.bomb.setPosition( -1000, 0)
+		this.addChild( this.bomb );
 
 
 		// this.player2 = new Player();
@@ -55,13 +59,6 @@ var GameLayer = cc.LayerColor.extend({
 		this.player.stop();
 	},
 
-	createPillarPair: function() {
-		this.pillarPair = new PillarPair();
-		this.pillarPair.setPosition( new cc.Point( 900, 300 ) );
-		this.addChild( this.pillarPair );
-		this.pillarPair.scheduleUpdate();
-	},
-
 	onKeyDown: function( e ) {
 		switch ( e ) {
 		case cc.KEY.space:
@@ -77,6 +74,20 @@ var GameLayer = cc.LayerColor.extend({
 			break;
 
 		case cc.KEY.e:
+			// this.player.fireBomb();
+			if ( this.player.isAiming ) {
+				this.bomb.setPosition( this.player.getPosition() );
+				var fireAction = cc.MoveTo.create( 0.1, this.player.aimedPixel );
+				this.bomb.runAction( fireAction );
+				this.scheduleOnce( function(){
+					this.bomb.setPosition( new cc.Point( -1000, 0 ) );
+					this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
+				}, 0.3 );
+
+				this.map.hitBlock( this.player.aimedBlockX, this.player.aimedBlockY );
+			}
+			break;
+
 			// this.player.
 			// this.debugLabel.setString( Math
 					// .round( this.player.getPositionX() / 3 / 40 )
@@ -92,11 +103,11 @@ var GameLayer = cc.LayerColor.extend({
 			break;
 
 		case cc.KEY.w:
-			this.shiftMap( 1, 0 );
+			this.shiftMap( -1, 0 );
 			break;
 
 		case cc.KEY.s:
-			this.shiftMap( -1, 0 );
+			this.shiftMap( 1, 0 );
 			break;
 
 		case cc.KEY.r:
@@ -136,7 +147,7 @@ var GameLayer = cc.LayerColor.extend({
 
 	update: function() {
 
-		this.highLightBlock.setPosition( this.player.getCoordinate() );
+		// this.highLightBlock.setPosition( this.player.getCoordinate() );
 
 		if ( this.player.getPositionX() >= screenWidth * 4.0 / 5 ) {
 			this.shiftMap( 0, 1 );
