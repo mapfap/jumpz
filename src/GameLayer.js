@@ -24,6 +24,9 @@ var GameLayer = cc.LayerColor.extend({
 		this.highLightBlock.setPosition( new cc.Point( 300, 300 ) );
 		this.addChild( this.highLightBlock );
 
+		this.accumulateColumn = 0;
+		this.accumulateRow = 0;
+
 
 		// this.player2 = new Player();
 		// this.player2.setHealthBar( new HealthBar() );
@@ -54,40 +57,48 @@ var GameLayer = cc.LayerColor.extend({
 	},
 
 	onKeyDown: function( e ) {
-		if ( e == cc.KEY.space ) {
+		switch ( e ) {
+		case cc.KEY.space:
 			this.player.jump();
-		}
+			break;
 
-		if ( e == cc.KEY.right ) {
+		case cc.KEY.right:
 			this.player.goRight();
-		}
+			break
 
-		if ( e == cc.KEY.left ) {
+		case cc.KEY.left:
 			this.player.goLeft();
-		}
+			break;
 
-		if ( e == cc.KEY.e ) {
+		case cc.KEY.e:
 			this.debugLabel.setString( Math
 					.round( this.player.getPositionX() / 3 / 40 )
 					+ ", " + ( Math.round( this.player.getPositionY() / 3 / 40 ) - 1 ) );
-		}
+			break;
 
-		if ( e == cc.KEY.d ) {
-			this.map.shiftMap( 0, 1 );
+		case cc.KEY.d:
+			this.shiftMap( 0, 1 );
+			break;
 
-			this.player.setPosition( new cc.Point( this.player.getPositionX() - 120,
-					this.player.getPositionY() ) );
-		}
+		case cc.KEY.a:
+			this.shiftMap( 0, -1 );
+			break;
 
-		if ( e == cc.KEY.a ) {
-			this.map.shiftMap( 0, -1 );
-			this.player.setPosition( new cc.Point( this.player.getPositionX() + 120,
-					this.player.getPositionY() ) );
-		}
+		case cc.KEY.w:
+			this.shiftMap( 1, 0 );
+			break;
 
-		if ( e == cc.KEY.r ) {
+		case cc.KEY.s:
+			this.shiftMap( -1, 0 );
+			break;
+
+		case cc.KEY.r:
 			this.player.amountLabel.dim( 255, 0, 8 );
 			this.player.increaseSP( 20 );
+			break
+
+		default:
+			break;
 		}
 	},
 
@@ -101,19 +112,36 @@ var GameLayer = cc.LayerColor.extend({
 		}
 	},
 
+
+	shiftMap: function( row , column ) {
+		// this.accumulateColumn += column;
+		// if ( Math.abs( this.accumulateColumn ) > 12 ) {
+		// 	this.accumulateColumn = 0;
+			this.map.shiftMap( row, column );
+			this.player.setPosition( new cc.Point( this.player.getPositionX() + 120 * -column,
+				this.player.getPositionY() + 120 * row ) );
+		// 	this.map.setPositionX( 0 );
+		// } else {
+		// 	this.map.setPositionX( this.getPositionX() + 10 * -column );
+		// }
+		
+	},
+
 	update: function() {
 
 		this.highLightBlock.setPosition( this.player.getCoordinate() );
 
-		if ( this.player.getPositionX() >= screenWidth * 5.0 / 6 ) {
-			this.map.shiftMap( 0, 1 );
-			this.player.setPosition( new cc.Point( this.player.getPositionX() - 120,
-					this.player.getPositionY() ) );
+		if ( this.player.getPositionX() >= screenWidth * 4.0 / 5 ) {
+			this.shiftMap( 0, 1 );
 		} else if ( this.player.getPositionX() <= screenWidth / 5.0 ) {
-			this.map.shiftMap( 0, -1 );
-			this.player.setPosition( new cc.Point( this.player.getPositionX() + 120,
-					this.player.getPositionY() ) );
+			this.shiftMap( 0, -1 );
 		}
+
+		if ( this.player.getPositionY() >= screenHeight * 4.0 / 5 ) {
+			this.shiftMap( -1, 0 );
+		} else if ( this.player.getPositionY() <= screenHeight / 9.0 ) {
+			this.shiftMap( 1, 0 );
+		}  
 	},
 
 });

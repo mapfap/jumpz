@@ -11,7 +11,7 @@ var Map = cc.Node.extend({
 			'#_____________##___##',
 			'####_______________##',
 			'_______________######',
-			'______####_______####',
+			'#_____####_______####',
 			'#####################', ];
 		this.setAnchorPoint( cc.p( 0, 0 ) );
 
@@ -33,6 +33,11 @@ var Map = cc.Node.extend({
 		this.shiftValueRow += diffRow;
 		this.shiftValueColumn += diffColumn;
 		this.plotMap();
+		console.log(this.shiftValueRow+","+this.shiftValueColumn)
+	},
+
+	isOutOfBound: function( row, column ) {
+		return row < 0 || row >= this.MAP.length || column < 0 || column >= this.MAP[0].length;
 	},
 
 	plotMap: function() {
@@ -40,19 +45,22 @@ var Map = cc.Node.extend({
 			for ( var c = this.shiftValueColumn; c < this.WIDTH
 			+ this.shiftValueColumn; c++ ) {
 
-				// if ( r < 0 || r >= this.MAP.length || c < 0 || c >= this.MAP[0].length ) ;
+				var source = null;
+				// console.log( "r"+r +"...c"+c);
+				if ( this.isOutOfBound( r, c ) ) {
+					source = 'images/block_dirt.png';
+				} else if ( this.MAP[r][c] == '#' ) {
 
-				if ( this.MAP[r][c] == '#' ) {
-					var source;
-
-					if ( r == 0 ) {
+					if ( r == 0 ) { // prevent from r - 1
 						source = 'images/block_grass.png';
 					} else if ( this.MAP[r - 1][c] == "#" ) {
 						source = 'images/block_dirt.png';
 					} else {
 						source = 'images/block_grass.png';
 					}
+				}
 
+				if ( source != null ) {
 					var s = new Block( source );
 					var posX = ( c - this.shiftValueColumn ) * 120;
 					var posY = ( this.HEIGHT - ( r - this.shiftValueRow ) - 1 ) * 120;
@@ -60,6 +68,9 @@ var Map = cc.Node.extend({
 					this.addChild( s );
 					this.children.push( s );
 				}
+
+				source = null;
+				
 			}
 		}
 	},
@@ -69,9 +80,12 @@ var Map = cc.Node.extend({
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
-		if ( r < this.shiftValueRow || c < this.shiftValueColumn
-				|| r >= ( this.HEIGHT + this.shiftValueRow )
-				|| c >= ( this.WIDTH + this.shiftValueColumn ) ) {
+		// if ( r < this.shiftValueRow || c < this.shiftValueColumn
+		// 		|| r >= ( this.HEIGHT + this.shiftValueRow )
+		// 		|| c >= ( this.WIDTH + this.shiftValueColumn ) ) {
+		// 	return true;
+		// }
+		if ( this.isOutOfBound( r, c ) ) {
 			return true;
 		}
 		return this.MAP[r][c] == '#';
