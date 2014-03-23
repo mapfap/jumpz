@@ -9,9 +9,15 @@ var GameLayer = cc.LayerColor.extend({
 
 		this.map = new Map();
 		this.map.setPosition( new cc.Point( 0, 0 ) );
-		this.addChild( this.map );
+		this.addChild( this.map, 1 );
 
-		this._super( new cc.Color4B( 127, 127, 127, 255 ) );
+		this._super();
+		// this._super( new cc.Color4B( 0, 144, 255, 255 ) );
+		// this.initWithFile( 'images/sky.png' );
+		this.background = cc.Sprite.create ( 'images/sky.png' );
+		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
+		this.addChild( this.background, 0 );
+
 		this.setPosition( new cc.Point( 0, 0 ) );
 
 		this.crosshair = new Block( 'images/crosshair.png' );
@@ -136,6 +142,8 @@ var GameLayer = cc.LayerColor.extend({
 		// this.accumulateColumn += column;
 		// if ( Math.abs( this.accumulateColumn ) > 12 ) {
 		// 	this.accumulateColumn = 0;
+		this.background.setPositionY( this.background.getPositionY() + row * 4 );
+		this.background.setPositionX( this.background.getPositionX() - column * 4 );
 			this.map.shiftMap( row, column );
 			this.player.setPosition( new cc.Point( this.player.getPositionX() + 120 * -column,
 				this.player.getPositionY() + 120 * row ) );
