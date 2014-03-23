@@ -85,6 +85,7 @@ var GameLayer = cc.LayerColor.extend({
 				}, 0.3 );
 
 				this.map.hitBlock( this.player.aimedBlockX, this.player.aimedBlockY );
+				this.player.isAiming = false;
 			}
 			break;
 

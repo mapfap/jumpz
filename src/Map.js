@@ -2,8 +2,8 @@ var Map = cc.Node.extend({
 
 	ctor: function() {
 		this._super();
-		this.WIDTH = 10;
-		this.HEIGHT = 8;
+		this.SCREEN_WIDTH = 10; // avoid BUG here.. "DO NOT" use this value for array range. 
+		this.SCREEN_HEIGHT = 8;
 		this.MAP = [
 			'_____________________',
 			'_____________________',
@@ -33,7 +33,7 @@ var Map = cc.Node.extend({
 	setBlock: function( r, c, value ) {
 		var newRow = "";
 
-		for ( var k = 0; k < this.WIDTH; k++ ) {
+		for ( var k = 0; k < this.MAP[0].length; k++ ) {
 			if ( k == c ) {
 				newRow += value;
 			} else {
@@ -45,25 +45,26 @@ var Map = cc.Node.extend({
 	},
 
 	hitBlock: function( blockX, blockY ) {
-		var r = this.HEIGHT - blockY - 1;
+		var r = this.SCREEN_HEIGHT - blockY - 1;
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
-		console.log( r + ",," + c );
+		// console.log( r + ",," + c );
 
 		// r and c is for the real array index access
 		this.setBlock( r, c, '_' );
 
-		// var newPosition = null;
-		// for ( var l = r; l < this.HEIGHT ; l++ ) {
-		// 	if ( this.MAP[ l ][ c ] == '#' ) {
-		// 		// console.log( newPosition )
-		// 		newPosition = this.HEIGHT - l - 2;
-		// 		break;
-		// 	}
-		// }
+		var newPosition = null;
+		// console.log("r="+  );
+		for ( var l = r; l < this.MAP.length ; l++ ) {
+			if ( this.MAP[ l ][ c ] == '#' ) {
+				newPosition = l - 1;
+				// console.log("n="+ newPosition) ;
+				break;
+			}
+		}
 
-		// this.setBlock( newPosition, c, '#' );
+		this.setBlock( newPosition, c, '#' );
 
 		this.plotMap();
 	},
@@ -85,8 +86,8 @@ var Map = cc.Node.extend({
 		}
 		this.children = [];
 
-		for ( var r = this.shiftValueRow; r < this.HEIGHT + this.shiftValueRow; r++ ) {
-			for ( var c = this.shiftValueColumn; c < this.WIDTH
+		for ( var r = this.shiftValueRow; r < this.SCREEN_HEIGHT + this.shiftValueRow; r++ ) {
+			for ( var c = this.shiftValueColumn; c < this.SCREEN_WIDTH
 			+ this.shiftValueColumn; c++ ) {
 
 				var source = null;
@@ -107,7 +108,7 @@ var Map = cc.Node.extend({
 				if ( source != null ) {
 					var s = new Block( source );
 					var posX = ( c - this.shiftValueColumn ) * 120;
-					var posY = ( this.HEIGHT - ( r - this.shiftValueRow ) - 1 ) * 120;
+					var posY = ( this.SCREEN_HEIGHT - ( r - this.shiftValueRow ) - 1 ) * 120;
 					s.setPosition( new cc.Point( posX, posY ) );
 					this.addChild( s );
 					this.children.push( s );
@@ -120,7 +121,7 @@ var Map = cc.Node.extend({
 	},
 
 	isGround: function( blockX, blockY ) {
-		var r = this.HEIGHT - blockY - 1;
+		var r = this.SCREEN_HEIGHT - blockY - 1;
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
@@ -131,7 +132,7 @@ var Map = cc.Node.extend({
 	},
 
 	isAimable: function( blockX, blockY ) {
-		var r = this.HEIGHT - blockY - 1;
+		var r = this.SCREEN_HEIGHT - blockY - 1;
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
