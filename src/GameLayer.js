@@ -14,7 +14,13 @@ var GameLayer = cc.LayerColor.extend({
 		this._super( new cc.Color4B( 127, 127, 127, 255 ) );
 		this.setPosition( new cc.Point( 0, 0 ) );
 
+		this.crosshair = new Block( 'images/crosshair.png' );
+		this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
+		this.addChild( this.crosshair );
+
 		this.player = new Player();
+		this.player.setCrosshair( this.crosshair );
+
 		this.player.setHealthBar( new HealthBar() );
 		this.player.setPosition( new cc.Point( 200, 200 ) );
 		this.addChild( this.player, 1 );
@@ -71,10 +77,11 @@ var GameLayer = cc.LayerColor.extend({
 			break;
 
 		case cc.KEY.e:
-			this.debugLabel.setString( Math
-					.round( this.player.getPositionX() / 3 / 40 )
-					+ ", " + ( Math.round( this.player.getPositionY() / 3 / 40 ) - 1 ) );
-			break;
+			// this.player.
+			// this.debugLabel.setString( Math
+					// .round( this.player.getPositionX() / 3 / 40 )
+					// + ", " + ( Math.round( this.player.getPositionY() / 3 / 40 ) - 1 ) );
+			// break;
 
 		case cc.KEY.d:
 			this.shiftMap( 0, 1 );

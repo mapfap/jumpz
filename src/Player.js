@@ -30,6 +30,18 @@ var Player = cc.Sprite.extend({
 		this.hp = this.MAX_HP;
 		this.sp = this.MAX_SP;
 
+		this.aimOrders = [
+			[ 1, 1 ],
+			[ 2, 1 ],
+			[ 1, 2 ],
+			[ 2, 2 ],
+			[ 3, 2 ],
+			[ 1, 3 ],
+			[ 2, 3 ],
+			[ 3, 3 ],
+		];
+
+
 		this.healthBar = null;
 
 		var animation = new cc.Animation.create();
@@ -52,11 +64,17 @@ var Player = cc.Sprite.extend({
 		this.alertLabel.setString( "Not enough SP" );
 		// this.alertLabel.setOpacity( 220 );
 		// this.alertLabel.setString(this.alertLabel.getOpacity());
+		
+		this.crosshair = null;
 
 		this.amountLabel = cc.DimLabel.create( '0', 'Arial', 13 );
 		this.addChild( this.amountLabel );
 		this.amountLabel.setPosition( new cc.Point( 20, 50 ) );
 		this.amountLabel.setString( "+20" );
+	},
+
+	setCrosshair: function( crosshair ) {
+		this.crosshair = crosshair;
 	},
 
 	getCoordinate: function() {
@@ -98,15 +116,34 @@ var Player = cc.Sprite.extend({
 		this.map = map;
 	},
 
+	aimTarget: function( direction ) {
+		// aim right = positive x-axis , 1
+		// aim left = negative x-axis , -1
+		for ( var i = 0; i < this.aimOrders.length; i++ ) {
+	  	var aim = this.aimOrders[i];
+	  	var aimX = aim[ 0 ] * 120 * direction + this.reducePixel( this.getPositionX() );
+	  	var aimY = aim[ 1 ] * 120 + this.reducePixel( this.getPositionY() );
+
+	  	if ( this.map.isAimable( this.convertPixelToBlock( aimX ), this.convertPixelToBlock( aimY ) ) ) {
+		    this.crosshair.setPosition( new cc.Point( aimX, aimY ) );  		
+	  		break;
+	  	}
+	  	this.crosshair.setPosition( new cc.Point( -1000, 0));
+	  }
+	},
+
 	goRight: function() {
 		this.holdRight = true;
 		this.setFlippedX( true );
 
 		this.goingRight = true; // need this: in case, did not keyup the left
-		// BUT click right it will lag
+		// BUT push right it will lag
 
 		decreaseSpeedLeft = false;
 		this.vx = Physics.WALKING_SPEED;
+
+		this.aimTarget( 1 );
+
 	},
 	goLeft: function() {
 		this.setFlippedX( false );
@@ -115,6 +152,8 @@ var Player = cc.Sprite.extend({
 		this.goingLeft = true;
 		decreaseSpeedRight = false;
 		this.vx = -Physics.WALKING_SPEED;
+
+		this.aimTarget( -1 );
 	},
 
 	stopRight: function() {
@@ -154,6 +193,10 @@ var Player = cc.Sprite.extend({
 		var posX = this.convertPixelToBlock( this.getPositionX(), false );
 		var posY = this.convertPixelToBlock( this.getPositionY(), false ) - 1;
 		return !this.map.isGround( posX, posY );
+	},
+
+	reducePixel: function( coordinate ) {
+		return this.convertBlockToPixel( this.convertPixelToBlock( coordinate ) );
 	},
 
 	canFallTo: function( dt ) {

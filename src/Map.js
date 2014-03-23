@@ -33,7 +33,7 @@ var Map = cc.Node.extend({
 		this.shiftValueRow += diffRow;
 		this.shiftValueColumn += diffColumn;
 		this.plotMap();
-		console.log(this.shiftValueRow+","+this.shiftValueColumn)
+		// console.log(this.shiftValueRow+","+this.shiftValueColumn)
 	},
 
 	isOutOfBound: function( row, column ) {
@@ -80,15 +80,21 @@ var Map = cc.Node.extend({
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
-		// if ( r < this.shiftValueRow || c < this.shiftValueColumn
-		// 		|| r >= ( this.HEIGHT + this.shiftValueRow )
-		// 		|| c >= ( this.WIDTH + this.shiftValueColumn ) ) {
-		// 	return true;
-		// }
 		if ( this.isOutOfBound( r, c ) ) {
 			return true;
 		}
 		return this.MAP[r][c] == '#';
 	},
-	
+
+	isAimable: function( blockX, blockY ) {
+		var r = this.HEIGHT - blockY - 1;
+		r += this.shiftValueRow;
+		var c = blockX;
+		c += this.shiftValueColumn;
+		if ( this.isOutOfBound( r, c ) ) {
+			return false;
+		}
+		return this.MAP[r][c] == '#';
+	},
+
 });
