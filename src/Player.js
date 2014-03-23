@@ -1,23 +1,24 @@
 var Player = cc.Sprite.extend({
-	
+
 	ctor: function() {
 		this.started = false;
 		this._super();
 		this.canJump = true;
 		this.map = null;
 
-		this.jumpingStep = 0;
+		this.jumpStep = 0;
 		this.maxJump = 2;
 		this.decreaseSpeedRight = false;
 		this.decreaseSpeedLeft = false;
 
 		this.goingRight = false;
+		// this.forceToJump = false;
 
 		this.holdRight = false;
 		this.holdLeft = false;
 
-		this.velocityY = Player.STARTING_VELOCITY;
-		this.velocityX = 0;
+		this.vy = Player.STARTING_VELOCITY;
+		this.vx = 0;
 
 		this.nextX = 0;
 		this.nextY = 0;
@@ -31,17 +32,6 @@ var Player = cc.Sprite.extend({
 
 		this.healthBar = null;
 
-		this.ENVIRONMENT = {
-			GROUND: 0,
-			AIR: 1,
-		};
-
-		this.touchingAbove = this.ENVIRONMENT.AIR;
-		this.touchingBelow = this.ENVIRONMENT.AIR;
-		this.touchingLeft = this.ENVIRONMENT.AIR;
-		this.touchingRight = this.ENVIRONMENT.AIR;
-
-		this.setAnchorPoint( new cc.Point( 0, 0 ) );
 		var animation = new cc.Animation.create();
 		animation.addSpriteFrameWithFile( 'images/poring0.png' );
 		animation.addSpriteFrameWithFile( 'images/poring1.png' );
@@ -67,6 +57,17 @@ var Player = cc.Sprite.extend({
 		this.addChild( this.amountLabel );
 		this.amountLabel.setPosition( new cc.Point( 20, 50 ) );
 		this.amountLabel.setString( "+20" );
+	},
+
+	getCoordinate: function() {
+		var position = this.getPosition();
+		var blockX = this.convertPixelToBlock( position.x );
+		var blockY = this.convertPixelToBlock( position.y );
+
+		var pixelX = this.convertBlockToPixel( blockX );
+		var pixelY = this.convertBlockToPixel( blockY );
+
+		return new cc.Point( pixelX, pixelY );
 	},
 
 	setPosition: function( point ) {
@@ -105,7 +106,7 @@ var Player = cc.Sprite.extend({
 		// BUT click right it will lag
 
 		decreaseSpeedLeft = false;
-		this.velocityX = Physics.WALKING_SPEED;
+		this.vx = Physics.WALKING_SPEED;
 	},
 	goLeft: function() {
 		this.setFlippedX( false );
@@ -113,7 +114,7 @@ var Player = cc.Sprite.extend({
 
 		this.goingLeft = true;
 		decreaseSpeedRight = false;
-		this.velocityX = -Physics.WALKING_SPEED;
+		this.vx = -Physics.WALKING_SPEED;
 	},
 
 	stopRight: function() {
@@ -135,23 +136,38 @@ var Player = cc.Sprite.extend({
 	},
 
 	convertPixelToBlock: function( coordinate, isFloor ) {
-		return Math.floor( coordinate / 3 / 40 );
-		// if ( isFloor == null ) {
-		// 	return Math.round( coordinate / 3 / 40 );
-		// }
-		// if ( isFloor ) {
-		// 	return Math.floor( coordinate / 3 / 40 );
-		// }
+		if ( isFloor == null ) {
+			return Math.round( coordinate / 3 / 40 );
+		}
+		if ( isFloor ) {
+			return Math.floor( coordinate / 3 / 40 );
+		}
 
-		// return Math.ceil( coordinate / 3 / 40 );
+		return Math.ceil( coordinate / 3 / 40 );
 	},
 
 	convertBlockToPixel: function( coordinate ) {
 		return coordinate * 3 * 40;
 	},
 
-	reducePixel: function ( coordinate ) {
-		this.convertBlockToPixel( this.convertPixelToBlock ( coordinate ) );
+	isInTheAir: function() {
+		var posX = this.convertPixelToBlock( this.getPositionX(), false );
+		var posY = this.convertPixelToBlock( this.getPositionY(), false ) - 1;
+		return !this.map.isGround( posX, posY );
+	},
+
+	canFallTo: function( dt ) {
+		var isFloor = dt < 0;
+		var posX = this.convertPixelToBlock( this.getPositionX(), isFloor );
+		var posY = this.convertPixelToBlock( this.getPositionY() + dt, isFloor );
+		return !this.map.isGround( posX, posY );
+	},
+
+	canWalkTo: function( dt ) {
+		var isFloor = dt < 0;
+		var posX = this.convertPixelToBlock( this.getPositionX() + dt, isFloor );
+		var posY = this.convertPixelToBlock( this.getPositionY(), isFloor );
+		return !this.map.isGround( posX, posY );
 	},
 
 	checkKeyHolded: function() {
@@ -164,76 +180,56 @@ var Player = cc.Sprite.extend({
 		}
 	},
 
-	resetJumpingStep: function() {
-		// if ( this.touchingBelow == this.ENVIRONMENT.GROUND ) {
-		// 	this.jumpingStep = 0;
-		// }
-	},
+	applyGravity: function() {
 
-	getCoordinate: function() {
-		var position = this.getPosition();
-		var blockX = this.convertPixelToBlock( position.x );
-		var blockY = this.convertPixelToBlock( position.y );
-
-		var pixelX = this.convertBlockToPixel( blockX );
-		var pixelY = this.convertBlockToPixel( blockY );
-
-		return new cc.Point( pixelX, pixelY );
-	},
-
-	getEnvironmentAt: function( blockX, blockY ) {
-		if ( this.map.isGround( blockX, blockY ) ) {
-			return this.ENVIRONMENT.GROUND;
+		if ( !this.isInTheAir() ) { // on the ground
+			this.jumpStep = 0;
 		} else {
-			return this.ENVIRONMENT.AIR;
+			this.vy += Player.G;
 		}
 	},
 
-	updateTouch: function() {
-		var blockX = this.convertPixelToBlock( this.getPositionX() );
-		var blockY = this.convertPixelToBlock( this.getPositionY() );
+	checkWallCollision: function() {
+		if ( this.canWalkTo( this.vx ) ) {
+			this.nextX += this.vx;
+		}
+	},
 
-		var nextBlockX = this.convertPixelToBlock( this.nextX );
-		var nextBlockY = this.convertPixelToBlock( this.nextY );
-
-		this.canGoX = this.getEnvironmentAt( nextBlockX, blockY ) == this.ENVIRONMENT.AIR;
-		this.canGoY = this.getEnvironmentAt( blockX, nextBlockY ) == this.ENVIRONMENT.AIR;
-
-		this.minAvailableY = this.convertBlockToPixel( nextBlockY + 1 );
-		this.maxAvailableY = this.convertBlockToPixel( nextBlockY - 1 );
-
-		// this.touchingAbove = this.getEnvironmentAt( blockX, blockY + 1 );
-		// this.touchingBelow = this.getEnvironmentAt( blockX, blockY - 1);
-		// this.touchingLeft = this.getEnvironmentAt( blockX - 1, blockY );
-		// this.touchingRight = this.getEnvironmentAt( blockX + 1, blockY );
+	checkFloorCollision: function() {
+		if ( this.canFallTo( this.vy ) ) {
+			this.nextY += this.vy;
+		} else {
+			this.nextY = this.convertBlockToPixel( this.convertPixelToBlock( this
+					.getPositionY(), this.vy < 0 ) );
+		}
 	},
 
 	applyFriction: function() {
 
-		if ( this.decreaseSpeedRight && this.velocityX >= 0 ) {
+		if ( this.decreaseSpeedRight && this.vx >= 0 ) {
 
-			// if ( this.touchingBelow == this.ENVIRONMENT.AIR ) {
-				// this.velocityX -= Physics.AIR_FRICTION;
-			// } else {
-				this.velocityX -= Physics.FLOOR_FRICTION;
-			// }
-			if ( this.velocityX <= 0 ) {
+			if ( this.isInTheAir() ) {
+				this.vx -= Physics.AIR_FRICTION;
+			} else {
+				this.vx -= Physics.FLOOR_FRICTION;
+			}
+			if ( this.vx <= 0 ) {
 				this.decreaseSpeedRight = false;
-				this.velocityX = 0;
+				this.vx = 0;
 			}
 		}
 
-		if ( this.decreaseSpeedLeft && this.velocityX <= 0 ) {
+		if ( this.decreaseSpeedLeft && this.vx <= 0 ) {
 
-			// if ( this.touchingBelow == this.ENVIRONMENT.AIR ) {
-				// this.velocityX += Physics.AIR_FRICTION;
-			// } else {
-				this.velocityX += Physics.FLOOR_FRICTION;
-			// }
+			if ( this.isInTheAir() ) {
+				this.vx += Physics.AIR_FRICTION;
+			} else {
+				this.vx += Physics.FLOOR_FRICTION;
+			}
 
-			if ( this.velocityX >= 0 ) {
+			if ( this.vx >= 0 ) {
 				this.decreaseSpeedLeft = false;
-				this.velocityX = 0;
+				this.vx = 0;
 			}
 		}
 
@@ -241,39 +237,16 @@ var Player = cc.Sprite.extend({
 
 	update: function() {
 
-		this.resetJumpingStep();
 		this.checkKeyHolded();
 
 		this.applyFriction();
-		this.velocityY += Player.G;
-		this.nextY = this.getPositionY() + this.velocityY;
-		this.nextX = this.getPositionX() + this.velocityX;
-		
-		this.updateTouch();
 
+		this.checkWallCollision();
 
-		if ( ! this.canGoY ) { // must seperate too floor
- 			// this.nextY = this.reducePixel( this.getPositionY() );
-			if ( this.velocityY < 0) {
-				this.nextY = this.getPositionY();
-				// this.nextY = this.minAvailableY;
-				this.jumpingStep = 0;
-			} else {
-	 			// this.nextY = this.maxAvailableY;
-			}
-			this.velocityY = 0;
-		}
+		this.checkFloorCollision();
 
-		if ( ! this.canGoX ) {
-			if ( this.velocityX < 0) {
-				this.nextX = this.getPositionX();
-			} else {
-				this.nextX = this.getPositionX() - 120;
-			}
-			this.velocityX = 0;
-		}
+		this.applyGravity();
 
-			// console.log( this.nextY );	
 		this.setPosition( new cc.Point( this.nextX, this.nextY ) );
 
 	},
@@ -285,14 +258,17 @@ var Player = cc.Sprite.extend({
 			return 0;
 		}
 
-		if ( this.jumpingStep < this.maxJump ) {
-			console.log("jump")
+		if ( this.jumpStep < this.maxJump ) {
 
-			this.velocityY = Physics.JUMPING_VELOCITY[this.jumpingStep];
+			this.vy = Physics.JUMPING_VELOCITY[this.jumpStep];
+			if ( !this.isInTheAir() ) {
+				// this.setPositionY( this.getPositionY() + 120 );
+				// this.forceToJump = true;
+			}
 
 			// this.increaseSP( -10 );
 
-			this.jumpingStep += 1;
+			this.jumpStep += 1;
 		}
 	},
 
