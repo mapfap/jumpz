@@ -1,4 +1,5 @@
 var Map = cc.Node.extend({
+
 	ctor: function() {
 		this._super();
 		this.WIDTH = 10;
@@ -75,4 +76,5 @@ var Map = cc.Node.extend({
 		}
 		return this.MAP[r][c] == '#';
 	},
+	
 });

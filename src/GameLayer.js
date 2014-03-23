@@ -1,4 +1,5 @@
 var GameLayer = cc.LayerColor.extend({
+	
 	init: function() {
 
 		this.debugLabel = cc.LabelTTF.create( '0', 'Arial', 40 );
@@ -33,18 +34,22 @@ var GameLayer = cc.LayerColor.extend({
 		this.player.scheduleUpdate();
 		return true;
 	},
+
 	startGame: function() {
 		this.player.start();
 	},
+
 	endGame: function() {
 		this.player.stop();
 	},
+
 	createPillarPair: function() {
 		this.pillarPair = new PillarPair();
 		this.pillarPair.setPosition( new cc.Point( 900, 300 ) );
 		this.addChild( this.pillarPair );
 		this.pillarPair.scheduleUpdate();
 	},
+
 	onKeyDown: function( e ) {
 		if ( e == cc.KEY.space ) {
 			this.player.jump();
@@ -82,6 +87,7 @@ var GameLayer = cc.LayerColor.extend({
 			this.player.increaseSP( 20 );
 		}
 	},
+
 	onKeyUp: function( e ) {
 		if ( e == cc.KEY.right ) {
 			this.player.stopRight();
@@ -91,6 +97,7 @@ var GameLayer = cc.LayerColor.extend({
 			this.player.stopLeft();
 		}
 	},
+
 	update: function() {
 		if ( this.player.getPositionX() >= screenWidth * 5.0 / 6 ) {
 			this.map.shiftMap( 0, 1 );
@@ -106,10 +113,12 @@ var GameLayer = cc.LayerColor.extend({
 });
 
 var StartScene = cc.Scene.extend({
+
 	onEnter: function() {
 		this._super();
 		var layer = new GameLayer();
 		layer.init();
 		this.addChild( layer );
-	}
+	},
+	
 });

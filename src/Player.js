@@ -1,4 +1,5 @@
 var Player = cc.Sprite.extend({
+	
 	ctor: function() {
 		this.started = false;
 		this._super();
@@ -79,7 +80,6 @@ var Player = cc.Sprite.extend({
 		this.healthBar.setPosition( -4, -14 );
 		// this.healthBar.setPosition( -4, 45 );
 		this.addChild( this.healthBar );
-
 	},
 
 	setMap: function( map ) {
@@ -104,6 +104,7 @@ var Player = cc.Sprite.extend({
 		decreaseSpeedRight = false;
 		this.vx = -Physics.WALKING_SPEED;
 	},
+
 	stopRight: function() {
 
 		this.holdRight = false;
@@ -112,6 +113,7 @@ var Player = cc.Sprite.extend({
 			this.decreaseSpeedRight = true;
 		}
 	},
+
 	stopLeft: function() {
 
 		this.holdLeft = false;
@@ -155,6 +157,7 @@ var Player = cc.Sprite.extend({
 		var posY = this.convertPixelToBlock( this.getPositionY(), isFloor );
 		return !this.map.isGround( posX, posY );
 	},
+
 	checkKeyHolded: function() {
 		if ( this.holdLeft && ( !this.holdRight ) ) {
 			this.goLeft();
@@ -164,6 +167,7 @@ var Player = cc.Sprite.extend({
 			this.goRight();
 		}
 	},
+
 	applyGravity: function() {
 
 		if ( !this.isInTheAir() ) { // on the ground
@@ -181,6 +185,7 @@ var Player = cc.Sprite.extend({
 			// this.getPositionX() , this.vx < 0) );
 		}
 	},
+
 	checkFloorCollision: function() {
 		if ( this.canFallTo( this.vy ) ) {
 			this.nextY += this.vy;
@@ -189,6 +194,7 @@ var Player = cc.Sprite.extend({
 					.getPositionY(), this.vy < 0 ) );
 		}
 	},
+
 	applyFriction: function() {
 
 		if ( this.decreaseSpeedRight && this.vx >= 0 ) {
@@ -219,6 +225,7 @@ var Player = cc.Sprite.extend({
 		}
 
 	},
+
 	update: function() {
 
 		this.checkKeyHolded();
@@ -234,6 +241,7 @@ var Player = cc.Sprite.extend({
 		this.setPosition( new cc.Point( this.nextX, this.nextY ) );
 
 	},
+
 	jump: function() {
 
 		if ( this.sp == 0 ) {
@@ -253,12 +261,15 @@ var Player = cc.Sprite.extend({
 			this.jumpStep += 1;
 		}
 	},
+
 	start: function() {
 		this.started = true;
 	},
+
 	stop: function() {
 		this.started = false;
-	}
+	},
+
 });
 
 Player.STARTING_VELOCITY = 3;

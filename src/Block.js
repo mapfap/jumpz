@@ -1,4 +1,5 @@
 var Block = cc.Sprite.extend({
+
 	ctor: function( resource ) {
 		this._super();
 		this.initWithFile( resource, cc.rect( 0, 0, 120, 120 ) );
@@ -25,5 +26,6 @@ var Block = cc.Sprite.extend({
 		var minx = cc.rectGetMinX( rect );
 		var maxx = cc.rectGetMaxX( rect );
 		return ( minx <= bmaxx ) && ( bminx <= maxx );
-	}
+	},
+	
 });

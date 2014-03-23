@@ -1,4 +1,5 @@
 var HealthBar = cc.Node.extend({
+	
 	ctor: function() {
 		this.started = false;
 
