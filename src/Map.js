@@ -19,7 +19,9 @@ var Map = cc.Node.extend({
 			'_______________######___________________',
 			'#_____####_______##########_____________',
 			'########################################', ];
+
 		this.setAnchorPoint( cc.p( 0, 0 ) );
+		this.childrenHash = {};
 
 		// this.scale = 120.0 / 512;
 
@@ -87,8 +89,7 @@ var Map = cc.Node.extend({
 		this.children = [];
 
 		for ( var r = this.shiftValueRow; r < this.SCREEN_HEIGHT + this.shiftValueRow; r++ ) {
-			for ( var c = this.shiftValueColumn; c < this.SCREEN_WIDTH
-			+ this.shiftValueColumn; c++ ) {
+			for ( var c = this.shiftValueColumn; c < this.SCREEN_WIDTH + this.shiftValueColumn; c++ ) {
 
 				var source = null;
 				// console.log( "r"+r +"...c"+c);
@@ -103,21 +104,36 @@ var Map = cc.Node.extend({
 					} else {
 						source = 'images/block_grass.png';
 					}
+				} else if ( this.MAP[ r ][ c ] == '_' ) {
+					if ( this.MAP[ r + 1 ][ c ] == '#' ) {
+						source = 'images/grass.png';
+					}
 				}
 
 				if ( source != null ) {
-					var s = new Block( source );
+					var name = r + "," + c;
+					var s = new Block( source, name );
 					var posX = ( c - this.shiftValueColumn ) * 120;
 					var posY = ( this.SCREEN_HEIGHT - ( r - this.shiftValueRow ) - 1 ) * 120;
 					s.setPosition( new cc.Point( posX, posY ) );
 					this.addChild( s );
 					this.children.push( s );
+					this.childrenHash[ name ] = s;
 				}
 
 				source = null;
 				
 			}
 		}
+	},
+
+	walk: function( blockX, blockY ) {
+		var r = this.SCREEN_HEIGHT - blockY - 1;
+		r += this.shiftValueRow;
+		var c = blockX;
+		c += this.shiftValueColumn;
+		
+		this.childrenHash[ (r - 1) + "," + c ].walk();
 	},
 
 	isGround: function( blockX, blockY ) {
@@ -128,7 +144,11 @@ var Map = cc.Node.extend({
 		if ( this.isOutOfBound( r, c ) ) {
 			return true;
 		}
-		return this.MAP[ r ][ c ] == '#';
+		var isGround = this.MAP[ r ][ c ] == '#';
+		// if ( isGround ) {
+		// 	this.childrenHash[ (r - 1) + "," + c ].walk();
+		// }
+		return isGround;
 	},
 
 	isAimable: function( blockX, blockY ) {

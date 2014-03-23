@@ -217,7 +217,11 @@ var Player = cc.Sprite.extend({
 		var isFloor = dt < 0;
 		var posX = this.convertPixelToBlock( this.getPositionX(), isFloor );
 		var posY = this.convertPixelToBlock( this.getPositionY() + dt, isFloor );
-		return !this.map.isGround( posX, posY );
+		var isGround = this.map.isGround( posX, posY );
+		if ( isGround ) {
+			this.map.walk( posX, posY );
+		}
+		return ! isGround ;
 	},
 
 	canWalkTo: function( dt ) {

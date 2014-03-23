@@ -41,7 +41,11 @@ var GameLayer = cc.LayerColor.extend({
 
 		this.bomb = new Block( 'images/crosshair.png' );
 		this.bomb.setPosition( -1000, 0)
-		this.addChild( this.bomb, 4);
+		this.addChild( this.bomb, 4 );
+
+		// this.grass = new Block ( 'images/grass.png')
+		// this.grass.setPosition( 300, 300 );
+		// this.addChild( this.grass, 5 )
 
 
 		// this.player2 = new Player();
@@ -115,6 +119,16 @@ var GameLayer = cc.LayerColor.extend({
 
 		case cc.KEY.s:
 			this.shiftMap( 1, 0 );
+			break;
+
+		case cc.KEY.l:
+			// console.log(this.map.childrenHash)
+			// this.map.children[32].walk();
+			this.map.walk(
+				this.player.convertPixelToBlock(this.player.getPositionX())
+				,
+				this.player.convertPixelToBlock(this.player.getPositionY())
+				);
 			break;
 
 		case cc.KEY.r:
