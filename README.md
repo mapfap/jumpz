@@ -2,4 +2,4 @@ jumpz
 =====
 
 JumpZ Online. action-adventure sandbox multiplayer game, using 'Cocos2D-HTML5'
-<img src="https://github.com/mapfap/jumpz/screenshots/iteration1.png">
+<img src="https://raw.githubusercontent.com/mapfap/jumpz/master/screenshots/Iteration1.png">
