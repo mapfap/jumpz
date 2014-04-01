@@ -2,7 +2,7 @@ var GameLayer = cc.LayerColor.extend({
 	
 	init: function() {
 
-		this.debugLabel = cc.LabelTTF.create( 'Space: jump\nE: shoot\nR: refill\n', 'Arial', 20 );
+		this.debugLabel = cc.LabelTTF.create( 'Space: jump\nE: shoot\nR: refill\nF: toggle sight', 'Arial', 20 );
 		this.debugLabel.setPosition( new cc.Point( 100, 600 ) );
 		this.debugLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.addChild( this.debugLabel, 2 );
@@ -124,6 +124,10 @@ var GameLayer = cc.LayerColor.extend({
 					// .round( this.player.getPositionX() / 3 / 40 )
 					// + ", " + ( Math.round( this.player.getPositionY() / 3 / 40 ) - 1 ) );
 			// break;
+
+		case cc.KEY.f:
+			this.player.toggleSight();
+			break;
 
 		case cc.KEY.d:
 			this.shiftMap( 0, 1 );

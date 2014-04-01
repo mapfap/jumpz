@@ -31,14 +31,14 @@ var Player = cc.Sprite.extend({
 		this.sp = this.MAX_SP;
 
 		this.aimOrders = [
-			[ 1, 1 ],
-			[ 2, 1 ],
-			[ 1, 2 ],
-			[ 2, 2 ],
-			[ 3, 2 ],
-			[ 1, 3 ],
-			[ 2, 3 ],
-			[ 3, 3 ],
+			[ 1, 1, -45 ],
+			[ 2, 1, -30],
+			[ 1, 2, -80 ],
+			[ 2, 2, -45 ],
+			[ 3, 2, -30 ],
+			[ 1, 3, -80 ],
+			[ 2, 3, -50 ],
+			[ 3, 3, -45 ],
 		];
 
 		this.isAiming = false;
@@ -79,6 +79,24 @@ var Player = cc.Sprite.extend({
 		this.amountLabel.setColor( new cc.Color3B( 255, 255, 255 ) );
 		this.amountLabel.setString( "+40" );
 		this.amountLabel.enableStroke( new cc.Color3B( 100, 100, 100 ), 1 );
+
+		this.sight = cc.Sprite.create ( 'images/sight.png' );
+		this.sight.setPosition( new cc.Point( 10 , 30 ) );
+		this.sight.setAnchorPoint( new cc.Point( -0.001 , 0.5 ) );
+		this.addChild( this.sight );
+		this.setFlippedX( true );
+
+		this.isSightOn = true;
+	},
+
+	toggleSight: function() {
+		if ( this.isSightOn ) {
+			this.sight.setOpacity( 0 );
+			this.isSightOn = false;
+		} else {
+			this.sight.setOpacity( 255 );
+			this.isSightOn = true;
+		}
 	},
 
 	setCrosshair: function( crosshair ) {
@@ -139,10 +157,21 @@ var Player = cc.Sprite.extend({
 		    this.aimedPixel = new cc.Point( aimPixelX, aimPixelY );
 		    this.crosshair.setPosition( this.aimedPixel ); 
 		    this.isAiming = true;
+		    if ( direction == -1 ) {
+		    	this.sight.setRotation( 180 - aim[2] );
+		    } else {
+			    this.sight.setRotation( aim[2] );
+		    }
 	  		break;
 	  	}
 	  	this.crosshair.setPosition( new cc.Point( -1000, 0));
 	    this.isAiming = false;
+	    if ( direction == -1 ) {
+		    this.sight.setRotation( -180 );
+		  } else {
+		  	this.sight.setRotation( -0 );
+		  }
+
 	  }
 	},
 
