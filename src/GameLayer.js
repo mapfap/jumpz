@@ -18,6 +18,14 @@ var GameLayer = cc.LayerColor.extend({
 		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.addChild( this.background, 0 );
 
+		this.tree1 = cc.Sprite.create ( 'images/tree1.png' );
+		this.tree1.setPosition( new cc.Point( 500 , 200 ) );
+		this.addChild( this.tree1, 0 );
+
+		// this.tree2 = cc.Sprite.create ( 'images/tree2.png' );
+		// this.tree2.setPosition( new cc.Point( 800 , 200 ) );
+		// this.addChild( this.tree2, 0 );
+
 		this.setPosition( new cc.Point( 0, 0 ) );
 
 		this.crosshair = new Block( 'images/crosshair.png' );
@@ -162,8 +170,10 @@ var GameLayer = cc.LayerColor.extend({
 		// this.accumulateColumn += column;
 		// if ( Math.abs( this.accumulateColumn ) > 12 ) {
 		// 	this.accumulateColumn = 0;
-		this.background.setPositionY( this.background.getPositionY() + row * 4 );
-		this.background.setPositionX( this.background.getPositionX() - column * 4 );
+		this.tree1.setPositionY( this.tree1.getPositionY() + row * 40 );
+		this.tree1.setPositionX( this.tree1.getPositionX() - column * 10 );
+		// this.tree2.setPositionY( this.tree1.getPositionY() + row * 5 );
+		// this.tree2.setPositionX( this.tree1.getPositionX() - column * 5 );
 			this.map.shiftMap( row, column );
 			this.player.setPosition( new cc.Point( this.player.getPositionX() + 120 * -column,
 				this.player.getPositionY() + 120 * row ) );
