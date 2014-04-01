@@ -106,12 +106,12 @@ var GameLayer = cc.LayerColor.extend({
 
 			if ( this.player.isAiming ) {
 				this.player.increaseSP( -10 );
-				this.bomb.setPosition( this.player.getPosition() );
-				var fireAction = cc.MoveTo.create( 0.1, this.player.aimedPixel );
-				this.bomb.runAction( fireAction );
+				// this.bomb.setPosition( this.player.getPosition() );
+				// var fireAction = cc.MoveTo.create( 0.1, this.player.aimedPixel );
+				// this.bomb.runAction( fireAction );
+				this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 				this.scheduleOnce( function(){
-					this.bomb.setPosition( new cc.Point( -1000, 0 ) );
-					this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
+					// this.bomb.setPosition( new cc.Point( -1000, 0 ) );
 				}, 0.3 );
 
 				this.map.hitBlock( this.player.aimedBlockX, this.player.aimedBlockY );
