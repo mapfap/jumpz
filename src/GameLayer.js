@@ -2,6 +2,11 @@ var GameLayer = cc.LayerColor.extend({
 	
 	init: function() {
 
+		this.debugLabel = cc.LabelTTF.create( 'Space: jump\nE: shoot\nR: refill\n', 'Arial', 20 );
+		this.debugLabel.setPosition( new cc.Point( 100, 600 ) );
+		this.debugLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
+		this.addChild( this.debugLabel, 2 );
+
 		this.debugLabel = cc.LabelTTF.create( 'JumpZ Online: Alpha Test', 'Arial', 20 );
 		this.debugLabel.setPosition( new cc.Point( screenWidth / 2,
 				screenHeight - 30 ) );
@@ -22,9 +27,10 @@ var GameLayer = cc.LayerColor.extend({
 		this.tree1.setPosition( new cc.Point( 500 , 200 ) );
 		this.addChild( this.tree1, 0 );
 
-		// this.tree2 = cc.Sprite.create ( 'images/tree2.png' );
-		// this.tree2.setPosition( new cc.Point( 800 , 200 ) );
-		// this.addChild( this.tree2, 0 );
+		this.tree2 = cc.Sprite.create ( 'images/tree2.png' );
+		this.tree2.setPosition( new cc.Point( 900 , 300 ) );
+		this.tree2.setScaleY(2);
+		this.addChild( this.tree2, 0 );
 
 		this.setPosition( new cc.Point( 0, 0 ) );
 
@@ -172,8 +178,8 @@ var GameLayer = cc.LayerColor.extend({
 		// 	this.accumulateColumn = 0;
 		this.tree1.setPositionY( this.tree1.getPositionY() + row * 40 );
 		this.tree1.setPositionX( this.tree1.getPositionX() - column * 10 );
-		// this.tree2.setPositionY( this.tree1.getPositionY() + row * 5 );
-		// this.tree2.setPositionX( this.tree1.getPositionX() - column * 5 );
+		this.tree2.setPositionY( this.tree2.getPositionY() + row * 40 );
+		this.tree2.setPositionX( this.tree2.getPositionX() - column * 20 );
 			this.map.shiftMap( row, column );
 			this.player.setPosition( new cc.Point( this.player.getPositionX() + 120 * -column,
 				this.player.getPositionY() + 120 * row ) );

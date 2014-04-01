@@ -6,7 +6,7 @@
         chipmunk: false,
         showFPS: false,
         loadExtension: false,
-        frameRate: 40,
+        frameRate: 30,
         renderMode: 1,       //Choose of RenderMode: 0(default), 1(Canvas only), 2(WebGL only)
         tag: 'gameCanvas', //the dom element to run cocos2d on
         // engineDir: '../../cocos2d/',
