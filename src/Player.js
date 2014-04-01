@@ -39,6 +39,9 @@ var Player = cc.Sprite.extend({
 			[ 1, 3, -80 ],
 			[ 2, 3, -50 ],
 			[ 3, 3, -45 ],
+			[ 1, 0, -0 ],
+			[ 2, 0, -0 ],
+			[ 3, 0, -0 ],
 		];
 
 		this.isAiming = false;
