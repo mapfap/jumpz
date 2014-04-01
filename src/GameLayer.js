@@ -2,7 +2,7 @@ var GameLayer = cc.LayerColor.extend({
 	
 	init: function() {
 
-		this.debugLabel = cc.LabelTTF.create( '0', 'Arial', 40 );
+		this.debugLabel = cc.LabelTTF.create( 'JumpZ Online: Alpha Test', 'Arial', 20 );
 		this.debugLabel.setPosition( new cc.Point( screenWidth / 2,
 				screenHeight - 30 ) );
 		this.addChild( this.debugLabel, 2 );
@@ -85,7 +85,13 @@ var GameLayer = cc.LayerColor.extend({
 
 		case cc.KEY.e:
 			// this.player.fireBomb();
+			if ( this.player.sp == 0 ) {
+				this.player.alertLabel.dim( 255, 0, 8 );
+				return 0;
+			}
+
 			if ( this.player.isAiming ) {
+				this.player.increaseSP( -10 );
 				this.bomb.setPosition( this.player.getPosition() );
 				var fireAction = cc.MoveTo.create( 0.1, this.player.aimedPixel );
 				this.bomb.runAction( fireAction );
@@ -133,7 +139,7 @@ var GameLayer = cc.LayerColor.extend({
 
 		case cc.KEY.r:
 			this.player.amountLabel.dim( 255, 0, 8 );
-			this.player.increaseSP( 20 );
+			this.player.increaseSP( 40 );
 			break
 
 		default:
@@ -172,9 +178,11 @@ var GameLayer = cc.LayerColor.extend({
 
 		// this.highLightBlock.setPosition( this.player.getCoordinate() );
 
-		if ( this.player.getPositionX() >= screenWidth * 4.0 / 5 ) {
+		// if ( this.player.getPositionX() >= screenWidth * 4.0 / 5 ) {
+		if ( this.player.getPositionX() >= 980 ) {
 			this.shiftMap( 0, 1 );
-		} else if ( this.player.getPositionX() <= screenWidth / 5.0 ) {
+		// } else if ( this.player.getPositionX() <= screenWidth / 5.0 ) {
+		} else if ( this.player.getPositionX() <= 110 ) {
 			this.shiftMap( 0, -1 );
 		}
 

@@ -66,6 +66,8 @@ var Player = cc.Sprite.extend({
 		this.addChild( this.alertLabel );
 		this.alertLabel.setPosition( new cc.Point( 10, 50 ) );
 		this.alertLabel.setString( "Not enough SP" );
+		this.alertLabel.setColor( new cc.Color4B( 200, 0, 15, 255 ) );
+		this.alertLabel.enableStroke( new cc.Color3B( 100, 100, 100 ), 1 );
 		// this.alertLabel.setOpacity( 220 );
 		// this.alertLabel.setString(this.alertLabel.getOpacity());
 		
@@ -74,7 +76,9 @@ var Player = cc.Sprite.extend({
 		this.amountLabel = cc.DimLabel.create( '0', 'Arial', 13 );
 		this.addChild( this.amountLabel );
 		this.amountLabel.setPosition( new cc.Point( 20, 50 ) );
-		this.amountLabel.setString( "+20" );
+		this.amountLabel.setColor( new cc.Color3B( 0, 32, 196 ) );
+		this.amountLabel.setString( "+40" );
+		this.amountLabel.enableStroke( new cc.Color3B( 100, 100, 100 ), 1 );
 	},
 
 	setCrosshair: function( crosshair ) {
@@ -320,7 +324,7 @@ var Player = cc.Sprite.extend({
 
 		if ( this.jumpStep < this.maxJump ) {
 			this.vy = Physics.JUMPING_VELOCITY[ this.jumpStep ];
-			// this.increaseSP( -10 );
+			this.increaseSP( -10 );
 			this.jumpStep += 1;
 		}
 	},
