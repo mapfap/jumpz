@@ -119,10 +119,10 @@ cc.DimLabel = cc.Sprite.extend(/** @lends cc.DimLabel# */{
 				this.schedule( function() {
 					var newOpacity = this.getOpacity() - this.step;
 					this.setOpacity( this.getOpacity() - this.step );
-					console.log( this.getOpacity() )
+					// console.log( this.getOpacity() )
 					if ( newOpacity <= 0 ) {
 						this.getScheduler().unscheduleAllCallbacksForTarget( this );
-						console.log( "stop" )
+						// console.log( "stop" )
 						this.state = this.STATE.HIDE;
 					}
 				}, 1.0 / 45 );

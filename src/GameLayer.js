@@ -3,7 +3,7 @@ var GameLayer = cc.LayerColor.extend({
 	init: function() {
 
 		this.debugLabel = cc.LabelTTF.create( 'Space: jump\nE: shoot\nR: refill\nF: toggle sight', 'Arial', 20 );
-		this.debugLabel.setPosition( new cc.Point( 100, 600 ) );
+		this.debugLabel.setPosition( new cc.Point( 100, 500 ) );
 		this.debugLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.addChild( this.debugLabel, 2 );
 
@@ -30,11 +30,13 @@ var GameLayer = cc.LayerColor.extend({
 
 		this.tree1 = cc.Sprite.create ( 'images/tree1.png' );
 		this.tree1.setPosition( new cc.Point( 500 , 200 ) );
+		this.tree1.setScale( 2.5 );
 		this.addChild( this.tree1, 0 );
 
 		this.tree2 = cc.Sprite.create ( 'images/tree2.png' );
 		this.tree2.setPosition( new cc.Point( 900 , 300 ) );
-		this.tree2.setScaleY(2);
+		this.tree2.setScale( 4 );
+		this.tree2.setScaleY( 6 );
 		this.addChild( this.tree2, 0 );
 
 		this.setPosition( new cc.Point( 0, 0 ) );
@@ -204,10 +206,10 @@ var GameLayer = cc.LayerColor.extend({
 		// this.highLightBlock.setPosition( this.player.getCoordinate() );
 
 		// if ( this.player.getPositionX() >= screenWidth * 4.0 / 5 ) {
-		if ( this.player.getPositionX() >= 980 ) {
+		if ( this.player.getPositionX() >= 790 ) {
 			this.shiftMap( 0, 1 );
 		// } else if ( this.player.getPositionX() <= screenWidth / 5.0 ) {
-		} else if ( this.player.getPositionX() <= 110 ) {
+		} else if ( this.player.getPositionX() <= 180 ) {
 			this.shiftMap( 0, -1 );
 		}
 

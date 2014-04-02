@@ -42,7 +42,7 @@ var HealthBar = cc.Node.extend({
 	},
 
 	setSP: function( percent ) {
-		console.log( this.DEFAULT_SCALE_X * percent / 100 )
+		// console.log( this.DEFAULT_SCALE_X * percent / 100 )
 		this.spBar.setScaleX( 4 * ( percent / 100.0 ) );
 	},
 	
