@@ -161,13 +161,13 @@ var Player = cc.Sprite.extend({
 		    this.crosshair.setPosition( this.aimedPixel ); 
 		    this.isAiming = true;
 		    if ( direction == -1 ) {
-		    	this.sight.setRotation( 180 - aim[2] );
+		    	this.sight.setRotation( 180 - aim[ 2 ] );
 		    } else {
 			    this.sight.setRotation( aim[2] );
 		    }
 	  		break;
 	  	}
-	  	this.crosshair.setPosition( new cc.Point( -1000, 0));
+	  	this.crosshair.setPosition( new cc.Point( -1000, 0 ));
 	    this.isAiming = false;
 	    if ( direction == -1 ) {
 		    this.sight.setRotation( -180 );
@@ -189,7 +189,7 @@ var Player = cc.Sprite.extend({
 		this.goingRight = true; // need this: in case, did not keyup the left
 		// BUT push right it will lag
 
-		decreaseSpeedLeft = false;
+		this.decreaseSpeedLeft = false;
 		this.vx = Physics.WALKING_SPEED;
 
 		this.aimTarget( 1 );
@@ -200,7 +200,7 @@ var Player = cc.Sprite.extend({
 		this.holdLeft = true;
 
 		this.goingLeft = true;
-		decreaseSpeedRight = false;
+		this.decreaseSpeedRight = false;
 		this.vx = -Physics.WALKING_SPEED;
 
 		this.aimTarget( -1 );

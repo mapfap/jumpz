@@ -1,22 +1,22 @@
 var Block = cc.Sprite.extend({
 
-	ctor: function( resource, name ) {
+	ctor: function( type, name ) {
 		this._super();
-		this.initWithFile( resource, cc.rect( 0, 0, 120, 120 ) );
+		this.initWithFile( type , cc.rect( 0, 0, 120, 120 ) );
 		this.setAnchorPoint( cc.p( 0, 0 ) );
 		this.name = name;
 
-		this.animation = new cc.Animation.create();
-		this.animation.addSpriteFrameWithFile( 'images/grass_walk.png' );
-		this.animation.setDelayPerUnit( 0.1 );
-		this.movingAction = cc.Animate.create( this.animation );
+		// this.animation = new cc.Animation.create();
+		// this.animation.addSpriteFrameWithFile( 'images/grass_walk.png' );
+		// this.animation.setDelayPerUnit( 0.1 );
+		// this.movingAction = cc.Animate.create( this.animation );
 
 	},
 
-	walk: function() {
-		this.runAction( this.movingAction );
+	// walk: function() {
+		// this.runAction( this.movingAction );
 		// console.log("walk");
-	},
+	// },
 
 	// getTopY: function() {
 	// 	return cc.rectGetMaxY( this.getBoundingBoxToWorld() );
@@ -41,3 +41,17 @@ var Block = cc.Sprite.extend({
 	// },
 	
 });
+
+// Block.TYPE = {
+// 	AIR: 0,
+// 	DIRT: 1,
+// 	GRASS: 2,
+// 	GRASS_TOUCHED: 3,
+// }
+
+Block.TYPE = {
+	AIR: "images/blocks/air.png",
+	DIRT: "images/blocks/dirt.png",
+	GRASS: "images/blocks/grass.png",
+	GRASS_TOUCHED: "images/blocks/grass_touched.png",
+}

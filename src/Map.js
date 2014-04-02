@@ -86,30 +86,30 @@ var Map = cc.Node.extend({
 		for ( var r = this.shiftValueRow; r < this.SCREEN_HEIGHT + this.shiftValueRow; r++ ) {
 			for ( var c = this.shiftValueColumn; c < this.SCREEN_WIDTH + this.shiftValueColumn; c++ ) {
 
-				var source = null;
+				var type = null;
 				// console.log( "r"+r +"...c"+c);
 				if ( this.isOutOfBound( r, c ) ) {
-					source = 'images/block_dirt.png';
+					type = Block.TYPE.DIRT;
 				} else if ( this.MAP[ r ][ c ] == '#' ) {
 
 					if ( r == 0 ) { // prevent from r - 1
-						// source = 'images/block_grass.png';
-						source = 'images/block_dirt.png';
+						// type = 'images/block_grass.png';
+						type = Block.TYPE.DIRT;
 					} else if ( this.MAP[r - 1][c] == "#" ) {
-						source = 'images/block_dirt.png';
+						type = Block.TYPE.DIRT;
 					} else {
-						// source = 'images/block_grass.png';
-						source = 'images/block_dirt.png';
+						// type = 'images/block_grass.png';
+						type = Block.TYPE.DIRT;
 					}
 				} else if ( this.MAP[ r ][ c ] == '_' ) {
 					if ( this.MAP[ r + 1 ][ c ] == '#' ) {
-						source = 'images/grass.png';
+						type = Block.TYPE.GRASS;
 					}
 				}
 
-				if ( source != null ) {
+				if ( type != null ) {
 					var name = r + "," + c;
-					var s = new Block( source, name );
+					var s = new Block( type, name );
 					var posX = ( c - this.shiftValueColumn ) * 120;
 					var posY = ( this.SCREEN_HEIGHT - ( r - this.shiftValueRow ) - 1 ) * 120;
 					s.setPosition( new cc.Point( posX, posY ) );
@@ -118,7 +118,7 @@ var Map = cc.Node.extend({
 					this.childrenHash[ name ] = s;
 				}
 
-				source = null;
+				type = null;
 				
 			}
 		}
@@ -130,7 +130,7 @@ var Map = cc.Node.extend({
 		var c = blockX;
 		c += this.shiftValueColumn;
 		
-		this.childrenHash[ (r - 1) + "," + c ].walk();
+		// this.childrenHash[ (r - 1) + "," + c ].walk();
 	},
 
 	isGround: function( blockX, blockY ) {

@@ -17,9 +17,14 @@ var GameLayer = cc.LayerColor.extend({
 		this.addChild( this.map, 1 );
 
 		this._super();
-		// this._super( new cc.Color4B( 0, 144, 255, 255 ) );
-		// this.initWithFile( 'images/sky.png' );
+
+		// this.filter = cc.Sprite.create ( 'images/filter.png' );
+		// this.filter.setAnchorPoint( new cc.Point( 0 , 0 ) );
+		// this.filter.setScale(2);
+		// this.addChild( this.filter, 30 );
+		
 		this.background = cc.Sprite.create ( 'images/sky.png' );
+		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.addChild( this.background, 0 );
 
