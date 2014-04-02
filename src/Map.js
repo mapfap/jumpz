@@ -142,9 +142,9 @@ var Map = cc.Node.extend({
 			return true;
 		}
 		var isGround = this.MAP[ r ][ c ] == '#';
-		// if ( isGround ) {
-		// 	this.childrenHash[ (r - 1) + "," + c ].walk();
-		// }
+		if ( isGround ) {
+			this.childrenHash[ (r - 1) + "," + c ].touched();
+		}
 		return isGround;
 	},
 
