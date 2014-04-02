@@ -92,15 +92,19 @@ var Map = cc.Node.extend({
 					type = Block.TYPE.DIRT;
 				} else if ( this.MAP[ r ][ c ] == '#' ) {
 
-					if ( r == 0 ) { // prevent from r - 1
-						// type = 'images/block_grass.png';
-						type = Block.TYPE.DIRT;
-					} else if ( this.MAP[r - 1][c] == "#" ) {
-						type = Block.TYPE.DIRT;
-					} else {
-						// type = 'images/block_grass.png';
-						type = Block.TYPE.DIRT;
-					}
+					// if ( r + 1 < this.MAP.length && this.MAP[r + 1][c] == "_" ) {
+						// type = Block.TYPE.DIRT_FLOAT;
+					// } else {
+						type = Block.TYPE.DIRT;	
+					// }
+
+					// if ( r == 0 ) { // prevent from r - 1
+					// } else if ( this.MAP[r - 1][c] == "#" ) {
+					// 	type = Block.TYPE.DIRT;
+					// } else {
+					// 	type = Block.TYPE.DIRT;
+					// }
+
 				} else if ( this.MAP[ r ][ c ] == '_' ) {
 					if ( this.MAP[ r + 1 ][ c ] == '#' ) {
 						type = Block.TYPE.GRASS;
