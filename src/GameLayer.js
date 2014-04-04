@@ -17,11 +17,6 @@ var GameLayer = cc.LayerColor.extend({
 		this.addChild( this.map, 1 );
 
 		this._super();
-
-		// this.filter = cc.Sprite.create ( 'images/filter.png' );
-		// this.filter.setAnchorPoint( new cc.Point( 0 , 0 ) );
-		// this.filter.setScale(2);
-		// this.addChild( this.filter, 30 );
 		
 		this.background = cc.Sprite.create ( 'images/sky.png' );
 		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
@@ -153,8 +148,6 @@ var GameLayer = cc.LayerColor.extend({
 			break;
 
 		case cc.KEY.l:
-			// console.log(this.map.childrenHash)
-			// this.map.children[32].walk();
 			this.map.walk(
 				this.player.convertPixelToBlock(this.player.getPositionX())
 				,
@@ -184,27 +177,16 @@ var GameLayer = cc.LayerColor.extend({
 
 
 	shiftMap: function( row , column ) {
-		// this.accumulateColumn += column;
-		// if ( Math.abs( this.accumulateColumn ) > 12 ) {
-		// 	this.accumulateColumn = 0;
 		this.tree1.setPositionY( this.tree1.getPositionY() + row * 40 );
 		this.tree1.setPositionX( this.tree1.getPositionX() - column * 10 );
 		this.tree2.setPositionY( this.tree2.getPositionY() + row * 40 );
 		this.tree2.setPositionX( this.tree2.getPositionX() - column * 20 );
-			this.map.shiftMap( row, column );
-			this.player.setPosition( new cc.Point( this.player.getPositionX() + 120 * -column,
-				this.player.getPositionY() + 120 * row ) );
-		// 	this.map.setPositionX( 0 );
-		// } else {
-		// 	this.map.setPositionX( this.getPositionX() + 10 * -column );
-		// }
-		
+		this.map.shiftMap( row, column );
+		this.player.setPosition( new cc.Point( this.player.getPositionX() + 120 * -column,
+			this.player.getPositionY() + 120 * row ) );
 	},
 
 	update: function() {
-
-		// this.highLightBlock.setPosition( this.player.getCoordinate() );
-
 		// if ( this.player.getPositionX() >= screenWidth * 4.0 / 5 ) {
 		if ( this.player.getPositionX() >= 790 ) {
 			this.shiftMap( 0, 1 );
@@ -212,7 +194,6 @@ var GameLayer = cc.LayerColor.extend({
 		} else if ( this.player.getPositionX() <= 180 ) {
 			this.shiftMap( 0, -1 );
 		}
-
 		if ( this.player.getPositionY() >= screenHeight * 4.0 / 5 ) {
 			this.shiftMap( -1, 0 );
 		} else if ( this.player.getPositionY() <= screenHeight / 9.0 ) {

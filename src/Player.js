@@ -64,15 +64,12 @@ var Player = cc.Sprite.extend({
 				.create( animation ) );
 		this.runAction( movingAction );
 
-		// this.alertLabel = new DimLabel();//.create( '0', 'Arial', 13 );
 		this.alertLabel = cc.DimLabel.create( '0', 'Arial', 13 );
 		this.addChild( this.alertLabel );
 		this.alertLabel.setPosition( new cc.Point( 10, 50 ) );
 		this.alertLabel.setString( "Not enough SP" );
 		this.alertLabel.setColor( new cc.Color3B( 255, 255, 255 ) );
 		this.alertLabel.enableStroke( new cc.Color3B( 100, 100, 100 ), 1 );
-		// this.alertLabel.setOpacity( 220 );
-		// this.alertLabel.setString(this.alertLabel.getOpacity());
 		
 		this.crosshair = null;
 
@@ -207,7 +204,6 @@ var Player = cc.Sprite.extend({
 	},
 
 	stopRight: function() {
-
 		this.holdRight = false;
 		this.goingRight = false;
 		if ( !this.goingLeft ) {
@@ -216,7 +212,6 @@ var Player = cc.Sprite.extend({
 	},
 
 	stopLeft: function() {
-
 		this.holdLeft = false;
 		this.goingLeft = false;
 		if ( !this.goingRight ) {
