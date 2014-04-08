@@ -17,13 +17,14 @@ var Player = cc.Sprite.extend({
 		this.holdRight = false;
 		this.holdLeft = false;
 
-		this.vy = Player.STARTING_VELOCITY;
+		this.vy = 0;
 		this.vx = 0;
 
 		this.nextX = 0;
 		this.nextY = 0;
 
 		this.setScale( 3 );
+		this.PIXEL_SIZE = 120;
 
 		this.MAX_HP = 500;
 		this.MAX_SP = 180;
@@ -147,8 +148,8 @@ var Player = cc.Sprite.extend({
 		// aim left = negative x-axis , -1
 		for ( var i = 0; i < this.aimOrders.length; i++ ) {
 	  	var aim = this.aimOrders[i];
-	  	var aimPixelX = aim[ 0 ] * 120 * direction + this.reducePixel( this.getPositionX() );
-	  	var aimPixelY = aim[ 1 ] * 120 + this.reducePixel( this.getPositionY() );
+	  	var aimPixelX = aim[ 0 ] * this.PIXEL_SIZE * direction + this.reducePixel( this.getPositionX() );
+	  	var aimPixelY = aim[ 1 ] * this.PIXEL_SIZE + this.reducePixel( this.getPositionY() );
 
 	  	this.aimedBlockX = this.convertPixelToBlock( aimPixelX );
 	  	this.aimedBlockY = this.convertPixelToBlock( aimPixelY );
@@ -221,17 +222,17 @@ var Player = cc.Sprite.extend({
 
 	convertPixelToBlock: function( coordinate, isFloor ) {
 		if ( isFloor == null ) {
-			return Math.round( coordinate / 3 / 40 );
+			return Math.round( coordinate / this.PIXEL_SIZE );
 		}
 		if ( isFloor ) {
-			return Math.floor( coordinate / 3 / 40 );
+			return Math.floor( coordinate / this.PIXEL_SIZE );
 		}
 
-		return Math.ceil( coordinate / 3 / 40 );
+		return Math.ceil( coordinate / this.PIXEL_SIZE );
 	},
 
 	convertBlockToPixel: function( coordinate ) {
-		return coordinate * 3 * 40;
+		return coordinate * this.PIXEL_SIZE;
 	},
 
 	isInTheAir: function() {
@@ -273,11 +274,10 @@ var Player = cc.Sprite.extend({
 	},
 
 	applyGravity: function() {
-
 		if ( !this.isInTheAir() ) { // on the ground
 			this.jumpStep = 0;
 		} else {
-			this.vy += Player.G;
+			this.vy += Physics.G;
 		}
 	},
 
@@ -299,12 +299,12 @@ var Player = cc.Sprite.extend({
 	applyFriction: function() {
 
 		if ( this.decreaseSpeedRight && this.vx >= 0 ) {
-
 			if ( this.isInTheAir() ) {
 				this.vx -= Physics.AIR_FRICTION;
 			} else {
 				this.vx -= Physics.FLOOR_FRICTION;
 			}
+
 			if ( this.vx <= 0 ) {
 				this.decreaseSpeedRight = false;
 				this.vx = 0;
@@ -312,7 +312,6 @@ var Player = cc.Sprite.extend({
 		}
 
 		if ( this.decreaseSpeedLeft && this.vx <= 0 ) {
-
 			if ( this.isInTheAir() ) {
 				this.vx += Physics.AIR_FRICTION;
 			} else {
@@ -328,19 +327,12 @@ var Player = cc.Sprite.extend({
 	},
 
 	update: function() {
-
 		this.checkKeyHolded();
-
 		this.applyFriction();
-
 		this.checkWallCollision();
-
 		this.checkFloorCollision();
-
 		this.applyGravity();
-
 		this.setPosition( new cc.Point( this.nextX, this.nextY ) );
-
 	},
 
 	jump: function() {
@@ -365,6 +357,3 @@ var Player = cc.Sprite.extend({
 	},
 
 });
-
-Player.STARTING_VELOCITY = 3;
-Player.G = Physics.G;

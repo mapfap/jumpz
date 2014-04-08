@@ -45,7 +45,7 @@ var GameLayer = cc.LayerColor.extend({
 
 		this.player.setHealthBar( new HealthBar() );
 		this.player.setPosition( new cc.Point( 200, 200 ) );
-		this.addChild( this.player, 1 );
+		this.addChild( this.player, 2 );
 		this.player.setMap( this.map );
 
 		// this.highLightBlock = new Block( 'images/green.png' );
@@ -69,11 +69,27 @@ var GameLayer = cc.LayerColor.extend({
 		// this.player2.setPosition( new cc.Point( 300, 120 ) );
 		// this.addChild( this.player2, 1 );
 		// this.player2.setMap( this.map );
+		this.monster = new Monster( Monster.SIZE.SMALL );
+		this.monster.setPosition( new cc.Point( 200, 200 ) );
+		this.monster.setAnchorPoint( new cc.Point( 0, 0 ) )
+		this.addChild( this.monster, 1 );
+		// this.monster.setMap( this.map );
+
+
+		// this.monster2 = new Monster( Monster.SIZE.MEDIUM );
+		// this.monster2.setPosition( new cc.Point( 400, 200 ) );
+		// this.monster2.setAnchorPoint( new cc.Point( 0, 0 ) )
+		// this.addChild( this.monster2, 1 );
+
+
 
 		this.scheduleUpdate();
 		this.startGame();
 		this.setKeyboardEnabled( true );
 		this.player.scheduleUpdate();
+		this.monster.scheduleUpdate();
+
+
 		return true;
 	},
 

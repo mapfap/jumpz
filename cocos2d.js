@@ -20,6 +20,7 @@
             'src/Block.js',
             'src/HealthBar.js',
             'src/DimLabel.js',
+            'src/Monster.js',
         ]
     };
 
