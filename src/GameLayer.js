@@ -1,23 +1,76 @@
 var GameLayer = cc.LayerColor.extend({
 	
 	init: function() {
+		this._super();
+		this.setPosition( new cc.Point( 0, 0 ) );
 
-		this.debugLabel = cc.LabelTTF.create( 'Space: jump\nE: shoot\nR: refill\nF: toggle sight', 'Arial', 20 );
-		this.debugLabel.setPosition( new cc.Point( 100, 500 ) );
-		this.debugLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
-		this.addChild( this.debugLabel, 2 );
+		this.allRigidBodies = [];
+		this.allShiftableObjects = [];
 
-		this.debugLabel = cc.LabelTTF.create( 'JumpZ Online: Alpha Test', 'Arial', 20 );
-		this.debugLabel.setPosition( new cc.Point( screenWidth / 2,
+		this.initMap();
+		this.initBackground();
+		this.initPlayer();		
+		this.initMonster();
+		this.initUI();
+
+		this.scheduleUpdate();
+		this.setKeyboardEnabled( true );
+		this.player.scheduleUpdate();
+
+		this.scheduleOnce(function(){
+			this.addChild( this.monster, 1 );
+			this.monster.scheduleUpdate();
+		}, 1);
+
+		return true;
+	},
+
+	initPlayer: function() {
+		this.player = new Player();
+		this.player.setHealthBar( new HealthBar() );
+		this.player.setPosition( new cc.Point( 200, 200 ) );
+		this.addChild( this.player, 2 );
+		this.player.setMap( this.map );
+		this.allRigidBodies.push( this.player );
+		this.allShiftableObjects.push( this.player );
+		this.player.setAllRigidBodies( this.allRigidBodies );
+
+		this.crosshair = new Block( 'images/crosshair.png' );
+		this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
+		this.allShiftableObjects.push( this.crosshair );
+		this.addChild( this.crosshair, 3 );
+		this.player.setCrosshair( this.crosshair );
+	},
+
+	initMonster: function() {
+		this.monster = new PatrolMonster( Monster.SIZE.MEDIUM );
+		this.monster.setPosition( new cc.Point( 300, 100 ) );
+		this.monster.setAnchorPoint( new cc.Point( 0, -0.2 ) )
+		this.monster.setMap( this.map );
+		this.allRigidBodies.push( this.monster );
+		this.allShiftableObjects.push( this.monster );
+		this.monster.setAllRigidBodies( this.allRigidBodies );
+
+	},
+	initUI: function() {
+		this.guideLabel = cc.LabelTTF.create( 'Space: jump\nE: shoot\nR: refill\nF: toggle sight', 'Arial', 20 );
+		this.guideLabel.setPosition( new cc.Point( 100, 500 ) );
+		this.guideLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
+		this.addChild( this.guideLabel, 2 );
+
+		this.headLabel = cc.LabelTTF.create( 'JumpZ Online: Alpha Test', 'Arial', 20 );
+		this.headLabel.setPosition( new cc.Point( screenWidth / 2,
 				screenHeight - 30 ) );
-		this.addChild( this.debugLabel, 2 );
-
+		this.addChild( this.headLabel, 2 );
+	},
+	
+	initMap: function() {
 		this.map = new Map();
 		this.map.setPosition( new cc.Point( 0, 0 ) );
 		this.addChild( this.map, 1 );
+	},
 
-		this._super();
-		
+	initBackground: function() {
 		this.background = cc.Sprite.create ( 'images/sky.png' );
 		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
@@ -33,44 +86,6 @@ var GameLayer = cc.LayerColor.extend({
 		this.tree2.setScale( 4 );
 		this.tree2.setScaleY( 6 );
 		this.addChild( this.tree2, 0 );
-
-		this.setPosition( new cc.Point( 0, 0 ) );
-
-		this.crosshair = new Block( 'images/crosshair.png' );
-		this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
-		this.addChild( this.crosshair, 3 );
-
-		this.allRigidBodies = [];
-
-		this.player = new Player();
-		this.player.setCrosshair( this.crosshair );
-		this.player.setHealthBar( new HealthBar() );
-		this.player.setPosition( new cc.Point( 200, 200 ) );
-		this.addChild( this.player, 2 );
-		this.player.setMap( this.map );
-		this.allRigidBodies.push( this.player );
-		this.player.setAllRigidBodies( this.allRigidBodies );
-
-		this.accumulateColumn = 0;
-		this.accumulateRow = 0;
-		
-		this.monster = new PatrolMonster( Monster.SIZE.MEDIUM );
-		this.monster.setPosition( new cc.Point( 300, 100 ) );
-		this.monster.setAnchorPoint( new cc.Point( 0, -0.2 ) )
-		this.monster.setMap( this.map );
-		this.allRigidBodies.push( this.monster );
-		this.monster.setAllRigidBodies( this.allRigidBodies );
-
-		this.scheduleUpdate();
-		this.setKeyboardEnabled( true );
-
-		this.player.scheduleUpdate();
-		this.scheduleOnce(function(){
-			// console.log( this.player.allRigidBodies )
-			this.addChild( this.monster, 1 );
-			this.monster.scheduleUpdate();
-		}, 1);
-		return true;
 	},
 
 	onKeyDown: function( e ) {
@@ -156,12 +171,10 @@ var GameLayer = cc.LayerColor.extend({
 		this.tree2.setPositionY( this.tree2.getPositionY() + row * 40 );
 		this.tree2.setPositionX( this.tree2.getPositionX() - column * 20 );
 		this.map.shiftMap( row, column );
-		this.player.setPosition( new cc.Point( this.player.getPositionX() + 120 * -column,
-			this.player.getPositionY() + 120 * row ) );
-		this.monster.setPosition( new cc.Point( this.monster.getPositionX() + 120 * -column,
-			this.monster.getPositionY() + 120 * row ) );
-		this.crosshair.setPosition( new cc.Point( this.crosshair.getPositionX() + 120 * -column,
-			this.crosshair.getPositionY() + 120 * row ) );
+
+		this.allShiftableObjects.forEach(function( o ){
+			o.setPosition( new cc.Point( o.getPositionX() + 120 * -column, o.getPositionY() + 120 * row ) );
+		}, this);
 	},
 
 	update: function() {

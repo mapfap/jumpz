@@ -16,13 +16,37 @@ var Player = RigidBody.extend({
 		this.holdRight = false;
 		this.holdLeft = false;
 
-		this.setScale( 3 );
+		this.healthBar = null;
+		this.crosshair = null;
 
 		this.MAXIMUM_HEALTH_POINT = 500;
 		this.MAXIMUM_STAMINA_POINT = 180;
 		this.healthPoint = this.MAXIMUM_HEALTH_POINT;
 		this.staminaPoint = this.MAXIMUM_STAMINA_POINT;
 
+		this.initAnimation();
+		this.initAimSystem();
+		this.initLabel();
+	},
+
+	initAnimation: function() {
+		this.setScale( 3 );
+
+		var animation = new cc.Animation.create();
+		animation.addSpriteFrameWithFile( 'images/poring0.png' );
+		animation.addSpriteFrameWithFile( 'images/poring1.png' );
+		animation.addSpriteFrameWithFile( 'images/poring2.png' );
+		animation.addSpriteFrameWithFile( 'images/poring1.png' );
+		animation.addSpriteFrameWithFile( 'images/poring0.png' );
+		animation.setDelayPerUnit( 0.1 );
+		// var movingAction = cc.Animate.create( animation );
+
+		var movingAction = cc.RepeatForever.create( cc.Animate
+				.create( animation ) );
+		this.runAction( movingAction );
+	},
+
+	initAimSystem: function() {
 		this.aimOrders = [
 			[ 1, 1, -45 ],
 			[ 2, 1, -30],
@@ -38,25 +62,20 @@ var Player = RigidBody.extend({
 		];
 
 		this.isAiming = false;
-
 		this.aimedPixel = null;
 		this.aimedBlockX = 0;
 		this.aimedBlockY = 0;
-		this.healthBar = null;
+		
+		this.setFlippedX( true );
+		this.isSightOn = true;
 
-		var animation = new cc.Animation.create();
-		animation.addSpriteFrameWithFile( 'images/poring0.png' );
-		animation.addSpriteFrameWithFile( 'images/poring1.png' );
-		animation.addSpriteFrameWithFile( 'images/poring2.png' );
-		animation.addSpriteFrameWithFile( 'images/poring1.png' );
-		animation.addSpriteFrameWithFile( 'images/poring0.png' );
-		animation.setDelayPerUnit( 0.1 );
+		this.sight = cc.Sprite.create ( 'images/sight.png' );
+		this.sight.setPosition( new cc.Point( 10 , 30 ) );
+		this.sight.setAnchorPoint( new cc.Point( -0.001 , 0.5 ) );
+		this.addChild( this.sight );
+	},
 
-		// var movingAction = cc.Animate.create( animation );
-		var movingAction = cc.RepeatForever.create( cc.Animate
-				.create( animation ) );
-		this.runAction( movingAction );
-
+	initLabel: function() {
 		this.alertLabel = cc.DimLabel.create( '0', 'Arial', 13 );
 		this.addChild( this.alertLabel );
 		this.alertLabel.setPosition( new cc.Point( 10, 50 ) );
@@ -64,22 +83,12 @@ var Player = RigidBody.extend({
 		this.alertLabel.setColor( new cc.Color3B( 255, 255, 255 ) );
 		this.alertLabel.enableStroke( new cc.Color3B( 100, 100, 100 ), 1 );
 		
-		this.crosshair = null;
-
 		this.amountLabel = cc.DimLabel.create( '0', 'Arial', 13 );
 		this.addChild( this.amountLabel );
 		this.amountLabel.setPosition( new cc.Point( 20, 50 ) );
 		this.amountLabel.setColor( new cc.Color3B( 255, 255, 255 ) );
 		this.amountLabel.setString( "+40" );
 		this.amountLabel.enableStroke( new cc.Color3B( 100, 100, 100 ), 1 );
-
-		this.sight = cc.Sprite.create ( 'images/sight.png' );
-		this.sight.setPosition( new cc.Point( 10 , 30 ) );
-		this.sight.setAnchorPoint( new cc.Point( -0.001 , 0.5 ) );
-		this.addChild( this.sight );
-		this.setFlippedX( true );
-
-		this.isSightOn = true;
 	},
 
 	toggleSight: function() {
