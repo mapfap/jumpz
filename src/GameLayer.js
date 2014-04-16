@@ -40,11 +40,20 @@ var GameLayer = cc.LayerColor.extend({
 		this.allShiftableObjects.push( this.crosshair );
 		this.addChild( this.crosshair, 3 );
 		this.player.setCrosshair( this.crosshair );
+
+		// var flash = cc.Sprite.create ( 'images/blocks/dirt.png' );
+		// flash.setScale(30);
+		var flash = cc.Sprite.create ( 'images/sky.png' );
+		flash.setAnchorPoint( new cc.Point( 0 , 0 ) );
+		flash.setAnchorPoint( new cc.Point( 0 , 0 ) );
+		this.addChild( flash, 100 );
+		flash.setOpacity( 0 );
+		this.player.setFlash( flash );
 	},
 
 	initMonster: function() {
 		this.monster = new PatrolMonster( Monster.SIZE.MEDIUM );
-		this.monster.setPosition( new cc.Point( 300, 100 ) );
+		this.monster.setPosition( new cc.Point( 350, 100 ) );
 		this.monster.setAnchorPoint( new cc.Point( 0, -0.2 ) )
 		this.monster.setMap( this.map );
 		this.allRigidBodies.push( this.monster );
@@ -109,7 +118,7 @@ var GameLayer = cc.LayerColor.extend({
 			}
 
 			if ( this.player.isAiming ) {
-				this.player.increaseSP( -10 );
+				this.player.increaseStaminaPoint( -10 );
 				this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 				this.map.hitBlock( this.player.aimedBlockX, this.player.aimedBlockY );
 				this.player.isAiming = false;
@@ -146,7 +155,7 @@ var GameLayer = cc.LayerColor.extend({
 
 		case cc.KEY.r:
 			this.player.amountLabel.dim( 255, 0, 8 );
-			this.player.increaseSP( 40 );
+			this.player.increaseStaminaPoint( 40 );
 			break
 
 		default:

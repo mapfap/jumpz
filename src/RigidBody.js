@@ -66,11 +66,24 @@ var RigidBody = cc.Sprite.extend({
 
 	isHitOtherRigidBodies: function( dt ) {
 		// console.log( this.allRigidBodies );
+		var thisPositionX = this.getPositionX() + dt;
+		var thisPositionY = this.getPositionY();
+
 		for ( var i = 0; i < this.allRigidBodies.length; i++ ) {
-			if ( Math.abs(this.getPositionY() - this.allRigidBodies[i].getPositionY()) < 120) {
-				if ( Math.abs(this.getPositionX() + dt - this.allRigidBodies[i].getPositionX()) < 120) {
-					if ( this !== this.allRigidBodies[i] ) {
-						// console.log("crash")
+			var that = this.allRigidBodies[i];
+			var thatPositionX = that.getPositionX();
+			var thatPositionY = that.getPositionY();
+
+			if ( Math.abs( thisPositionY - thatPositionY ) < this.PIXEL_SIZE) {
+				if ( Math.abs( thisPositionX - thatPositionX ) < this.PIXEL_SIZE) {
+					if ( this !== that ) {
+						if ( that instanceof Player ) {
+							var direction = 1;
+							if ( thisPositionX > thatPositionX ) {
+								direction *= -1;
+							}
+							that.takeDamage( direction );
+						}
 						return true;
 					}
 				}

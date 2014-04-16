@@ -18,6 +18,7 @@ var Player = RigidBody.extend({
 
 		this.healthBar = null;
 		this.crosshair = null;
+		this.flash = null;
 
 		this.MAXIMUM_HEALTH_POINT = 500;
 		this.MAXIMUM_STAMINA_POINT = 180;
@@ -105,14 +106,24 @@ var Player = RigidBody.extend({
 		this.crosshair = crosshair;
 	},
 
-	increaseSP: function( amount ) {
+	increaseStaminaPoint: function( amount ) {
 		this.staminaPoint += amount;
 		if ( this.staminaPoint >= this.MAXIMUM_STAMINA_POINT ) {
 			this.staminaPoint = this.MAXIMUM_STAMINA_POINT;
 		}
 		if ( this.staminaPoint <= 0 )
 			this.staminaPoint = 0;
-		this.healthBar.setSP( ( this.staminaPoint / this.MAXIMUM_STAMINA_POINT ) * 100 );
+		this.healthBar.setStaminaPointBarLength( ( this.staminaPoint / this.MAXIMUM_STAMINA_POINT ) * 100 );
+	},
+
+	increaseHealthPoint: function( amount ) {
+		this.healthPoint += amount;
+		if ( this.healthPoint >= this.MAXIMUM_HEALTH_POINT ) {
+			this.healthPoint = this.MAXIMUM_HEALTH_POINT;
+		}
+		if ( this.healthPoint <= 0 )
+			this.healthPoint = 0;
+		this.healthBar.setHealthPointBarLength( ( this.healthPoint / this.MAXIMUM_HEALTH_POINT ) * 100 );
 	},
 
 	setHealthBar: function( healthBar ) {
@@ -121,6 +132,10 @@ var Player = RigidBody.extend({
 		this.healthBar.setPosition( -4, -14 );
 		// this.healthBar.setPosition( -4, 45 );
 		this.addChild( this.healthBar );
+	},
+
+	setFlash: function( flash ) {
+		this.flash = flash;
 	},
 
 	aimTarget: function( direction ) {
@@ -212,9 +227,20 @@ var Player = RigidBody.extend({
 		}
 
 		this.jumpStep += 1;
-		this.increaseSP( -10 );
+		this.increaseStaminaPoint( -10 );
 		this.setVelocityY(this.jumpingVelocity[ this.jumpStep ]);
 
+	},
+
+	takeDamage: function( direction ) {
+		this.increaseHealthPoint( -150 );
+		this.setVelocityX( 10 * direction );
+		this.setVelocityY( 70 );
+		this.flash.setOpacity( 150 );
+		this.scheduleOnce(function(){
+			this.flash.setOpacity( 0 );
+		}, 0.1 );
+		
 	},
 
 });

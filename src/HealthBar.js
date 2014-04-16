@@ -13,19 +13,19 @@ var HealthBar = cc.Node.extend({
 
 		this.DEFAULT_SCALE_X = 4;
 
-		this.hpBar = cc.Sprite.create( 'images/hp_green.png' );
-		this.hpBar.setScaleY( 3 );
-		this.hpBar.setScaleX( this.DEFAULT_SCALE_X );
-		this.hpBar.setAnchorPoint( new cc.Point( 0, 0 ) );
-		this.hpBar.setPosition( new cc.Point( 0, 12 ) );
-		this.addChild( this.hpBar );
+		this.healthPointBar = cc.Sprite.create( 'images/hp_green.png' );
+		this.healthPointBar.setScaleY( 3 );
+		this.healthPointBar.setScaleX( this.DEFAULT_SCALE_X );
+		this.healthPointBar.setAnchorPoint( new cc.Point( 0, 0 ) );
+		this.healthPointBar.setPosition( new cc.Point( 0, 12 ) );
+		this.addChild( this.healthPointBar );
 
-		this.spBar = cc.Sprite.create( 'images/sp.png' );
-		this.spBar.setScaleY( 3 );
-		this.spBar.setScaleX( this.DEFAULT_SCALE_X );
-		this.spBar.setAnchorPoint( new cc.Point( 0, 0 ) );
-		this.spBar.setPosition( new cc.Point( 0, 0 ) );
-		this.addChild( this.spBar );
+		this.staminaPointBar = cc.Sprite.create( 'images/sp.png' );
+		this.staminaPointBar.setScaleY( 3 );
+		this.staminaPointBar.setScaleX( this.DEFAULT_SCALE_X );
+		this.staminaPointBar.setAnchorPoint( new cc.Point( 0, 0 ) );
+		this.staminaPointBar.setPosition( new cc.Point( 0, 0 ) );
+		this.addChild( this.staminaPointBar );
 
 		this.barBoarder = cc.Sprite.create( 'images/bar_border.png' );
 		this.barBoarder.setScaleY( 3 );
@@ -36,14 +36,13 @@ var HealthBar = cc.Node.extend({
 
 	},
 
-	setHP: function( percent ) {
-		console.log( this.DEFAULT_SCALE_X * percent / 100 )
-		this.hpBar.setScaleX( this.DEFAULT_SCALE_X * percent / 100 );
+	setHealthPointBarLength: function( percent ) {
+		// console.log( this.DEFAULT_SCALE_X * percent / 100 )
+		this.healthPointBar.setScaleX( this.DEFAULT_SCALE_X * ( percent / 100.0 ) );
 	},
 
-	setSP: function( percent ) {
-		// console.log( this.DEFAULT_SCALE_X * percent / 100 )
-		this.spBar.setScaleX( 4 * ( percent / 100.0 ) );
+	setStaminaPointBarLength: function( percent ) {
+		this.staminaPointBar.setScaleX( this.DEFAULT_SCALE_X * ( percent / 100.0 ) );
 	},
 	
 });
