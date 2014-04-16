@@ -192,16 +192,20 @@ var Player = RigidBody.extend({
 	},
 
 	jump: function() {
+
 		if ( this.staminaPoint == 0 ) {
 			this.alertLabel.dim( 255, 0, 8 );
 			return 0;
 		}
 
-		if ( this.jumpStep < this.maxJump ) {
-			this.vy = this.jumpingVelocity[ this.jumpStep ];
-			this.increaseSP( -10 );
-			this.jumpStep += 1;
+		if ( this.jumpStep >= this.maxJump ) {
+			return 0;
 		}
+
+		this.jumpStep += 1;
+		this.increaseSP( -10 );
+		this.setVelocityY(this.jumpingVelocity[ this.jumpStep ]);
+
 	},
 
 });

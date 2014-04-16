@@ -22,6 +22,7 @@
             'src/HealthBar.js',
             'src/DimLabel.js',
             'src/Monster.js',
+            'src/PatrolMonster.js',
         ]
     };
 

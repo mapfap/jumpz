@@ -51,8 +51,8 @@ var GameLayer = cc.LayerColor.extend({
 		this.accumulateColumn = 0;
 		this.accumulateRow = 0;
 		
-		this.monster = new Monster( Monster.SIZE.MEDIUM );
-		this.monster.setPosition( new cc.Point( 300, 200 ) );
+		this.monster = new PatrolMonster( Monster.SIZE.MEDIUM );
+		this.monster.setPosition( new cc.Point( 300, 100 ) );
 		this.monster.setAnchorPoint( new cc.Point( 0, -0.2 ) )
 		this.monster.setMap( this.map );
 
@@ -153,6 +153,8 @@ var GameLayer = cc.LayerColor.extend({
 			this.player.getPositionY() + 120 * row ) );
 		this.monster.setPosition( new cc.Point( this.monster.getPositionX() + 120 * -column,
 			this.monster.getPositionY() + 120 * row ) );
+		this.crosshair.setPosition( new cc.Point( this.crosshair.getPositionX() + 120 * -column,
+			this.crosshair.getPositionY() + 120 * row ) );
 	},
 
 	update: function() {

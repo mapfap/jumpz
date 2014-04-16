@@ -2,11 +2,11 @@ var RigidBody = cc.Sprite.extend({
 	ctor: function() {
 		this._super();
 
-		this.vy = 0;
-		this.vx = 0;
+		this.velocityY = 0;
+		this.velocityX = 0;
 
-		this.nextX = 0;
-		this.nextY = 0;
+		this.nextPositionX = 0;
+		this.nextPositionY = 0;
 
 		this.decreaseSpeedRight = false;
 		this.decreaseSpeedLeft = false;
@@ -66,60 +66,68 @@ var RigidBody = cc.Sprite.extend({
 		if ( !this.isInTheAir() ) { // on the ground
 			this.jumpStep = 0;
 		} else {
-			this.vy += PHYSICS.GRAVITY;
+			this.velocityY += PHYSICS.GRAVITY;
 		}
 	},
 
 	checkWallCollision: function() {
-		if ( this.canWalkTo( this.vx ) ) {
-			this.nextX += this.vx;
+		if ( this.canWalkTo( this.velocityX ) ) {
+			this.nextPositionX += this.velocityX;
 		}
 	},
 
 	checkFloorCollision: function() {
-		if ( this.canFallTo( this.vy ) ) {
-			this.nextY += this.vy;
+		if ( this.canFallTo( this.velocityY ) ) {
+			this.nextPositionY += this.velocityY;
 		} else {
-			this.nextY = this.convertBlockToPixel( this.convertPixelToBlock( this
-					.getPositionY(), this.vy < 0 ) );
+			this.nextPositionY = this.convertBlockToPixel( this.convertPixelToBlock( this
+					.getPositionY(), this.velocityY < 0 ) );
 		}
 	},
 
 	setPosition: function( point ) {
 		this._super( point );
-		this.nextX = point.x;
-		this.nextY = point.y;
+		this.nextPositionX = point.x;
+		this.nextPositionY = point.y;
 	},
 
 	setMap: function( map ) {
 		this.map = map;
 	},
 
+	setVelocityY: function( velocity ) {
+		this.velocityY = velocity;
+	},
+
+	setVelocityX: function( velocity ) {
+		this.velocityX = velocity;
+	},
+
 	applyFriction: function() {
 
-		if ( this.decreaseSpeedRight && this.vx >= 0 ) {
+		if ( this.decreaseSpeedRight && this.velocityX >= 0 ) {
 			if ( this.isInTheAir() ) {
-				this.vx -= PHYSICS.AIR_FRICTION;
+				this.velocityX -= PHYSICS.AIR_FRICTION;
 			} else {
-				this.vx -= PHYSICS.FLOOR_FRICTION;
+				this.velocityX -= PHYSICS.FLOOR_FRICTION;
 			}
 
-			if ( this.vx <= 0 ) {
+			if ( this.velocityX <= 0 ) {
 				this.decreaseSpeedRight = false;
-				this.vx = 0;
+				this.velocityX = 0;
 			}
 		}
 
-		if ( this.decreaseSpeedLeft && this.vx <= 0 ) {
+		if ( this.decreaseSpeedLeft && this.velocityX <= 0 ) {
 			if ( this.isInTheAir() ) {
-				this.vx += PHYSICS.AIR_FRICTION;
+				this.velocityX += PHYSICS.AIR_FRICTION;
 			} else {
-				this.vx += PHYSICS.FLOOR_FRICTION;
+				this.velocityX += PHYSICS.FLOOR_FRICTION;
 			}
 
-			if ( this.vx >= 0 ) {
+			if ( this.velocityX >= 0 ) {
 				this.decreaseSpeedLeft = false;
-				this.vx = 0;
+				this.velocityX = 0;
 			}
 		}
 
@@ -130,7 +138,7 @@ var RigidBody = cc.Sprite.extend({
 		this.checkWallCollision();
 		this.checkFloorCollision();
 		this.applyGravity();
-		this.setPosition( new cc.Point( this.nextX, this.nextY ) );
+		this.setPosition( new cc.Point( this.nextPositionX, this.nextPositionY ) );
 	},
 
 	getCoordinate: function() {
@@ -150,14 +158,14 @@ var RigidBody = cc.Sprite.extend({
 		this.goingRight = true;
 		this.decreaseSpeedLeft = false;
 		this.setFlippedX( true );
-		this.vx = this.walkingSpeed;
+		this.velocityX = this.walkingSpeed;
 	},
 
 	goLeft: function() {
 		this.goingLeft = true;
 		this.decreaseSpeedRight = false;
 		this.setFlippedX( false );
-		this.vx = -this.walkingSpeed;
+		this.velocityX = -this.walkingSpeed;
 	},
 
 
