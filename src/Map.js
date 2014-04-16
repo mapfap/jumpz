@@ -23,6 +23,7 @@ var Map = cc.Node.extend({
 		this.shiftValueRow = 0;
 		this.shiftValueColumn = 0;
 		this.children = [];
+		this.blocks = [];
 		this.plotMap();
 
 	},
@@ -82,6 +83,7 @@ var Map = cc.Node.extend({
 			this.removeChild( this.children[i] );
 		}
 		this.children = [];
+		this.blocks = [];
 
 		for ( var r = this.shiftValueRow; r < this.SCREEN_HEIGHT + this.shiftValueRow; r++ ) {
 			for ( var c = this.shiftValueColumn; c < this.SCREEN_WIDTH + this.shiftValueColumn; c++ ) {
@@ -119,6 +121,9 @@ var Map = cc.Node.extend({
 					s.setPosition( new cc.Point( posX, posY ) );
 					this.addChild( s );
 					this.children.push( s );
+					if ( s.type == Block.TYPE.DIRT ) {
+						this.blocks.push( s );
+					}
 					this.childrenHash[ name ] = s;
 				}
 
@@ -161,6 +166,10 @@ var Map = cc.Node.extend({
 			return false;
 		}
 		return this.MAP[ r ][ c ] == '#';
+	},
+
+	getBlocks: function() {
+		return this.blocks;
 	},
 
 });
