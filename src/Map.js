@@ -2,9 +2,12 @@ var Map = cc.Node.extend({
 
 	ctor: function() {
 		this._super();
-		this.SCREEN_WIDTH = 10; // avoid BUG here.. "DO NOT" use this value for array range. 
+		// beware BUG here.. "DO NOT" use this value for array range.
+		// this value is numbers of blocks shown in the screen.
+		this.SCREEN_WIDTH = 10;
 		this.SCREEN_HEIGHT = 8;
-		this.MAP = [
+		
+		this.readableMap = [
 			'#______________________________________#',
 			'#___________##_________________________#',
 			'#___________###________________________#',
@@ -14,6 +17,19 @@ var Map = cc.Node.extend({
 			'#_______________________________#####__#',
 			'#_____######___________________________#',
 			'########################################', ];
+
+		// convert array of string to 2D char, in order to be mutable object.
+
+		this.map = [];
+		for ( var i = 0; i < this.readableMap.length; i++ ) {
+			var line = [];
+			for ( var j = 0 ; j < this.readableMap[i].length; j++ ) {
+				line.push( this.readableMap[i][j] );
+			}
+			this.map.push( line );
+			console.log(line[0])
+		}
+		
 
 		this.setAnchorPoint( cc.p( 0, 0 ) );
 		this.childrenHash = {};
@@ -29,17 +45,17 @@ var Map = cc.Node.extend({
 	},
 
 	setBlock: function( r, c, value ) {
-		var newRow = "";
+		// var newRow = "";
 
-		for ( var k = 0; k < this.MAP[0].length; k++ ) {
-			if ( k == c ) {
-				newRow += value;
-			} else {
-				newRow += this.MAP[ r ][ k ];
-			}
-		}
+		// for ( var k = 0; k < this.map[0].length; k++ ) {
+		// 	if ( k == c ) {
+		// 		newRow += value;
+		// 	} else {
+		// 		newRow += this.map[ r ][ k ];
+		// 	}
+		// }
 
-		this.MAP[ r ] = newRow;
+		this.map[ r ][ c ] = value;
 	},
 
 	hitBlock: function( blockX, blockY ) {
@@ -54,8 +70,8 @@ var Map = cc.Node.extend({
 
 		var newPosition = null;
 		// console.log("r="+  );
-		for ( var l = r; l < this.MAP.length ; l++ ) {
-			if ( this.MAP[ l ][ c ] == '#' ) {
+		for ( var l = r; l < this.map.length ; l++ ) {
+			if ( this.map[ l ][ c ] == '#' ) {
 				newPosition = l - 1;
 				// console.log("n="+ newPosition) ;
 				break;
@@ -75,7 +91,7 @@ var Map = cc.Node.extend({
 	},
 
 	isOutOfBound: function( row, column ) {
-		return row < 0 || row >= this.MAP.length || column < 0 || column >= this.MAP[0].length;
+		return row < 0 || row >= this.map.length || column < 0 || column >= this.map[0].length;
 	},
 
 	plotMap: function() {
@@ -92,23 +108,23 @@ var Map = cc.Node.extend({
 				// console.log( "r"+r +"...c"+c);
 				if ( this.isOutOfBound( r, c ) ) {
 					type = Block.TYPE.DIRT;
-				} else if ( this.MAP[ r ][ c ] == '#' ) {
+				} else if ( this.map[ r ][ c ] == '#' ) {
 
-					// if ( r + 1 < this.MAP.length && this.MAP[r + 1][c] == "_" ) {
+					// if ( r + 1 < this.map.length && this.map[r + 1][c] == "_" ) {
 						// type = Block.TYPE.DIRT_FLOAT;
 					// } else {
 						type = Block.TYPE.DIRT;	
 					// }
 
 					// if ( r == 0 ) { // prevent from r - 1
-					// } else if ( this.MAP[r - 1][c] == "#" ) {
+					// } else if ( this.map[r - 1][c] == "#" ) {
 					// 	type = Block.TYPE.DIRT;
 					// } else {
 					// 	type = Block.TYPE.DIRT;
 					// }
 
-				} else if ( this.MAP[ r ][ c ] == '_' ) {
-					if ( this.MAP[ r + 1 ][ c ] == '#' ) {
+				} else if ( this.map[ r ][ c ] == '_' ) {
+					if ( this.map[ r + 1 ][ c ] == '#' ) {
 						type = Block.TYPE.GRASS;
 					}
 				}
@@ -150,7 +166,7 @@ var Map = cc.Node.extend({
 		if ( this.isOutOfBound( r, c ) ) {
 			return true;
 		}
-		var isGround = this.MAP[ r ][ c ] == '#';
+		var isGround = this.map[ r ][ c ] == '#';
 		if ( isGround ) {
 			this.childrenHash[ (r - 1) + "," + c ].touched();
 		}
@@ -165,7 +181,7 @@ var Map = cc.Node.extend({
 		if ( this.isOutOfBound( r, c ) ) {
 			return false;
 		}
-		return this.MAP[ r ][ c ] == '#';
+		return this.map[ r ][ c ] == '#';
 	},
 
 	getBlocks: function() {
