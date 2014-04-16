@@ -7,7 +7,7 @@ var Player = cc.Sprite.extend({
 		this.map = null;
 
 		this.jumpStep = 0;
-		this.maxJump = 2;
+		this.maxJump = 1;
 		this.decreaseSpeedRight = false;
 		this.decreaseSpeedLeft = false;
 
