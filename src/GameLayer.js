@@ -40,13 +40,16 @@ var GameLayer = cc.LayerColor.extend({
 		this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 		this.addChild( this.crosshair, 3 );
 
+		this.allRigidBodies = [];
+
 		this.player = new Player();
 		this.player.setCrosshair( this.crosshair );
-
 		this.player.setHealthBar( new HealthBar() );
 		this.player.setPosition( new cc.Point( 200, 200 ) );
 		this.addChild( this.player, 2 );
 		this.player.setMap( this.map );
+		this.allRigidBodies.push( this.player );
+		this.player.setAllRigidBodies( this.allRigidBodies );
 
 		this.accumulateColumn = 0;
 		this.accumulateRow = 0;
@@ -55,11 +58,15 @@ var GameLayer = cc.LayerColor.extend({
 		this.monster.setPosition( new cc.Point( 300, 100 ) );
 		this.monster.setAnchorPoint( new cc.Point( 0, -0.2 ) )
 		this.monster.setMap( this.map );
+		this.allRigidBodies.push( this.monster );
+		this.monster.setAllRigidBodies( this.allRigidBodies );
 
 		this.scheduleUpdate();
 		this.setKeyboardEnabled( true );
+
 		this.player.scheduleUpdate();
 		this.scheduleOnce(function(){
+			// console.log( this.player.allRigidBodies )
 			this.addChild( this.monster, 1 );
 			this.monster.scheduleUpdate();
 		}, 1);

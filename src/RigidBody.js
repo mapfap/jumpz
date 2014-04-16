@@ -12,6 +12,7 @@ var RigidBody = cc.Sprite.extend({
 		this.decreaseSpeedLeft = false;
 
 		this.map = null;
+		this.allRigidBodies = null;
 
 		this.PIXEL_SIZE = 120;
 		this.walkingSpeed = 0;
@@ -58,9 +59,25 @@ var RigidBody = cc.Sprite.extend({
 		var posX = this.convertPixelToBlock( this.getPositionX() + dt, isFloor );
 		var posY = this.convertPixelToBlock( this.getPositionY(), isFloor );
 		// console.log( this.getPositionY() )
-		return !this.map.isGround( posX, posY );
+		// console.log( this.isHitOtherRigidBodies( dt ) )
+		// console.log(this.isHitOtherRigidBodies( dt ));
+		return !this.map.isGround( posX, posY ) && !this.isHitOtherRigidBodies( dt );
 	},
 
+	isHitOtherRigidBodies: function( dt ) {
+		// console.log( this.allRigidBodies );
+		for ( var i = 0; i < this.allRigidBodies.length; i++ ) {
+			if ( Math.abs(this.getPositionY() - this.allRigidBodies[i].getPositionY()) < 120) {
+				if ( Math.abs(this.getPositionX() + dt - this.allRigidBodies[i].getPositionX()) < 120) {
+					if ( this !== this.allRigidBodies[i] ) {
+						// console.log("crash")
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	},
 
 	applyGravity: function() {
 		if ( !this.isInTheAir() ) { // on the ground
@@ -93,6 +110,10 @@ var RigidBody = cc.Sprite.extend({
 
 	setMap: function( map ) {
 		this.map = map;
+	},
+
+	setAllRigidBodies: function( allRigidBodies ) {
+		this.allRigidBodies = allRigidBodies;
 	},
 
 	setVelocityY: function( velocity ) {
