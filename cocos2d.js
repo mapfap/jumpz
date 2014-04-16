@@ -14,6 +14,7 @@
         appFiles:[
             'src/resource.js',
             'src/Physics.js',
+            'src/RigidBody.js',
             'src/GameLayer.js',
             'src/Player.js',
             'src/Map.js',

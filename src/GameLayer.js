@@ -48,50 +48,22 @@ var GameLayer = cc.LayerColor.extend({
 		this.addChild( this.player, 2 );
 		this.player.setMap( this.map );
 
-		// this.highLightBlock = new Block( 'images/green.png' );
-		// this.highLightBlock.setPosition( new cc.Point( 300, 300 ) );
-		// this.addChild( this.highLightBlock );
-
 		this.accumulateColumn = 0;
 		this.accumulateRow = 0;
-
-		this.bomb = new Block( 'images/crosshair.png' );
-		this.bomb.setPosition( -1000, 0)
-		this.addChild( this.bomb, 4 );
-
-		// this.grass = new Block ( 'images/grass.png')
-		// this.grass.setPosition( 300, 300 );
-		// this.addChild( this.grass, 5 )
-
-
-		// this.player2 = new Player();
-		// this.player2.setHealthBar( new HealthBar() );
-		// this.player2.setPosition( new cc.Point( 300, 120 ) );
-		// this.addChild( this.player2, 1 );
-		// this.player2.setMap( this.map );
 		
-		this.monster = new Monster( Monster.SIZE.LARGE );
+		this.monster = new Monster( Monster.SIZE.MEDIUM );
 		this.monster.setPosition( new cc.Point( 300, 200 ) );
-		this.monster.setAnchorPoint( new cc.Point( 0, 0 ) )
-		this.addChild( this.monster, 1 );
+		this.monster.setAnchorPoint( new cc.Point( 0, -0.2 ) )
 		this.monster.setMap( this.map );
 
 		this.scheduleUpdate();
-		this.startGame();
 		this.setKeyboardEnabled( true );
 		this.player.scheduleUpdate();
 		this.scheduleOnce(function(){
+			this.addChild( this.monster, 1 );
 			this.monster.scheduleUpdate();
 		}, 1);
 		return true;
-	},
-
-	startGame: function() {
-		this.player.start();
-	},
-
-	endGame: function() {
-		this.player.stop();
 	},
 
 	onKeyDown: function( e ) {
@@ -109,7 +81,6 @@ var GameLayer = cc.LayerColor.extend({
 			break;
 
 		case cc.KEY.e:
-			// this.player.fireBomb();
 			if ( this.player.sp == 0 ) {
 				this.player.alertLabel.dim( 255, 0, 8 );
 				return 0;
@@ -117,24 +88,11 @@ var GameLayer = cc.LayerColor.extend({
 
 			if ( this.player.isAiming ) {
 				this.player.increaseSP( -10 );
-				// this.bomb.setPosition( this.player.getPosition() );
-				// var fireAction = cc.MoveTo.create( 0.1, this.player.aimedPixel );
-				// this.bomb.runAction( fireAction );
 				this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
-				this.scheduleOnce( function(){
-					// this.bomb.setPosition( new cc.Point( -1000, 0 ) );
-				}, 0.3 );
-
 				this.map.hitBlock( this.player.aimedBlockX, this.player.aimedBlockY );
 				this.player.isAiming = false;
 			}
 			break;
-
-			// this.player.
-			// this.debugLabel.setString( Math
-					// .round( this.player.getPositionX() / 3 / 40 )
-					// + ", " + ( Math.round( this.player.getPositionY() / 3 / 40 ) - 1 ) );
-			// break;
 
 		case cc.KEY.f:
 			this.player.toggleSight();
@@ -193,6 +151,8 @@ var GameLayer = cc.LayerColor.extend({
 		this.map.shiftMap( row, column );
 		this.player.setPosition( new cc.Point( this.player.getPositionX() + 120 * -column,
 			this.player.getPositionY() + 120 * row ) );
+		this.monster.setPosition( new cc.Point( this.monster.getPositionX() + 120 * -column,
+			this.monster.getPositionY() + 120 * row ) );
 	},
 
 	update: function() {

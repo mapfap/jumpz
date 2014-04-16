@@ -27,7 +27,7 @@ var Map = cc.Node.extend({
 				line.push( this.readableMap[i][j] );
 			}
 			this.map.push( line );
-			console.log(line[0])
+			// console.log(line[0])
 		}
 		
 
@@ -39,7 +39,7 @@ var Map = cc.Node.extend({
 		this.shiftValueRow = 0;
 		this.shiftValueColumn = 0;
 		this.children = [];
-		this.blocks = [];
+		// this.blocks = [];
 		this.plotMap();
 
 	},
@@ -99,7 +99,7 @@ var Map = cc.Node.extend({
 			this.removeChild( this.children[i] );
 		}
 		this.children = [];
-		this.blocks = [];
+		// this.blocks = [];
 
 		for ( var r = this.shiftValueRow; r < this.SCREEN_HEIGHT + this.shiftValueRow; r++ ) {
 			for ( var c = this.shiftValueColumn; c < this.SCREEN_WIDTH + this.shiftValueColumn; c++ ) {
@@ -137,9 +137,9 @@ var Map = cc.Node.extend({
 					s.setPosition( new cc.Point( posX, posY ) );
 					this.addChild( s );
 					this.children.push( s );
-					if ( s.type == Block.TYPE.DIRT ) {
-						this.blocks.push( s );
-					}
+					// if ( s.type == Block.TYPE.DIRT ) {
+					// 	this.blocks.push( s );
+					// }
 					this.childrenHash[ name ] = s;
 				}
 
@@ -166,6 +166,7 @@ var Map = cc.Node.extend({
 		if ( this.isOutOfBound( r, c ) ) {
 			return true;
 		}
+		// console.log(r);
 		var isGround = this.map[ r ][ c ] == '#';
 		if ( isGround ) {
 			this.childrenHash[ (r - 1) + "," + c ].touched();
