@@ -14,6 +14,7 @@ var RigidBody = cc.Sprite.extend({
 		this.map = null;
 
 		this.PIXEL_SIZE = 120;
+		this.walkingSpeed = 0;
 	},
 
 	convertPixelToBlock: function( coordinate, isFloor ) {
@@ -65,7 +66,7 @@ var RigidBody = cc.Sprite.extend({
 		if ( !this.isInTheAir() ) { // on the ground
 			this.jumpStep = 0;
 		} else {
-			this.vy += Physics.G;
+			this.vy += PHYSICS.GRAVITY;
 		}
 	},
 
@@ -98,9 +99,9 @@ var RigidBody = cc.Sprite.extend({
 
 		if ( this.decreaseSpeedRight && this.vx >= 0 ) {
 			if ( this.isInTheAir() ) {
-				this.vx -= Physics.AIR_FRICTION;
+				this.vx -= PHYSICS.AIR_FRICTION;
 			} else {
-				this.vx -= Physics.FLOOR_FRICTION;
+				this.vx -= PHYSICS.FLOOR_FRICTION;
 			}
 
 			if ( this.vx <= 0 ) {
@@ -111,9 +112,9 @@ var RigidBody = cc.Sprite.extend({
 
 		if ( this.decreaseSpeedLeft && this.vx <= 0 ) {
 			if ( this.isInTheAir() ) {
-				this.vx += Physics.AIR_FRICTION;
+				this.vx += PHYSICS.AIR_FRICTION;
 			} else {
-				this.vx += Physics.FLOOR_FRICTION;
+				this.vx += PHYSICS.FLOOR_FRICTION;
 			}
 
 			if ( this.vx >= 0 ) {
@@ -141,6 +142,22 @@ var RigidBody = cc.Sprite.extend({
 		var pixelY = this.convertBlockToPixel( blockY );
 
 		return new cc.Point( pixelX, pixelY );
+	},
+
+	goRight: function() {
+		// need this: in case, did not keyup the left
+		// BUT push right it will lag
+		this.goingRight = true;
+		this.decreaseSpeedLeft = false;
+		this.setFlippedX( true );
+		this.vx = this.walkingSpeed;
+	},
+
+	goLeft: function() {
+		this.goingLeft = true;
+		this.decreaseSpeedRight = false;
+		this.setFlippedX( false );
+		this.vx = -this.walkingSpeed;
 	},
 
 

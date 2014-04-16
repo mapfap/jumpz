@@ -3,6 +3,9 @@ var Player = RigidBody.extend({
 	ctor: function() {
 		this._super();
 
+		this.walkingSpeed = 20;
+		this.jumpingVelocity = [ 40, 50 ],
+
 		this.canJump = true;
 		this.jumpStep = 0;
 		this.maxJump = 1;
@@ -145,27 +148,15 @@ var Player = RigidBody.extend({
 	},
 
 	goRight: function() {
+		// this._super.goRight();
+		RigidBody.prototype.goRight.call(this);
 		this.holdRight = true;
-		this.setFlippedX( true );
-
-		this.goingRight = true; // need this: in case, did not keyup the left
-		// BUT push right it will lag
-
-		this.decreaseSpeedLeft = false;
-		this.vx = Physics.WALKING_SPEED;
-
 		this.aimTarget( 1 );
-
 	},
 
 	goLeft: function() {
-		this.setFlippedX( false );
+		RigidBody.prototype.goLeft.call(this);
 		this.holdLeft = true;
-
-		this.goingLeft = true;
-		this.decreaseSpeedRight = false;
-		this.vx = -Physics.WALKING_SPEED;
-
 		this.aimTarget( -1 );
 	},
 
@@ -207,7 +198,7 @@ var Player = RigidBody.extend({
 		}
 
 		if ( this.jumpStep < this.maxJump ) {
-			this.vy = Physics.JUMPING_VELOCITY[ this.jumpStep ];
+			this.vy = this.jumpingVelocity[ this.jumpStep ];
 			this.increaseSP( -10 );
 			this.jumpStep += 1;
 		}

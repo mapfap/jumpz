@@ -1,10 +1,5 @@
-var Physics = {
-
-	G: -5,
-	FLOOR: 120,
-	WALKING_SPEED: 20,
-	JUMPING_VELOCITY: [ 40, 50 ],
+var PHYSICS = {
+	GRAVITY: -5,
 	AIR_FRICTION: 0,
 	FLOOR_FRICTION: 20,
-	
 }

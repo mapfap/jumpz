@@ -5,6 +5,8 @@ var Monster = RigidBody.extend({
 		this._super();
 		this.setScale( size );
 
+		this.walkingSpeed = 20;
+
 		var animation = new cc.Animation.create();
 		animation.addSpriteFrameWithFile( 'images/monsters/soul0.png' );
 		animation.addSpriteFrameWithFile( 'images/monsters/soul1.png' );
