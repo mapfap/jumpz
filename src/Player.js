@@ -126,6 +126,10 @@ var Player = RigidBody.extend({
 		this.healthBar.setHealthPointBarLength( ( this.healthPoint / this.MAXIMUM_HEALTH_POINT ) * 100 );
 	},
 
+	isStaminaPointEmpty: function() {
+		return this.staminaPoint == 0;
+	},
+
 	setHealthBar: function( healthBar ) {
 		this.healthBar = healthBar;
 		this.healthBar.setScale( 0.3 );
@@ -169,6 +173,20 @@ var Player = RigidBody.extend({
 		  }
 
 	  }
+	},
+
+	dragBlock: function() {
+		if ( this.isStaminaPointEmpty() ) {
+			this.player.alertLabel.dim( 255, 0, 8 );
+			return 0;
+		}
+
+		if ( this.isAiming ) {
+			this.increaseStaminaPoint( -10 );
+			this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
+			this.map.hitBlock( this.aimedBlockX, this.aimedBlockY );
+			this.isAiming = false;
+		}
 	},
 
 	goRight: function() {
@@ -217,7 +235,7 @@ var Player = RigidBody.extend({
 
 	jump: function() {
 
-		if ( this.staminaPoint == 0 ) {
+		if ( this.isStaminaPointEmpty() ) {
 			this.alertLabel.dim( 255, 0, 8 );
 			return 0;
 		}

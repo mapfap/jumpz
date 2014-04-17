@@ -112,17 +112,7 @@ var GameLayer = cc.LayerColor.extend({
 			break;
 
 		case cc.KEY.e:
-			if ( this.player.sp == 0 ) {
-				this.player.alertLabel.dim( 255, 0, 8 );
-				return 0;
-			}
-
-			if ( this.player.isAiming ) {
-				this.player.increaseStaminaPoint( -10 );
-				this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
-				this.map.hitBlock( this.player.aimedBlockX, this.player.aimedBlockY );
-				this.player.isAiming = false;
-			}
+			this.player.dragBlock();
 			break;
 
 		case cc.KEY.f:
