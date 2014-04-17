@@ -26,7 +26,7 @@ var Player = RigidBody.extend({
 		this.staminaPoint = this.MAXIMUM_STAMINA_POINT;
 
 		this.initAnimation();
-		this.initAimSystem();
+		this.initAimingSystem();
 		this.initLabel();
 	},
 
@@ -47,7 +47,7 @@ var Player = RigidBody.extend({
 		this.runAction( movingAction );
 	},
 
-	initAimSystem: function() {
+	initAimingSystem: function() {
 		this.aimOrders = [
 			[ 1, 1, -45 ],
 			[ 2, 1, -30],
@@ -186,6 +186,14 @@ var Player = RigidBody.extend({
 			this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 			this.map.hitBlock( this.aimedBlockX, this.aimedBlockY );
 			this.isAiming = false;
+
+			// this.fallingBlock = cc.Sprite.create( 'images/blocks/bone.png' );
+			// this.fallingBlock.setAnchorPoint( cc.p( 0, 0 ) );
+			// this.fallingBlock.setPosition( this.aimedPixel );
+			// this.getParent().addChild( this.fallingBlock, 20 );
+			// var fallAction = cc.MoveTo.create( 0.5, new cc.Point( this.aimedPixel.x , this.aimedPixel.y - 20 ) );
+			// console.log( fallAction );
+			// this.runAction( fallAction );
 		}
 	},
 

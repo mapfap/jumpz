@@ -35,7 +35,8 @@ var GameLayer = cc.LayerColor.extend({
 		this.allShiftableObjects.push( this.player );
 		this.player.setAllRigidBodies( this.allRigidBodies );
 
-		this.crosshair = new Block( 'images/crosshair.png' );
+		this.crosshair = new cc.Sprite.create( 'images/crosshair.png' );
+		this.crosshair.setAnchorPoint( cc.p( 0, 0 ) );
 		this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 		this.allShiftableObjects.push( this.crosshair );
 		this.addChild( this.crosshair, 3 );
@@ -43,7 +44,7 @@ var GameLayer = cc.LayerColor.extend({
 
 		// var flash = cc.Sprite.create ( 'images/blocks/dirt.png' );
 		// flash.setScale(30);
-		var flash = cc.Sprite.create ( 'images/sky.png' );
+		var flash = cc.Sprite.create( 'images/sky.png' );
 		flash.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		flash.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.addChild( flash, 100 );
@@ -80,17 +81,17 @@ var GameLayer = cc.LayerColor.extend({
 	},
 
 	initBackground: function() {
-		this.background = cc.Sprite.create ( 'images/sky.png' );
+		this.background = cc.Sprite.create( 'images/sky.png' );
 		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.addChild( this.background, 0 );
 
-		this.tree1 = cc.Sprite.create ( 'images/tree1.png' );
+		this.tree1 = cc.Sprite.create( 'images/tree1.png' );
 		this.tree1.setPosition( new cc.Point( 500 , 200 ) );
 		this.tree1.setScale( 2.5 );
 		this.addChild( this.tree1, 0 );
 
-		this.tree2 = cc.Sprite.create ( 'images/tree2.png' );
+		this.tree2 = cc.Sprite.create( 'images/tree2.png' );
 		this.tree2.setPosition( new cc.Point( 900 , 300 ) );
 		this.tree2.setScale( 4 );
 		this.tree2.setScaleY( 6 );
