@@ -17,12 +17,27 @@ var GameLayer = cc.LayerColor.extend({
 		this.setKeyboardEnabled( true );
 		this.player.scheduleUpdate();
 
+		this.setMouseEnabled(true);
+
 		this.scheduleOnce(function(){
 			this.addChild( this.monster, 1 );
 			this.monster.scheduleUpdate();
 		}, 1);
 
 		return true;
+	},
+
+	onMouseMoved: function( e ) {
+		// console.log( e.getLocation().x );
+    },
+
+	onMouseDown: function( e ) {
+		// console.log( cc.EventMouse.BUTTON_LEFT )
+		// console.log( e.getButton() == cc.EventMouse.BUTTON_LEFT );
+		var ui = cc.LayerColor.create( new cc.Color4B(255,23,23,127), 100, 100 );
+		ui.setAnchorPoint( new cc.Point( 0, 0 ) );
+		ui.setPosition( new cc.Point( e.getLocation().x , e.getLocation().y ) );
+		this.addChild( ui );
 	},
 
 	initPlayer: function() {
@@ -36,7 +51,7 @@ var GameLayer = cc.LayerColor.extend({
 		this.player.setAllRigidBodies( this.allRigidBodies );
 
 		this.crosshair = new cc.Sprite.create( 'images/crosshair.png' );
-		this.crosshair.setAnchorPoint( cc.p( 0, 0 ) );
+		this.crosshair.setAnchorPoint( new cc.Point( 1, 1 ) );
 		this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 		this.allShiftableObjects.push( this.crosshair );
 		this.addChild( this.crosshair, 3 );
