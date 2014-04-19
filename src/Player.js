@@ -260,8 +260,13 @@ var Player = RigidBody.extend({
 
 	takeDamage: function( direction ) {
 		this.increaseHealthPoint( -150 );
-		this.setVelocityX( 10 * direction );
-		this.setVelocityY( 70 );
+		this.setVelocityX( 20 * direction );
+		this.setVelocityY( 30 );
+		this.scheduleOnce(function(){
+			this.decreaseSpeedRight = true;
+			this.decreaseSpeedLeft = true;
+		}, 0.5);
+
 		this.flash.setOpacity( 150 );
 		this.scheduleOnce(function(){
 			this.flash.setOpacity( 0 );

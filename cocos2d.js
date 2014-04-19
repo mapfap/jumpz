@@ -23,6 +23,8 @@
             'src/DimLabel.js',
             'src/Monster.js',
             'src/PatrolMonster.js',
+            'src/Inventory.js',
+            'src/cursor.js',
         ]
     };
 

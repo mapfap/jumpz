@@ -11,13 +11,14 @@ var GameLayer = cc.LayerColor.extend({
 		this.initBackground();
 		this.initPlayer();		
 		this.initMonster();
-		this.initUI();
+
+		this.initHelperUI();
+		this.initInventory();
 
 		this.scheduleUpdate();
-		this.setKeyboardEnabled( true );
 		this.player.scheduleUpdate();
 
-		this.setMouseEnabled(true);
+		this.setKeyboardEnabled(true);
 
 		this.scheduleOnce(function(){
 			this.addChild( this.monster, 1 );
@@ -27,17 +28,14 @@ var GameLayer = cc.LayerColor.extend({
 		return true;
 	},
 
-	onMouseMoved: function( e ) {
-		// console.log( e.getLocation().x );
-    },
+	initInventory: function() {
+		this.inventory = new Inventory();
+		this.addChild( this.inventory, 3 );
 
-	onMouseDown: function( e ) {
-		// console.log( cc.EventMouse.BUTTON_LEFT )
-		// console.log( e.getButton() == cc.EventMouse.BUTTON_LEFT );
-		var ui = cc.LayerColor.create( new cc.Color4B(255,23,23,127), 100, 100 );
-		ui.setAnchorPoint( new cc.Point( 0, 0 ) );
-		ui.setPosition( new cc.Point( e.getLocation().x , e.getLocation().y ) );
-		this.addChild( ui );
+		this.cursor = new Cursor();
+		this.addChild( this.cursor, 5 );
+		this.inventory.setCursor( this.cursor );
+
 	},
 
 	initPlayer: function() {
@@ -62,7 +60,7 @@ var GameLayer = cc.LayerColor.extend({
 		var flash = cc.Sprite.create( 'images/sky.png' );
 		flash.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		flash.setAnchorPoint( new cc.Point( 0 , 0 ) );
-		this.addChild( flash, 100 );
+		this.addChild( flash, 10 );
 		flash.setOpacity( 0 );
 		this.player.setFlash( flash );
 	},
@@ -77,16 +75,16 @@ var GameLayer = cc.LayerColor.extend({
 		this.monster.setAllRigidBodies( this.allRigidBodies );
 
 	},
-	initUI: function() {
+	initHelperUI: function() {
 		this.guideLabel = cc.LabelTTF.create( 'Space: jump\nE: shoot\nR: refill\nF: toggle sight', 'Arial', 20 );
 		this.guideLabel.setPosition( new cc.Point( 100, 500 ) );
 		this.guideLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
-		this.addChild( this.guideLabel, 2 );
+		this.addChild( this.guideLabel, 4 );
 
 		this.headLabel = cc.LabelTTF.create( 'JumpZ Online: Alpha Test', 'Arial', 20 );
 		this.headLabel.setPosition( new cc.Point( screenWidth / 2,
 				screenHeight - 30 ) );
-		this.addChild( this.headLabel, 2 );
+		this.addChild( this.headLabel, 4 );
 	},
 	
 	initMap: function() {
@@ -213,6 +211,7 @@ var StartScene = cc.Scene.extend({
 
 	onEnter: function() {
 		this._super();
+		document.getElementById('gameCanvas').style.cursor = 'none';
 		var layer = new GameLayer();
 		layer.init();
 		this.addChild( layer );
