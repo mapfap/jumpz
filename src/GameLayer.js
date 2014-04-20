@@ -49,7 +49,7 @@ var GameLayer = cc.LayerColor.extend({
 		this.player.setAllRigidBodies( this.allRigidBodies );
 
 		this.crosshair = new cc.Sprite.create( 'images/crosshair.png' );
-		this.crosshair.setAnchorPoint( new cc.Point( 1, 1 ) );
+		this.crosshair.setAnchorPoint( new cc.Point( 0, 0 ) );
 		this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 		this.allShiftableObjects.push( this.crosshair );
 		this.addChild( this.crosshair, 3 );
@@ -58,7 +58,6 @@ var GameLayer = cc.LayerColor.extend({
 		// var flash = cc.Sprite.create ( 'images/blocks/dirt.png' );
 		// flash.setScale(30);
 		var flash = cc.Sprite.create( 'images/sky.png' );
-		flash.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		flash.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.addChild( flash, 10 );
 		flash.setOpacity( 0 );
