@@ -14,7 +14,7 @@ var Inventory = cc.LayerColor.extend({
 
 		this._super( new cc.Color4B(100, 100, 100, 127), this.width, this.height );
 		this.setAnchorPoint( new cc.Point( 0, 0 ) );
-		this.setPosition( new cc.Point( 300, 300 ) );
+		this.setPosition( new cc.Point( 800, 100 ) );
 
 		this.label = cc.LabelTTF.create( 'UI จ้า', 'Arial', 25 );
 		this.label.setPosition( 35, this.height - 25 );
