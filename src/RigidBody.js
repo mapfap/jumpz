@@ -16,6 +16,9 @@ var RigidBody = cc.Sprite.extend({
 
 		this.PIXEL_SIZE = 120;
 		this.walkingSpeed = 0;
+
+		this.headingDirection = RigidBody.DIRECTION.RIGHT;
+		this.setFlippedX( true );
 	},
 
 	convertPixelToBlock: function( coordinate, isFloor ) {
@@ -35,7 +38,7 @@ var RigidBody = cc.Sprite.extend({
 
 	isInTheAir: function() {
 		var posX = this.convertPixelToBlock( this.getPositionX(), false );
-		var posY = this.convertPixelToBlock( this.getPositionY(), false ) - 1;
+		var posY = this.convertPixelToBlock( this.getPositionY(), true ) - 1;
 		return !this.map.isGround( posX, posY );
 	},
 
@@ -49,7 +52,7 @@ var RigidBody = cc.Sprite.extend({
 		var posY = this.convertPixelToBlock( this.getPositionY() + dt, isFloor );
 		var isGround = this.map.isGround( posX, posY );
 		if ( isGround ) {
-			this.map.walk( posX, posY );
+			this.map.touched( posX, posY );
 		}
 		return ! isGround ;
 	},
@@ -167,11 +170,14 @@ var RigidBody = cc.Sprite.extend({
 
 	},
 
-	applyAllForces: function() {
+	calculateNextPosition: function( onFocus ) {
 		this.applyFriction();
 		this.checkWallCollision();
 		this.checkFloorCollision();
 		this.applyGravity();
+	},
+
+	applyNextPosition: function() {
 		this.setPosition( new cc.Point( this.nextPositionX, this.nextPositionY ) );
 	},
 
@@ -192,6 +198,7 @@ var RigidBody = cc.Sprite.extend({
 		this.goingRight = true;
 		this.decreaseSpeedLeft = false;
 		this.setFlippedX( true );
+		this.headingDirection = RigidBody.DIRECTION.RIGHT;
 		this.velocityX = this.walkingSpeed;
 	},
 
@@ -199,8 +206,14 @@ var RigidBody = cc.Sprite.extend({
 		this.goingLeft = true;
 		this.decreaseSpeedRight = false;
 		this.setFlippedX( false );
+		this.headingDirection = RigidBody.DIRECTION.LEFT;
 		this.velocityX = -this.walkingSpeed;
 	},
 
 
 });
+
+RigidBody.DIRECTION = {
+	LEFT: -1,
+	RIGHT: 1,
+}

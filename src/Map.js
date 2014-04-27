@@ -15,7 +15,7 @@ var Map = cc.Node.extend({
 			'###_________##_________________________#',
 			'#___________##############_____________#',
 			'#_______________________________#####__#',
-			'#_____######___________________________#',
+			'#______##########______________________#',
 			'########################################', ];
 
 		// convert array of string to 2D char, in order to be mutable object.
@@ -101,8 +101,8 @@ var Map = cc.Node.extend({
 		this.children = [];
 		// this.blocks = [];
 
-		for ( var r = this.shiftValueRow; r < this.SCREEN_HEIGHT + this.shiftValueRow; r++ ) {
-			for ( var c = this.shiftValueColumn; c < this.SCREEN_WIDTH + this.shiftValueColumn; c++ ) {
+		for ( var r = this.shiftValueRow - 1; r < this.SCREEN_HEIGHT + this.shiftValueRow + 1; r++ ) {
+			for ( var c = this.shiftValueColumn - 1; c < this.SCREEN_WIDTH + this.shiftValueColumn + 1; c++ ) {
 
 				var type = null;
 				// console.log( "r"+r +"...c"+c);
@@ -149,13 +149,15 @@ var Map = cc.Node.extend({
 		}
 	},
 
-	walk: function( blockX, blockY ) {
+	touched: function( blockX, blockY ) {
 		var r = this.SCREEN_HEIGHT - blockY - 1;
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
 		
-		// this.childrenHash[ (r - 1) + "," + c ].walk();
+		if ( ! this.isOutOfBound( r, c ) ) {
+			this.childrenHash[ (r - 1) + "," + c ].touched();
+		}
 	},
 
 	isGround: function( blockX, blockY ) {
@@ -167,11 +169,12 @@ var Map = cc.Node.extend({
 			return true;
 		}
 		// console.log(r);
-		var isGround = this.map[ r ][ c ] == '#';
-		if ( isGround ) {
-			this.childrenHash[ (r - 1) + "," + c ].touched();
-		}
-		return isGround;
+		// var isGround = this.map[ r ][ c ] == '#';
+		// if ( isGround ) {
+			// this.childrenHash[ (r - 1) + "," + c ].touched();
+		// }
+		// return isGround;
+		return this.map[ r ][ c ] == '#';
 	},
 
 	isAimable: function( blockX, blockY ) {

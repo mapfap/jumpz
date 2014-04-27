@@ -30,6 +30,13 @@ var cocos2dApp = cc.Application.extend({
     }
 });
 
-var screenWidth = 1080;
-var screenHeight = 600;
+var SCREEN_WIDTH = 1080;
+var SCREEN_HEIGHT = 600;
+
+var RIGHT_FOCUS_BOUND = 840 - 120;
+var LEFT_FOCUS_BOUND = 240;
+var UPPER_FOCUS_BOUND = 480 - 120;
+var LOWER_FOCUS_BOUND = 120;
+
+
 var myApp = new cocos2dApp( StartScene );

@@ -10,20 +10,20 @@ var GameLayer = cc.LayerColor.extend({
 		this.initMap();
 		this.initBackground();
 		this.initPlayer();		
-		this.initMonster();
+		// this.initMonster();
 
 		this.initHelperUI();
-		this.initInventory();
+		// this.initInventory();
 
 		this.scheduleUpdate();
 		this.player.scheduleUpdate();
 
 		this.setKeyboardEnabled(true);
 
-		this.scheduleOnce(function(){
-			this.addChild( this.monster, 1 );
-			this.monster.scheduleUpdate();
-		}, 1);
+		// this.scheduleOnce(function(){
+			// this.addChild( this.monster, 1 );
+			// this.monster.scheduleUpdate();
+		// }, 1);
 
 		return true;
 	},
@@ -66,7 +66,7 @@ var GameLayer = cc.LayerColor.extend({
 
 	initMonster: function() {
 		this.monster = new PatrolMonster( Monster.SIZE.MEDIUM );
-		this.monster.setPosition( new cc.Point( 350, 100 ) );
+		this.monster.setPosition( new cc.Point( 550, 100 ) );
 		this.monster.setAnchorPoint( new cc.Point( 0, -0.2 ) )
 		this.monster.setMap( this.map );
 		this.allRigidBodies.push( this.monster );
@@ -81,8 +81,8 @@ var GameLayer = cc.LayerColor.extend({
 		this.addChild( this.guideLabel, 4 );
 
 		this.headLabel = cc.LabelTTF.create( 'JumpZ Online: Alpha Test', 'Arial', 20 );
-		this.headLabel.setPosition( new cc.Point( screenWidth / 2,
-				screenHeight - 30 ) );
+		this.headLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2,
+				SCREEN_HEIGHT - 30 ) );
 		this.addChild( this.headLabel, 4 );
 	},
 	
@@ -132,22 +132,6 @@ var GameLayer = cc.LayerColor.extend({
 			this.player.toggleSight();
 			break;
 
-		case cc.KEY.d:
-			this.shiftMap( 0, 1 );
-			break;
-
-		case cc.KEY.a:
-			this.shiftMap( 0, -1 );
-			break;
-
-		case cc.KEY.w:
-			this.shiftMap( -1, 0 );
-			break;
-
-		case cc.KEY.s:
-			this.shiftMap( 1, 0 );
-			break;
-
 		case cc.KEY.l:
 			this.map.walk(
 				this.player.convertPixelToBlock(this.player.getPositionX())
@@ -160,6 +144,13 @@ var GameLayer = cc.LayerColor.extend({
 			this.player.amountLabel.dim( 255, 0, 8 );
 			this.player.increaseStaminaPoint( 40 );
 			break
+
+		case cc.KEY.k:
+			console.log( this.player.isInTheAir() );
+			break;
+
+		case cc.KEY.a:
+			console.log( this.player.accumulatedX, this.player.accumulatedY )
 
 		default:
 			break;
@@ -176,33 +167,17 @@ var GameLayer = cc.LayerColor.extend({
 		}
 	},
 
+	// shiftMap: function( row , column, compensatedPixel ) {
+		// this.tree1.setPositionY( this.tree1.getPositionY() + row * 40 );
+		// this.tree1.setPositionX( this.tree1.getPositionX() - column * 10 );
+		// this.tree2.setPositionY( this.tree2.getPositionY() + row * 40 );
+		// this.tree2.setPositionX( this.tree2.getPositionX() - column * 20 );
+		// this.map.shiftMap( row, column );
 
-	shiftMap: function( row , column ) {
-		this.tree1.setPositionY( this.tree1.getPositionY() + row * 40 );
-		this.tree1.setPositionX( this.tree1.getPositionX() - column * 10 );
-		this.tree2.setPositionY( this.tree2.getPositionY() + row * 40 );
-		this.tree2.setPositionX( this.tree2.getPositionX() - column * 20 );
-		this.map.shiftMap( row, column );
-
-		this.allShiftableObjects.forEach(function( o ){
-			o.setPosition( new cc.Point( o.getPositionX() + 120 * -column, o.getPositionY() + 120 * row ) );
-		}, this);
-	},
-
-	update: function() {
-		// if ( this.player.getPositionX() >= screenWidth * 4.0 / 5 ) {
-		if ( this.player.getPositionX() >= 790 ) {
-			this.shiftMap( 0, 1 );
-		// } else if ( this.player.getPositionX() <= screenWidth / 5.0 ) {
-		} else if ( this.player.getPositionX() <= 180 ) {
-			this.shiftMap( 0, -1 );
-		}
-		if ( this.player.getPositionY() >= screenHeight * 4.0 / 5 ) {
-			this.shiftMap( -1, 0 );
-		} else if ( this.player.getPositionY() <= screenHeight / 9.0 ) {
-			this.shiftMap( 1, 0 );
-		}  
-	},
+		// this.allShiftableObjects.forEach(function( o ){
+			// o.setPosition( new cc.Point( o.getPositionX() + 120 * -column + compensatedPixel , o.getPositionY() + 120 * row ) );
+		// }, this);
+	// },
 
 });
 

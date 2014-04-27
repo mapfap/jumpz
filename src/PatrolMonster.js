@@ -6,7 +6,8 @@ var PatrolMonster = Monster.extend({
 
 	update: function() {
 		var beforeWalk = this.getPositionX();
-		this.applyAllForces();
+		this.calculateNextPosition();
+		this.applyNextPosition();
 		var afterWalk = this.getPositionX();
 		if ( beforeWalk == afterWalk ) {
 			if ( this.canWalkTo( this.walkingSpeed ) ) {
