@@ -58,13 +58,25 @@ var Map = cc.Node.extend({
 		this.map[ r ][ c ] = value;
 	},
 
-	hitBlock: function( blockX, blockY ) {
+	dragBlock: function( blockX, blockY, headingDirection ) {
 		var r = this.SCREEN_HEIGHT - blockY - 1;
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
-		// console.log( r + ",," + c );
 
+		if ( this.map[ r + 1 ][ c ] == '#' ) {
+			console.log("PULL");
+			// this.setBlock( r, c, '_' );
+
+			if ( this.map[ r ][ c - headingDirection ] == '_' ) {
+				this.map[ r ][ c - headingDirection ] = '#'
+				this.map[ r ][ c ] = '_'
+				this.plotMap();
+			}
+
+
+			return 0;
+		}
 		// r and c is for the real array index access
 		this.setBlock( r, c, '_' );
 

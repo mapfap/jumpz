@@ -171,10 +171,10 @@ var RigidBody = cc.Sprite.extend({
 	},
 
 	calculateNextPosition: function( onFocus ) {
-		this.applyFriction();
-		this.checkWallCollision();
-		this.checkFloorCollision();
 		this.applyGravity();
+		this.applyFriction();
+		this.checkFloorCollision();
+		this.checkWallCollision();
 	},
 
 	applyNextPosition: function() {

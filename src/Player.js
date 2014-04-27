@@ -183,10 +183,9 @@ var Player = RigidBody.extend({
 		}
 
 		if ( this.isAiming ) {
-			console.log( "DRAGGING" );
 			this.increaseStaminaPoint( -10 );
 			this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
-			this.map.hitBlock( this.aimedBlockX, this.aimedBlockY );
+			this.map.dragBlock( this.aimedBlockX, this.aimedBlockY, this.headingDirection );
 			this.isAiming = false;
 
 			// this.fallingBlock = cc.Sprite.create( 'images/blocks/bone.png' );
