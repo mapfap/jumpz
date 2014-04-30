@@ -110,7 +110,32 @@ cc.DimLabel = cc.Sprite.extend(/** @lends cc.DimLabel# */{
 		this.state = this.STATE.HIDE;
 	},
 
-	dim: function( startOpacity, stopOpacity, duration ) {
+	popup: function( text ) {
+		this.setString( text );
+		this.setOpacity( 255 );
+		var step = 2;
+		// this.scheduleOnce( function() {
+			this.schedule( function() {
+				this.setPositionY( this.getPositionY() + 1 );
+				var newOpacity = this.getOpacity() - step;
+				this.setOpacity( this.getOpacity() - step );
+				// console.log( this.getOpacity() )
+				if ( newOpacity <= 0 ) {
+					this.getScheduler().unscheduleAllCallbacksForTarget( this );
+					this.removeFromParent();
+					// console.log( "stop" )
+					this.state = this.STATE.HIDE;
+				}
+			}, 1.0 / 45 );
+		// }, 0.1 )
+	},
+
+	dim: function( text ) {
+		var startOpacity = 255;
+		var stopOpacity = 0;
+		var duration = 8;
+		this.setString( text );
+
 		if ( this.state == this.STATE.HIDE ) {
 			// this.state = this.STATE.SHOW;
 			this.setOpacity( startOpacity );

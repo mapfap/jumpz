@@ -19,7 +19,7 @@
             'src/Player.js',
             'src/Map.js',
             'src/Block.js',
-            'src/HealthBar.js',
+            'src/StatusBar.js',
             'src/DimLabel.js',
             'src/Monster.js',
             'src/PatrolMonster.js',

@@ -40,7 +40,7 @@ var GameLayer = cc.LayerColor.extend({
 
 	initPlayer: function() {
 		this.player = new Player();
-		this.player.setHealthBar( new HealthBar() );
+		this.player.setStatusBar( new StatusBar() );
 		this.player.setPosition( new cc.Point( 200, 240 ) );
 		this.addChild( this.player, 2 );
 		this.player.setMap( this.map );
@@ -62,6 +62,11 @@ var GameLayer = cc.LayerColor.extend({
 		this.addChild( flash, 10 );
 		flash.setOpacity( 0 );
 		this.player.setFlash( flash );
+
+
+		this.shiftedLayer = new cc.LayerColor();
+		this.addChild( this.shiftedLayer, 9 )
+		this.player.setShiftedLayer( this.shiftedLayer );
 	},
 
 	initMonster: function() {
@@ -75,12 +80,12 @@ var GameLayer = cc.LayerColor.extend({
 
 	},
 	initHelperUI: function() {
-		this.guideLabel = cc.LabelTTF.create( 'Space: jump\nDown: drag\nR: refill\nF: toggle sight', 'Arial', 20 );
+		this.guideLabel = cc.LabelTTF.create( 'Space: jump\nUp: toggle sight\nDown: drag\n', 'Arial', 20 );
 		this.guideLabel.setPosition( new cc.Point( 100, 500 ) );
 		this.guideLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.addChild( this.guideLabel, 4 );
 
-		this.headLabel = cc.LabelTTF.create( 'JumpZ Online: Alpha Test', 'Arial', 20 );
+		this.headLabel = cc.LabelTTF.create( 'JumpZ Puzzle: Alpha Test', 'Arial', 20 );
 		this.headLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2,
 				SCREEN_HEIGHT - 30 ) );
 		this.addChild( this.headLabel, 4 );
@@ -130,29 +135,17 @@ var GameLayer = cc.LayerColor.extend({
 			this.player.dragBlock();
 			break;
 
-		case cc.KEY.f:
+		case cc.KEY.up:
 			this.player.toggleSight();
 			break;
 
-		case cc.KEY.l:
-			this.map.walk(
-				this.player.convertPixelToBlock(this.player.getPositionX())
-				,
-				this.player.convertPixelToBlock(this.player.getPositionY())
-				);
-			break;
-
 		case cc.KEY.r:
-			this.player.amountLabel.dim( 255, 0, 8 );
-			this.player.increaseStaminaPoint( 10 );
+			this.player.increaseEnergy( 100 );
 			break
 
-		case cc.KEY.k:
-			console.log( this.player.isInTheAir() );
-			break;
-
 		case cc.KEY.a:
-			console.log( this.player.accumulatedX, this.player.accumulatedY )
+			// console.log( this.player.accumulatedX, this.player.accumulatedY )
+			console.log( this.shiftedLayer.getPositionX() )
 
 		default:
 			break;

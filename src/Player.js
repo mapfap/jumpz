@@ -3,6 +3,8 @@ var Player = RigidBody.extend({
 	ctor: function() {
 		this._super();
 
+		this.energyDrainRate = -2; // per second
+
 		this.accumulatedX = 0;
 		this.accumulatedY = 0;
 
@@ -19,18 +21,20 @@ var Player = RigidBody.extend({
 		this.holdRight = false;
 		this.holdLeft = false;
 
-		this.healthBar = null;
+		this.statusBar = null;
 		this.crosshair = null;
 		this.flash = null;
 
-		this.MAXIMUM_HEALTH_POINT = 500;
-		this.MAXIMUM_STAMINA_POINT = 180;
-		this.healthPoint = this.MAXIMUM_HEALTH_POINT;
-		this.staminaPoint = this.MAXIMUM_STAMINA_POINT;
+		this.MAXIMUM_HEALTH = 500;
+		this.MAXIMUM_ENERGY = 180;
+		this.health = this.MAXIMUM_HEALTH;
+		this.energy = this.MAXIMUM_ENERGY;
 
 		this.initAnimation();
 		this.initAimingSystem();
 		this.initLabel();
+
+		this.schedule( this.energyDrain, 1 );
 	},
 
 	initAnimation: function() {
@@ -82,25 +86,26 @@ var Player = RigidBody.extend({
 	initLabel: function() {
 		this.alertLabel = cc.DimLabel.create( '0', 'Arial', 13 );
 		this.addChild( this.alertLabel );
-		this.alertLabel.setPosition( new cc.Point( 10, 50 ) );
-		this.alertLabel.setString( "Not enough SP" );
+		this.alertLabel.setPosition( new cc.Point( 20, 50 ) );
 		this.alertLabel.setColor( new cc.Color3B( 255, 255, 255 ) );
 		this.alertLabel.enableStroke( new cc.Color3B( 100, 100, 100 ), 1 );
-		
-		this.amountLabel = cc.DimLabel.create( '0', 'Arial', 13 );
-		this.addChild( this.amountLabel );
-		this.amountLabel.setPosition( new cc.Point( 20, 50 ) );
-		this.amountLabel.setColor( new cc.Color3B( 255, 255, 255 ) );
-		this.amountLabel.setString( "+10" );
-		this.amountLabel.enableStroke( new cc.Color3B( 100, 100, 100 ), 1 );
 	},
 
 	toggleSight: function() {
+
 		if ( this.isSightOn ) {
 			this.sight.setOpacity( 0 );
+			this.crosshair.setOpacity( 0 );
 			this.isSightOn = false;
 		} else {
+
+			if ( this.isEnergyEmpty() ) {
+				this.alertLabel.dim( Player.STRING.NEED_ENERGY );
+				return 0;
+			}
+
 			this.sight.setOpacity( 255 );
+			this.crosshair.setOpacity( 255 );
 			this.isSightOn = true;
 		}
 	},
@@ -109,36 +114,56 @@ var Player = RigidBody.extend({
 		this.crosshair = crosshair;
 	},
 
-	increaseStaminaPoint: function( amount ) {
-		this.staminaPoint += amount;
-		if ( this.staminaPoint >= this.MAXIMUM_STAMINA_POINT ) {
-			this.staminaPoint = this.MAXIMUM_STAMINA_POINT;
+	setShiftedLayer: function( shiftedLayer ){
+		this.shiftedLayer = shiftedLayer;
+	},
+
+	popup: function( text ) {
+		var label = cc.DimLabel.create( '0', 'Arial', 13 );
+		// this.shiftedLayer.addChild( label );
+		this.getParent().addChild( label, 100 );
+		label.setScale( 3 );
+		label.setPosition( new cc.Point( this.getPositionX(), this.getPositionY() + this.PIXEL_SIZE ) );
+		label.setColor( new cc.Color3B( 255, 255, 255 ) );
+		label.enableStroke( new cc.Color3B( 100, 100, 100 ), 1 );
+		label.popup( text );
+	},
+
+	increaseEnergy: function( amount ) {
+		text = amount;
+		if ( amount > 0 ) {
+			text = "+" + amount;
 		}
-		if ( this.staminaPoint <= 0 )
-			this.staminaPoint = 0;
-		this.healthBar.setStaminaPointBarLength( ( this.staminaPoint / this.MAXIMUM_STAMINA_POINT ) * 100 );
-	},
+		this.popup( text );
 
-	increaseHealthPoint: function( amount ) {
-		this.healthPoint += amount;
-		if ( this.healthPoint >= this.MAXIMUM_HEALTH_POINT ) {
-			this.healthPoint = this.MAXIMUM_HEALTH_POINT;
+		this.energy += amount;
+		if ( this.energy >= this.MAXIMUM_ENERGY ) {
+			this.energy = this.MAXIMUM_ENERGY;
 		}
-		if ( this.healthPoint <= 0 )
-			this.healthPoint = 0;
-		this.healthBar.setHealthPointBarLength( ( this.healthPoint / this.MAXIMUM_HEALTH_POINT ) * 100 );
+		if ( this.energy <= 0 )
+			this.energy = 0;
+		this.statusBar.setEnergyBarLength( ( this.energy / this.MAXIMUM_ENERGY ) * 100 );
 	},
 
-	isStaminaPointEmpty: function() {
-		return this.staminaPoint == 0;
+	increaseHealth: function( amount ) {
+		this.health += amount;
+		if ( this.health >= this.MAXIMUM_HEALTH ) {
+			this.health = this.MAXIMUM_HEALTH;
+		}
+		if ( this.health <= 0 )
+			this.health = 0;
+		this.statusBar.setHealthBarLength( ( this.health / this.MAXIMUM_HEALTH ) * 100 );
 	},
 
-	setHealthBar: function( healthBar ) {
-		this.healthBar = healthBar;
-		this.healthBar.setScale( 0.3 );
-		this.healthBar.setPosition( -4, -14 );
-		// this.healthBar.setPosition( -4, 45 );
-		this.addChild( this.healthBar );
+	isEnergyEmpty: function() {
+		return this.energy == 0;
+	},
+
+	setStatusBar: function( statusBar ) {
+		this.statusBar = statusBar;
+		this.statusBar.setScale( 0.3 );
+		this.statusBar.setPosition( -4, -14 );
+		this.addChild( this.statusBar );
 	},
 
 	setFlash: function( flash ) {
@@ -177,13 +202,18 @@ var Player = RigidBody.extend({
 	},
 
 	dragBlock: function() {
-		if ( this.isStaminaPointEmpty() ) {
-			this.player.alertLabel.dim( 255, 0, 8 );
+		if ( this.isEnergyEmpty() ) {
+			this.alertLabel.dim( Player.STRING.NEED_ENERGY );
+			return 0;
+		}
+
+		if ( ! this.isSightOn ) {
+			this.alertLabel.dim( Player.STRING.SIGHT_IS_OFF );
 			return 0;
 		}
 
 		if ( this.isAiming ) {
-			this.increaseStaminaPoint( -2 );
+			this.increaseEnergy( -30 );
 			this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 			this.map.dragBlock( this.aimedBlockX, this.aimedBlockY, this.headingDirection );
 			this.isAiming = false;
@@ -234,7 +264,18 @@ var Player = RigidBody.extend({
 		}
 	},
 
+	energyDrain: function() {
+		if ( this.isSightOn ) {
+			this.increaseEnergy( this.energyDrainRate );
+			
+			if ( this.isEnergyEmpty() ) {
+				this.toggleSight();
+			}
+		}
+	},
+
 	update: function() {
+
 		this.aimTarget();
 		this.checkKeyHolded();
 		this.calculateNextPosition();
@@ -244,6 +285,7 @@ var Player = RigidBody.extend({
 			this.nextPositionX = RIGHT_FOCUS_BOUND;
 			
 			this.map.setPositionX( this.map.getPositionX() - over );
+			this.shiftedLayer.setPositionX( this.shiftedLayer.getPositionX() - over );
 			// this.getParent().monster.setPositionX( this.getParent().monster.getPositionX() - over );
 
 			// console.log( this.map.getPositionX())
@@ -258,6 +300,7 @@ var Player = RigidBody.extend({
 			this.nextPositionX = LEFT_FOCUS_BOUND;
 
 			this.map.setPositionX( this.map.getPositionX() - over );
+			this.shiftedLayer.setPositionX( this.shiftedLayer.getPositionX() - over );
 			// this.getParent().monster.setPositionX( this.getParent().monster.getPositionX() - over );
 
 			if ( this.map.getPositionX() >= 120 ) {
@@ -272,6 +315,7 @@ var Player = RigidBody.extend({
 			this.nextPositionY = UPPER_FOCUS_BOUND;
 
 			this.map.setPositionY( this.map.getPositionY() - over );
+			this.shiftedLayer.setPositionY( this.shiftedLayer.getPositionY() - over );
 			// this.getParent().monster.setPositionY( this.getParent().monster.getPositionY() - over );
 
 			if ( this.map.getPositionY() <= -120 ) {
@@ -285,6 +329,7 @@ var Player = RigidBody.extend({
 
 			// this.getParent().monster.setPositionY( this.getParent().monster.getPositionY() - over );
 			this.map.setPositionY( this.map.getPositionY() - over );
+			this.shiftedLayer.setPositionY( this.shiftedLayer.getPositionY() - over );
 			
 			if ( this.map.getPositionY() >= 120 ) {
 				this.map.shiftMap( 1, 0 );
@@ -312,24 +357,15 @@ var Player = RigidBody.extend({
 	},
 
 	jump: function() {
-
-		if ( this.isStaminaPointEmpty() ) {
-			this.alertLabel.dim( 255, 0, 8 );
-			return 0;
-		}
-
 		if ( this.jumpStep >= this.maxJump ) {
 			return 0;
 		}
-
 		this.jumpStep += 1;
-		this.increaseStaminaPoint( -2 );
 		this.setVelocityY(this.jumpingVelocity[ this.jumpStep ]);
-
 	},
 
 	takeDamage: function( direction ) {
-		this.increaseHealthPoint( -150 );
+		this.increaseHealth( -150 );
 		this.setVelocityX( 20 * direction );
 		this.setVelocityY( 30 );
 		this.scheduleOnce(function(){
@@ -345,3 +381,8 @@ var Player = RigidBody.extend({
 	},
 
 });
+
+Player.STRING = {
+	NEED_ENERGY: "NEED ENERGY !",
+	SIGHT_IS_OFF: "SIGHT IS OFF !",
+}
