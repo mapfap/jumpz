@@ -91,7 +91,7 @@ var Player = RigidBody.extend({
 		this.addChild( this.amountLabel );
 		this.amountLabel.setPosition( new cc.Point( 20, 50 ) );
 		this.amountLabel.setColor( new cc.Color3B( 255, 255, 255 ) );
-		this.amountLabel.setString( "+40" );
+		this.amountLabel.setString( "+10" );
 		this.amountLabel.enableStroke( new cc.Color3B( 100, 100, 100 ), 1 );
 	},
 
@@ -183,7 +183,7 @@ var Player = RigidBody.extend({
 		}
 
 		if ( this.isAiming ) {
-			this.increaseStaminaPoint( -10 );
+			this.increaseStaminaPoint( -2 );
 			this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 			this.map.dragBlock( this.aimedBlockX, this.aimedBlockY, this.headingDirection );
 			this.isAiming = false;

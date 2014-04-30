@@ -9,8 +9,9 @@ var Block = cc.Sprite.extend({
 
 		this.animation = new cc.Animation.create();
 		this.animation.addSpriteFrameWithFile( Block.TYPE.GRASS_TOUCHED );
-		this.animation.setDelayPerUnit( 0.1 );
+		this.animation.setDelayPerUnit( 10 );
 		this.GRASS_TOUCHED_ACTION = cc.Animate.create( this.animation );
+
 	},
 
 	touched: function() {

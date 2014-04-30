@@ -75,7 +75,7 @@ var GameLayer = cc.LayerColor.extend({
 
 	},
 	initHelperUI: function() {
-		this.guideLabel = cc.LabelTTF.create( 'Space: jump\nE: shoot\nR: refill\nF: toggle sight', 'Arial', 20 );
+		this.guideLabel = cc.LabelTTF.create( 'Space: jump\nDown: drag\nR: refill\nF: toggle sight', 'Arial', 20 );
 		this.guideLabel.setPosition( new cc.Point( 100, 500 ) );
 		this.guideLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.addChild( this.guideLabel, 4 );
@@ -124,7 +124,7 @@ var GameLayer = cc.LayerColor.extend({
 			this.player.goLeft();
 			break;
 
-		case cc.KEY.e:
+		case cc.KEY.down:
 			this.player.dragBlock();
 			break;
 
@@ -142,7 +142,7 @@ var GameLayer = cc.LayerColor.extend({
 
 		case cc.KEY.r:
 			this.player.amountLabel.dim( 255, 0, 8 );
-			this.player.increaseStaminaPoint( 40 );
+			this.player.increaseStaminaPoint( 10 );
 			break
 
 		case cc.KEY.k:

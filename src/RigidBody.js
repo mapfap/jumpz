@@ -115,6 +115,7 @@ var RigidBody = cc.Sprite.extend({
 		} else {
 			this.nextPositionY = this.convertBlockToPixel( this.convertPixelToBlock( this
 					.getPositionY(), this.velocityY < 0 ) );
+			this.velocityY = 0; 
 		}
 	},
 
