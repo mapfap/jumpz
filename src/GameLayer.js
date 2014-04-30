@@ -11,20 +11,20 @@ var GameLayer = cc.LayerColor.extend({
 		this.initMap();
 		this.initBackground();
 		this.initPlayer();
-		// this.initMonster();
+		this.initMonster();
 
 		this.initHelperUI();
-		// this.initInventory();
+		this.initInventory();
 
 		this.scheduleUpdate();
 		this.player.scheduleUpdate();
 
 		this.setKeyboardEnabled(true);
 
-		// this.scheduleOnce(function(){
-			// this.addChild( this.monster, 1 );
-			// this.monster.scheduleUpdate();
-		// }, 1);
+		this.scheduleOnce(function(){
+			this.shiftedLayer.addChild( this.monster, 1 );
+			this.monster.scheduleUpdate();
+		}, 1);
 
 		return true;
 	},
@@ -66,11 +66,13 @@ var GameLayer = cc.LayerColor.extend({
 
 		this.player.setShiftedLayer( this.shiftedLayer );
 
+		this.player.toggleSight();
+
 	},
 
 	initMonster: function() {
 		this.monster = new PatrolMonster( Monster.SIZE.MEDIUM );
-		this.monster.setPosition( new cc.Point( 550, 100 ) );
+		this.monster.setPosition( new cc.Point( 550, 300 ) );
 		this.monster.setAnchorPoint( new cc.Point( 0, -0.2 ) )
 		this.monster.setMap( this.map );
 		this.allRigidBodies.push( this.monster );

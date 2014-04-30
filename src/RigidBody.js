@@ -77,7 +77,6 @@ var RigidBody = cc.Sprite.extend({
 
 	applyGravity: function() {
 		this.velocityY += PHYSICS.GRAVITY;
-
 	},
 
 	setPosition: function( point ) {

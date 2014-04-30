@@ -12,14 +12,14 @@ var Map = cc.Node.extend({
 			'#############################################################',
 			'#_________________________________##___#_#__##__________#####',
 			'#___________##______________________#____#__##______________#',
-			'#___________###____________________##__#_###________________#',
+			'#________***###____________________##__#_###________________#',
 			'#___________________________________________________________#',
 			'#__________###_########___________###__#_#####______________#',
 			'###_____######_________________##########________##_________#',
+			'#############################################################',
 			'#___________##############____________________#########_____#',
 			'#___________#_______________________________________________#',
 			'#__________________________________##__________________####_#',
-			// '#############################################################',
 			'#______##########________________________________#########__#',
 			'####__############_#######_____############______############',
 			'#_#____#_________________#####____________###########___#####',
@@ -46,52 +46,30 @@ var Map = cc.Node.extend({
 				line.push( this.readableMap[i][j] );
 			}
 			this.map.push( line );
-			// console.log(line[0])
 		}
 		
 
 		this.setAnchorPoint( cc.p( 0, 0 ) );
 		this.childrenHash = {};
 
-		// this.scale = 120.0 / 512;
-
 		this.shiftValueRow = 0;
 		this.shiftValueColumn = 0;
 		this.children = [];
-		// this.blocks = [];
 		this.plotMap();
 
 	},
 
 	setPositionX: function( positionX ) {
-		// console.log( new Date());
-		// console.log( this.shiftValueColumn * 120 + this.getPositionX() + "," + this.shiftValueRow * -120 + this.getPositionY());
 		this._super( positionX );
 		this.shiftedLayer.setPosition( this.shiftValueColumn * -120 + this.getPositionX(), this.shiftValueRow * 120 + this.getPositionY() );
 	},
 
 	setPositionY: function( positionY ) {
-		// console.log( new Date());
-		// console.log( this.shiftValueColumn * 120 + this.getPositionX() + "," + this.shiftValueRow * -120 + this.getPositionY());
 		this._super( positionY );
 		this.shiftedLayer.setPosition( this.shiftValueColumn * -120 + this.getPositionX(), this.shiftValueRow * 120 + this.getPositionY() );
 	},
 
-	// setShiftedLayer: function( shiftedLayer ){
-	// 	this.shiftedLayer = shiftedLayer;
-	// },
-
 	setBlock: function( r, c, value ) {
-		// var newRow = "";
-
-		// for ( var k = 0; k < this.map[0].length; k++ ) {
-		// 	if ( k == c ) {
-		// 		newRow += value;
-		// 	} else {
-		// 		newRow += this.map[ r ][ k ];
-		// 	}
-		// }
-
 		this.map[ r ][ c ] = value;
 	},
 
@@ -103,14 +81,12 @@ var Map = cc.Node.extend({
 
 		if ( this.map[ r + 1 ][ c ] == '#' ) {
 			console.log("PULL");
-			// this.setBlock( r, c, '_' );
 
 			if ( this.map[ r ][ c - headingDirection ] == '_' ) {
 				this.map[ r ][ c - headingDirection ] = '#'
 				this.map[ r ][ c ] = '_'
 				this.plotMap();
 			}
-
 
 			return 0;
 		}
@@ -148,7 +124,6 @@ var Map = cc.Node.extend({
 			this.removeChild( this.children[i] );
 		}
 		this.children = [];
-		// this.blocks = [];
 
 		for ( var r = this.shiftValueRow - 1; r < this.SCREEN_HEIGHT + this.shiftValueRow + 1; r++ ) {
 			for ( var c = this.shiftValueColumn - 1; c < this.SCREEN_WIDTH + this.shiftValueColumn + 1; c++ ) {
@@ -157,21 +132,10 @@ var Map = cc.Node.extend({
 				// console.log( "r"+r +"...c"+c);
 				if ( this.isOutOfBound( r, c ) ) {
 					type = Block.TYPE.DIRT;
+				} else if ( this.map[ r ][ c ] == '*' ) {
+					type = Block.TYPE.COIN;
 				} else if ( this.map[ r ][ c ] == '#' ) {
-
-					// if ( r + 1 < this.map.length && this.map[r + 1][c] == "_" ) {
-						// type = Block.TYPE.DIRT_FLOAT;
-					// } else {
-						type = Block.TYPE.DIRT;	
-					// }
-
-					// if ( r == 0 ) { // prevent from r - 1
-					// } else if ( this.map[r - 1][c] == "#" ) {
-					// 	type = Block.TYPE.DIRT;
-					// } else {
-					// 	type = Block.TYPE.DIRT;
-					// }
-
+					type = Block.TYPE.DIRT;
 				} else if ( this.map[ r ][ c ] == '_' ) {
 					if ( this.map[ r + 1 ][ c ] == '#' ) {
 						type = Block.TYPE.GRASS;
@@ -186,9 +150,6 @@ var Map = cc.Node.extend({
 					s.setPosition( new cc.Point( posX, posY ) );
 					this.addChild( s );
 					this.children.push( s );
-					// if ( s.type == Block.TYPE.DIRT ) {
-					// 	this.blocks.push( s );
-					// }
 					this.childrenHash[ name ] = s;
 				}
 
@@ -209,7 +170,7 @@ var Map = cc.Node.extend({
 		}
 	},
 
-	isGround: function( blockX, blockY ) {
+	isBlock: function( blockX, blockY ) {
 		var r = this.SCREEN_HEIGHT - blockY - 1;
 		r += this.shiftValueRow;
 		var c = blockX;
@@ -217,12 +178,7 @@ var Map = cc.Node.extend({
 		if ( this.isOutOfBound( r, c ) ) {
 			return true;
 		}
-		// console.log(r);
-		// var isGround = this.map[ r ][ c ] == '#';
-		// if ( isGround ) {
-			// this.childrenHash[ (r - 1) + "," + c ].touched();
-		// }
-		// return isGround;
+
 		return this.map[ r ][ c ] == '#';
 	},
 

@@ -10,11 +10,19 @@ var PatrolMonster = Monster.extend({
 		this.applyNextPosition();
 		var afterWalk = this.getPositionX();
 		if ( beforeWalk == afterWalk ) {
-			if ( this.canWalkTo( this.walkingSpeed ) ) {
-				this.goRight();
-			} else {
+
+			if ( Math.random() < 0.5 ) {
 				this.goLeft();
+			} else {
+				this.goRight();
 			}
+			
+			// if ( this.canWalkTo( this.walkingSpeed ) ) {
+			// 	this.goRight();
+			// } else {
+			// 	this.goLeft();
+			// }
+
 		}
 
 	},
