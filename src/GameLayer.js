@@ -90,6 +90,8 @@ var GameLayer = cc.LayerColor.extend({
 		this.map = new Map();
 		this.map.setPosition( new cc.Point( 0, 0 ) );
 		this.addChild( this.map, 1 );
+
+		Corner.map = this.map;
 	},
 
 	initBackground: function() {

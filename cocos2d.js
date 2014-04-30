@@ -24,7 +24,8 @@
             'src/Monster.js',
             'src/PatrolMonster.js',
             'src/Inventory.js',
-            'src/cursor.js',
+            'src/Cursor.js',
+            'src/Corner.js',
         ]
     };
 

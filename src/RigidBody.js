@@ -15,6 +15,7 @@ var RigidBody = cc.Sprite.extend({
 		this.allRigidBodies = null;
 
 		this.PIXEL_SIZE = 120;
+		this.PIXEL_SIZE_WITH_OFFSET = this.PIXEL_SIZE - 2;
 		this.walkingSpeed = 0;
 
 		this.headingDirection = RigidBody.DIRECTION.RIGHT;
@@ -58,9 +59,9 @@ var RigidBody = cc.Sprite.extend({
 	},
 
 	canWalkTo: function( dt ) {
-		var isFloor = dt < 0;
-		var posX = this.convertPixelToBlock( this.getPositionX() + dt, isFloor );
-		var posY = this.convertPixelToBlock( this.getPositionY(), isFloor );
+		// var isFloor = dt < 0;
+		// var posX = this.convertPixelToBlock( this.getPositionX() + dt, isFloor );
+		// var posY = this.convertPixelToBlock( this.getPositionY(), isFloor );
 		// console.log( this.getPositionY() )
 		// console.log( this.isHitOtherRigidBodies( dt ) )
 		// console.log(this.isHitOtherRigidBodies( dt ));
@@ -96,15 +97,15 @@ var RigidBody = cc.Sprite.extend({
 	},
 
 	applyGravity: function() {
-		if ( !this.isInTheAir() ) { // on the ground
-			this.jumpStep = 0;
-		} else {
+		// if ( !this.isInTheAir() ) { // on the ground
+			// this.jumpStep = 0;
+		// } else {
 			this.velocityY += PHYSICS.GRAVITY;
-		}
+		// }
 	},
 
 	checkWallCollision: function() {
-		if ( this.canWalkTo( this.velocityX ) ) {
+		if ( !this.isHitWall() ) {
 			this.nextPositionX += this.velocityX;
 		}
 	},
@@ -171,11 +172,84 @@ var RigidBody = cc.Sprite.extend({
 
 	},
 
+	checkLeftOrRightCollision: function( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner ) {
+		if ( this.velocityX < 0 ) {
+			if ( topLeftCorner.isFree() && bottomLeftCorner.isFree() ) {
+				this.nextPositionX += this.velocityX;
+				return;
+			}
+		} else if ( this.velocityX > 0 ) {
+			if ( topRightCorner.isFree() && bottomRightCorner.isFree() ) {
+				this.nextPositionX += this.velocityX;
+				return;
+			}
+		} else {
+			return;
+		}
+
+		this.nextPositionX = this.getPositionX();
+		this.velocityX = 0;
+	},
+
+	checkTopOrBottomCollision: function( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner ) {
+		if ( this.velocityY < 0 ) {
+			if ( bottomLeftCorner.isFree() && bottomRightCorner.isFree() ) {
+				this.nextPositionY += this.velocityY;
+				return;
+			} else {
+				this.jumpStep = 0;
+			}
+			
+		} else if ( this.velocityY > 0 ) {
+			if ( topLeftCorner.isFree() && topRightCorner.isFree() ) {
+				this.nextPositionY += this.velocityY;
+				return;
+			}
+		} else {
+			return;
+		}
+
+		this.nextPositionY = this.getPositionY();
+		this.velocityY = 0;
+
+	},
+
+	checkCollision: function() {
+		var currentPositionX = this.getPositionX();
+		var currentPositionY = this.getPositionY();
+		var newPositionX = this.getPositionX() + this.velocityX;
+		var newPositionY = this.getPositionY() + this.velocityY;
+
+		// var newTopLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY + this.PIXEL_SIZE ), this.map );
+		// var newTopRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE , newPositionY + this.PIXEL_SIZE), this.map );
+		// var newBottomLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY), this.map );
+		// var newBottomRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE, newPositionY), this.map );
+		// var currentTopLeftCorner = new Corner( new cc.Point( currentPositionX, currentPositionY + this.PIXEL_SIZE ), this.map );
+		// var currentTopRightCorner = new Corner( new cc.Point( currentPositionX + this.PIXEL_SIZE , currentPositionY + this.PIXEL_SIZE), this.map );
+		// var currentBottomLeftCorner = new Corner( new cc.Point( currentPositionX, currentPositionY), this.map );
+		// var currentBottomRightCorner = new Corner( new cc.Point( currentPositionX + this.PIXEL_SIZE, currentPositionY), this.map );
+
+		// new X but, current Y 
+		var topLeftCorner = new Corner( new cc.Point( newPositionX, currentPositionY + this.PIXEL_SIZE_WITH_OFFSET ), this.map );
+		var topRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE_WITH_OFFSET , currentPositionY + this.PIXEL_SIZE_WITH_OFFSET), this.map );
+		var bottomLeftCorner = new Corner( new cc.Point( newPositionX, currentPositionY), this.map );
+		var bottomRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE_WITH_OFFSET, currentPositionY), this.map );
+		this.checkLeftOrRightCollision( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
+		
+		// new X and, new Y 
+		var topLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY + this.PIXEL_SIZE_WITH_OFFSET ), this.map );
+		var topRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE_WITH_OFFSET , newPositionY + this.PIXEL_SIZE_WITH_OFFSET), this.map );
+		var bottomLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY), this.map );
+		var bottomRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE_WITH_OFFSET, newPositionY), this.map );
+		this.checkTopOrBottomCollision( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
+	},
+
 	calculateNextPosition: function( onFocus ) {
 		this.applyGravity();
 		this.applyFriction();
-		this.checkFloorCollision();
-		this.checkWallCollision();
+		this.checkCollision();
+		// this.checkFloorCollision();
+		// this.checkWallCollision();
 	},
 
 	applyNextPosition: function() {
