@@ -13,7 +13,8 @@ var Corner = cc.Node.extend({
 	// },
 
 	isFree: function() {
-		return ! this.map.isGround( Math.floor( this.x / 120 ) , Math.floor( this.y / 120 ) );
+		// console.log( this.map.getPositionY() )
+		return ! this.map.isGround( Math.floor( ( this.x - this.map.getPositionX() ) / 120 ) , Math.floor( ( this.y - this.map.getPositionY() ) / 120 ) );
 	},
 
 });
