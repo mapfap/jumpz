@@ -88,7 +88,7 @@ var Player = RigidBody.extend({
 		this.addChild( this.alertLabel );
 		this.alertLabel.setPosition( new cc.Point( 20, 50 ) );
 		this.alertLabel.setColor( new cc.Color3B( 255, 255, 255 ) );
-		this.alertLabel.enableStroke( new cc.Color3B( 100, 100, 100 ), 1 );
+		this.alertLabel.enableStroke( new cc.Color3B( 100, 100, 100 ), 3 );
 	},
 
 	toggleSight: function() {
@@ -120,12 +120,12 @@ var Player = RigidBody.extend({
 
 	popup: function( text ) {
 		var label = cc.DimLabel.create( '0', 'Arial', 13 );
-		// this.shiftedLayer.addChild( label );
-		this.getParent().addChild( label, 100 );
+		this.shiftedLayer.addChild( label );
+		// this.getParent().addChild( label, 100 );
 		label.setScale( 3 );
-		label.setPosition( new cc.Point( this.getPositionX(), this.getPositionY() + this.PIXEL_SIZE ) );
+		label.setPosition( new cc.Point( this.getPositionX() - this.shiftedLayer.getPositionX(), (this.getPositionY() + this.PIXEL_SIZE) - this.shiftedLayer.getPositionY() ) );
 		label.setColor( new cc.Color3B( 255, 255, 255 ) );
-		label.enableStroke( new cc.Color3B( 100, 100, 100 ), 1 );
+		label.enableStroke( new cc.Color3B( 100, 100, 100 ), 3 );
 		label.popup( text );
 	},
 
@@ -285,7 +285,6 @@ var Player = RigidBody.extend({
 			this.nextPositionX = RIGHT_FOCUS_BOUND;
 			
 			this.map.setPositionX( this.map.getPositionX() - over );
-			this.shiftedLayer.setPositionX( this.shiftedLayer.getPositionX() - over );
 			// this.getParent().monster.setPositionX( this.getParent().monster.getPositionX() - over );
 
 			// console.log( this.map.getPositionX())
@@ -300,7 +299,6 @@ var Player = RigidBody.extend({
 			this.nextPositionX = LEFT_FOCUS_BOUND;
 
 			this.map.setPositionX( this.map.getPositionX() - over );
-			this.shiftedLayer.setPositionX( this.shiftedLayer.getPositionX() - over );
 			// this.getParent().monster.setPositionX( this.getParent().monster.getPositionX() - over );
 
 			if ( this.map.getPositionX() >= 120 ) {
@@ -315,7 +313,6 @@ var Player = RigidBody.extend({
 			this.nextPositionY = UPPER_FOCUS_BOUND;
 
 			this.map.setPositionY( this.map.getPositionY() - over );
-			this.shiftedLayer.setPositionY( this.shiftedLayer.getPositionY() - over );
 			// this.getParent().monster.setPositionY( this.getParent().monster.getPositionY() - over );
 
 			if ( this.map.getPositionY() <= -120 ) {
@@ -329,7 +326,6 @@ var Player = RigidBody.extend({
 
 			// this.getParent().monster.setPositionY( this.getParent().monster.getPositionY() - over );
 			this.map.setPositionY( this.map.getPositionY() - over );
-			this.shiftedLayer.setPositionY( this.shiftedLayer.getPositionY() - over );
 			
 			if ( this.map.getPositionY() >= 120 ) {
 				this.map.shiftMap( 1, 0 );

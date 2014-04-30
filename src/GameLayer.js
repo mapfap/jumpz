@@ -7,9 +7,10 @@ var GameLayer = cc.LayerColor.extend({
 		this.allRigidBodies = [];
 		this.allShiftableObjects = [];
 
+		this.initShiftedLayer();
 		this.initMap();
 		this.initBackground();
-		this.initPlayer();		
+		this.initPlayer();
 		// this.initMonster();
 
 		this.initHelperUI();
@@ -63,10 +64,8 @@ var GameLayer = cc.LayerColor.extend({
 		flash.setOpacity( 0 );
 		this.player.setFlash( flash );
 
-
-		this.shiftedLayer = new cc.LayerColor();
-		this.addChild( this.shiftedLayer, 9 )
 		this.player.setShiftedLayer( this.shiftedLayer );
+
 	},
 
 	initMonster: function() {
@@ -92,7 +91,7 @@ var GameLayer = cc.LayerColor.extend({
 	},
 	
 	initMap: function() {
-		this.map = new Map();
+		this.map = new Map( this.shiftedLayer );
 		this.map.setPosition( new cc.Point( 0, 0 ) );
 		this.addChild( this.map, 1 );
 
@@ -106,15 +105,27 @@ var GameLayer = cc.LayerColor.extend({
 		this.addChild( this.background, 0 );
 
 		this.tree1 = cc.Sprite.create( 'images/tree1.png' );
-		this.tree1.setPosition( new cc.Point( 500 , 200 ) );
+		// this.tree1.setPosition( new cc.Point( 500 , 200 ) );
 		this.tree1.setScale( 2.5 );
 		this.addChild( this.tree1, 0 );
 
 		this.tree2 = cc.Sprite.create( 'images/tree2.png' );
-		this.tree2.setPosition( new cc.Point( 900 , 300 ) );
-		this.tree2.setScale( 4 );
-		this.tree2.setScaleY( 6 );
+		// this.tree2.setPosition( new cc.Point( 900 , 300 ) );
+		this.tree2.setScale( 5 );
+		this.tree2.setScaleY( 7 );
 		this.addChild( this.tree2, 0 );
+
+		this.tree3 = cc.Sprite.create( 'images/tree1.png' );
+		this.tree3.setOpacity( 50 );
+		// this.tree2.setPosition( new cc.Point( 900 , 300 ) );
+		this.tree3.setScaleX( 6 );
+		this.tree3.setPosition( 1000, 600 );
+		this.shiftedLayer.addChild( this.tree3, 0 );
+	},
+
+	initShiftedLayer: function() {
+		this.shiftedLayer = new cc.LayerColor();
+		this.addChild( this.shiftedLayer, 9 )
 	},
 
 	onKeyDown: function( e ) {
@@ -145,7 +156,7 @@ var GameLayer = cc.LayerColor.extend({
 
 		case cc.KEY.a:
 			// console.log( this.player.accumulatedX, this.player.accumulatedY )
-			console.log( this.shiftedLayer.getPositionX() )
+			console.log( this.shiftedLayer.getPosition() )
 
 		default:
 			break;
@@ -160,6 +171,20 @@ var GameLayer = cc.LayerColor.extend({
 		if ( e == cc.KEY.left ) {
 			this.player.stopLeft();
 		}
+	},
+
+	update: function() {
+		this.tree1.setPositionX( this.shiftedLayer.getPositionX() / 30 + 300 );
+		this.tree1.setPositionY( this.shiftedLayer.getPositionY() / 100 + 120 );
+
+		this.tree2.setPositionX( this.shiftedLayer.getPositionX() / 10 + 900 );
+		this.tree2.setPositionY( this.shiftedLayer.getPositionY() / 100 + 110 );
+
+		// this.tree1.setPositionY( this.tree1.getPositionY() + row * 40 );
+		// this.tree1.setPositionX( this.tree1.getPositionX() - column * 10 );
+	
+		// this.tree2.setPositionY( this.tree2.getPositionY() + row * 40 );
+		// this.tree2.setPositionX( this.tree2.getPositionX() - column * 20 );
 	},
 
 	// shiftMap: function( row , column, compensatedPixel ) {

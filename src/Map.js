@@ -1,7 +1,8 @@
 var Map = cc.Node.extend({
 
-	ctor: function() {
+	ctor: function( shiftedLayer ) {
 		this._super();
+		this.shiftedLayer = shiftedLayer;
 		// beware BUG here.. "DO NOT" use this value for array range.
 		// this value is numbers of blocks shown in the screen.
 		this.SCREEN_WIDTH = 10;
@@ -18,6 +19,7 @@ var Map = cc.Node.extend({
 			'#___________##############____________________#########_____#',
 			'#___________#_______________________________________________#',
 			'#__________________________________##__________________####_#',
+			// '#############################################################',
 			'#______##########________________________________#########__#',
 			'####__############_#######_____############______############',
 			'#_#____#_________________#####____________###########___#####',
@@ -60,6 +62,24 @@ var Map = cc.Node.extend({
 		this.plotMap();
 
 	},
+
+	setPositionX: function( positionX ) {
+		// console.log( new Date());
+		// console.log( this.shiftValueColumn * 120 + this.getPositionX() + "," + this.shiftValueRow * -120 + this.getPositionY());
+		this._super( positionX );
+		this.shiftedLayer.setPosition( this.shiftValueColumn * -120 + this.getPositionX(), this.shiftValueRow * 120 + this.getPositionY() );
+	},
+
+	setPositionY: function( positionY ) {
+		// console.log( new Date());
+		// console.log( this.shiftValueColumn * 120 + this.getPositionX() + "," + this.shiftValueRow * -120 + this.getPositionY());
+		this._super( positionY );
+		this.shiftedLayer.setPosition( this.shiftValueColumn * -120 + this.getPositionX(), this.shiftValueRow * 120 + this.getPositionY() );
+	},
+
+	// setShiftedLayer: function( shiftedLayer ){
+	// 	this.shiftedLayer = shiftedLayer;
+	// },
 
 	setBlock: function( r, c, value ) {
 		// var newRow = "";
