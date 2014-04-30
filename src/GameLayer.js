@@ -41,7 +41,7 @@ var GameLayer = cc.LayerColor.extend({
 	initPlayer: function() {
 		this.player = new Player();
 		this.player.setHealthBar( new HealthBar() );
-		this.player.setPosition( new cc.Point( 200, 200 ) );
+		this.player.setPosition( new cc.Point( 200, 240 ) );
 		this.addChild( this.player, 2 );
 		this.player.setMap( this.map );
 		this.allRigidBodies.push( this.player );

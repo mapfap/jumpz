@@ -197,10 +197,10 @@ var RigidBody = cc.Sprite.extend({
 		this.checkLeftOrRightCollision( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 		
 		// new X and, new Y 
-		var topLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY + this.PIXEL_SIZE_WITH_OFFSET ), this.map );
-		var topRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE_WITH_OFFSET , newPositionY + this.PIXEL_SIZE_WITH_OFFSET), this.map );
-		var bottomLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY), this.map );
-		var bottomRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE_WITH_OFFSET, newPositionY), this.map );
+		var topLeftCorner = new Corner( new cc.Point( currentPositionX, newPositionY + this.PIXEL_SIZE_WITH_OFFSET ), this.map );
+		var topRightCorner = new Corner( new cc.Point( currentPositionX + this.PIXEL_SIZE_WITH_OFFSET , newPositionY + this.PIXEL_SIZE_WITH_OFFSET), this.map );
+		var bottomLeftCorner = new Corner( new cc.Point( currentPositionX, newPositionY), this.map );
+		var bottomRightCorner = new Corner( new cc.Point( currentPositionX + this.PIXEL_SIZE_WITH_OFFSET, newPositionY), this.map );
 		this.checkTopOrBottomCollision( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 	},
 
