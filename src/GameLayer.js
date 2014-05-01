@@ -21,7 +21,8 @@ var GameLayer = cc.LayerColor.extend({
 		this.scheduleUpdate();
 		this.player.scheduleUpdate();
 
-		this.setKeyboardEnabled(true);
+		this.setKeyboardEnabled( true );
+		this.state = GameLayer.STATE.STARTED;
 
 		// this.scheduleOnce(function(){
 			// this.shiftedLayer.addChild( this.monster, 1 );
@@ -34,9 +35,9 @@ var GameLayer = cc.LayerColor.extend({
 	initTutorialLayer: function() {
 		this.tutorialLayer = new TutorialLayer();
 		this.tutorialLayer.init();
-		
-
 		this.addChild( this.tutorialLayer, 20 )
+
+		
 	},
 
 	initInventory: function() {
@@ -96,7 +97,7 @@ var GameLayer = cc.LayerColor.extend({
 	},
 
 	initHelperUI: function() {
-		this.coinIcon = cc.Sprite.create( 'images/blocks/coin2.png' );
+		this.coinIcon = cc.Sprite.create( 'images/blocks/coin.png' );
 		this.coinIcon.setScale( 0.5 );
 		this.coinIcon.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.coinIcon.setPosition( new cc.Point( 20 , 510 ) );
@@ -152,6 +153,23 @@ var GameLayer = cc.LayerColor.extend({
 
 	onKeyDown: function( e ) {
 		switch ( e ) {
+
+		case cc.KEY.enter:
+			if ( this.state == GameLayer.STATE.STOPPED ) {
+				console.log("DELETE")
+				this.player.nextLevelLayer.removeFromParent();
+				// console.log( this.player.nextLevelLayer.removeFromParent );
+				this.map.level += 1;
+				this.map.initMap( this.map.level );
+				this.map.plotMap();
+
+				// this.removeChild( this.player.nextLevelLayer );
+				this.player.scheduleUpdate();
+				this.state = GameLayer.STATE.STARTED;
+			}
+							
+			break;
+
 		case cc.KEY.space:
 			this.player.jump();
 			break;
@@ -258,3 +276,8 @@ var StartScene = cc.Scene.extend({
 	},
 	
 });
+
+GameLayer.STATE = {
+	STOPPED: 0,
+	STARTED: 1,
+}

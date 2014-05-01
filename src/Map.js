@@ -43,33 +43,33 @@ var Map = cc.Node.extend({
 			'_________*',
 			'_____*___*',
 			'____*_____',
-			'___*_#____',
+			'___*_#_^__',
 			'_____#____',
 			'##___#____',
-			'_____#__^_',
-			'_____#____',
+			'_____#___',
+			'_____#___*',
 			'##########',
 		],
 
 		[ // Level 2
-			'__________',
+			'**********',
 			'__________',
 			'^____#____',
 			'xx___#____',
-			'_____#####',
+			'*____#####',
 			'____#_____',
-			'___#______',
+			'___#**____',
 			'##########',
 		],
 
 		[ // Level 3
 			'__________',
 			'__________',
+			'____xxxx__',
 			'_____#____',
-			'xx___#____',
-			'_____#####',
-			'____#_____',
-			'___#____^_',
+			'___***##_#',
+			'____#_####',
+			'#__#__##^#',
 			'##########',
 		],
 		
@@ -121,7 +121,7 @@ var Map = cc.Node.extend({
 		var c = blockX;
 		c += this.shiftValueColumn;
 
-		if ( this.map[ r + 1 ][ c ] == '#' ) {
+		if ( this.map[ r + 1 ][ c ] != '_' ) {
 			console.log("PULL");
 
 			if ( this.map[ r ][ c - headingDirection ] == '_' ) {
@@ -138,7 +138,7 @@ var Map = cc.Node.extend({
 		var newPosition = null;
 		// console.log("r="+  );
 		for ( var l = r; l < this.map.length ; l++ ) {
-			if ( this.map[ l ][ c ] == '#' ) {
+			if ( this.map[ l ][ c ] == '#' || this.map[ l ][ c ] == 'x' ) {
 				newPosition = l - 1;
 				// console.log("n="+ newPosition) ;
 				break;
@@ -228,11 +228,10 @@ var Map = cc.Node.extend({
 							this.collectedCoin++;
 							this.plotMap();
 					} else if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.CHECKPOINT ) {
-							console.log("sdcsdc")
-							this.level += 1;
-							this.initMap( this.level );
-							this.plotMap();
-							// this.getParent().player.flashScreen( 1 );
+						if ( this.getParent().state == GameLayer.STATE.STARTED ) {
+							this.getParent().player.showNextLevelPopup();
+						}
+
 					} else {
 						this.childrenHash[ (r) + "," + c ].touched();	
 					}

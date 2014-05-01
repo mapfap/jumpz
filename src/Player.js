@@ -37,6 +37,29 @@ var Player = RigidBody.extend({
 		this.schedule( this.energyDrain, 1 );
 	},
 
+	showNextLevelPopup: function() {
+		// console.log("-=------------=-=-")
+		this.nextLevelLayer = new cc.LayerColor.create( new cc.Color4B( 0, 0, 0, 0 ) );
+		this.nextLevelLayer.init();
+		// this.nextLevelLayer.setOpacity( 0 );
+		this.getParent().addChild( this.nextLevelLayer, 21 )
+		
+		this.nextLevelLabel = cc.LabelTTF.create( 'Level: ' + ( this.map.level + 1 ), 'Arial', 60 );
+		this.nextLevelLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 40 ) );
+		this.nextLevelLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
+		this.nextLevelLayer.addChild( this.nextLevelLabel );
+
+		this.enterLabel = cc.LabelTTF.create( 'Enter to continue..', 'Arial', 30 );
+		this.enterLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 60 ) );
+		this.enterLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
+		this.nextLevelLayer.addChild( this.enterLabel );
+
+
+		this.getParent().state = GameLayer.STATE.STOPPED;
+		this.unscheduleUpdate();
+		// console.log( this.getParent().state );
+	},
+
 	initAnimation: function() {
 		this.setScale( 3 );
 
@@ -373,6 +396,14 @@ var Player = RigidBody.extend({
 		this.flashScreen( 0.1 );
 		
 	},
+
+	// roll: function() {
+	// 	var degree = 0;
+	// 	this.schedule(function(){
+	// 		degree += 3;
+	// 		this.setRotation( degree );
+	// 	}, 0.001 );
+	// },
 
 	flashScreen: function( time ) {
 		this.flash.setOpacity( 150 );

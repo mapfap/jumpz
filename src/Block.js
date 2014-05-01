@@ -15,9 +15,9 @@ var Block = cc.Sprite.extend({
 		// } else {
 			this.initWithFile( type );
 		// }
-		if ( type == Block.TYPE.CHECKPOINT ) {
-			this.setScale( 2 );
-		}
+		// if ( type == Block.TYPE.CHECKPOINT ) {
+			// this.setScale( 2 );
+		// }
 
 		this.setAnchorPoint( cc.p( 0, 0 ) );
 		this.name = name;
