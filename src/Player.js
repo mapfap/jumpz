@@ -370,11 +370,15 @@ var Player = RigidBody.extend({
 			this.decreaseSpeedLeft = true;
 		}, 0.5);
 
+		this.flashScreen( 0.1 );
+		
+	},
+
+	flashScreen: function( time ) {
 		this.flash.setOpacity( 150 );
 		this.scheduleOnce(function(){
 			this.flash.setOpacity( 0 );
-		}, 0.1 );
-		
+		}, time );
 	},
 
 });

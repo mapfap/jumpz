@@ -15,6 +15,9 @@ var Block = cc.Sprite.extend({
 		// } else {
 			this.initWithFile( type );
 		// }
+		if ( type == Block.TYPE.CHECKPOINT ) {
+			this.setScale( 2 );
+		}
 
 		this.setAnchorPoint( cc.p( 0, 0 ) );
 		this.name = name;
@@ -59,21 +62,21 @@ var Block = cc.Sprite.extend({
 		}
 	},
 
-	createSpinningCoin: function() {
-		var animation = new cc.Animation.create();
-		animation.addSpriteFrameWithFile( 'images/coin/coin0.png' );
+	// createSpinningCoin: function() {
+		// var animation = new cc.Animation.create();
+		// animation.addSpriteFrameWithFile( 'images/coin/coin0.png' );
 		// animation.addSpriteFrameWithFile( 'images/coin/coin1.png' );
 		// animation.addSpriteFrameWithFile( 'images/coin/coin2.png' );
 		// animation.addSpriteFrameWithFile( 'images/coin/coin3.png' );
 		// animation.addSpriteFrameWithFile( 'images/coin/coin4.png' );
 		// animation.addSpriteFrameWithFile( 'images/coin/coin5.png' );
 		// animation.addSpriteFrameWithFile( 'images/coin/coin0.png' );
-		animation.setDelayPerUnit( 0.1 );
+	// 	animation.setDelayPerUnit( 0.1 );
 
-		var movingAction = cc.RepeatForever.create( cc.Animate
-				.create( animation ) );
-		this.runAction( movingAction );
-	},
+	// 	var movingAction = cc.RepeatForever.create( cc.Animate
+	// 			.create( animation ) );
+	// 	this.runAction( movingAction );
+	// },
 	
 });
 
@@ -85,6 +88,7 @@ Block.TYPE = {
 	DIRT_FLOAT: "images/blocks/dirt_float.png",
 	GRASS: "images/blocks/grass.png",
 	GRASS_TOUCHED: "images/blocks/grass_touched.png",
+	METAL: "images/blocks/metal.png",
 }
 
 

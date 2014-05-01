@@ -47,18 +47,29 @@ var Map = cc.Node.extend({
 			'_____#____',
 			'##___#____',
 			'_____#__^_',
-			'__^__#____',
+			'_____#____',
 			'##########',
 		],
 
 		[ // Level 2
 			'__________',
 			'__________',
+			'^____#____',
+			'xx___#____',
+			'_____#####',
+			'____#_____',
+			'___#______',
+			'##########',
+		],
+
+		[ // Level 3
 			'__________',
 			'__________',
-			'__________',
-			'__________',
-			'__________',
+			'_____#____',
+			'xx___#____',
+			'_____#####',
+			'____#_____',
+			'___#____^_',
 			'##########',
 		],
 		
@@ -167,6 +178,8 @@ var Map = cc.Node.extend({
 					type = Block.TYPE.COIN;
 				} else if ( this.map[ r ][ c ] == '^' ) {
 					type = Block.TYPE.CHECKPOINT;
+				} else if ( this.map[ r ][ c ] == 'x' ) {
+					type = Block.TYPE.METAL;
 				} else if ( this.map[ r ][ c ] == '#' ) {
 					type = Block.TYPE.DIRT;
 				} else if ( this.map[ r ][ c ] == '_' ) {
@@ -206,6 +219,8 @@ var Map = cc.Node.extend({
 				
 				if ( ! this.isOutOfBound( r, c ) ) {
 					// console.log((r - 1) + "," + c )
+
+					// console.log(  this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.CHECKPOINT  );
 					if ( this.childrenHash[ (r) + "," + c ].type == Block.TYPE.DIRT ) {
 						this.childrenHash[ (r - 1) + "," + c ].touched();
 					} else if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.COIN ) {
@@ -214,9 +229,10 @@ var Map = cc.Node.extend({
 							this.plotMap();
 					} else if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.CHECKPOINT ) {
 							console.log("sdcsdc")
-							// this.level += 1;
-							// this.initMap( this.level );
-							// this.plotMap();
+							this.level += 1;
+							this.initMap( this.level );
+							this.plotMap();
+							// this.getParent().player.flashScreen( 1 );
 					} else {
 						this.childrenHash[ (r) + "," + c ].touched();	
 					}
@@ -235,7 +251,8 @@ var Map = cc.Node.extend({
 			return true;
 		}
 
-		return this.map[ r ][ c ] == '#' || this.map[ r ][ c ] == '*';
+		// return this.map[ r ][ c ] == '#' || this.map[ r ][ c ] == '*';
+		return this.map[ r ][ c ] != '_';
 	},
 
 	isBlock: function( blockX, blockY ) {
@@ -247,7 +264,7 @@ var Map = cc.Node.extend({
 			return true;
 		}
 
-		return this.map[ r ][ c ] == '#';
+		return this.map[ r ][ c ] == '#' || this.map[ r ][ c ] == 'x';
 	},
 
 	isAimable: function( blockX, blockY ) {
