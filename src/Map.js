@@ -1,6 +1,6 @@
 var Map = cc.Node.extend({
 
-	ctor: function( shiftedLayer ) {
+	ctor: function( shiftedLayer, level ) {
 		this._super();
 		this.shiftedLayer = shiftedLayer;
 		this.collectedCoin = 0;
@@ -9,45 +9,64 @@ var Map = cc.Node.extend({
 		this.SCREEN_WIDTH = 10;
 		this.SCREEN_HEIGHT = 8;
 		
-		this.readableMap = [
+		this.readableMaps = [
+
+		[ // Free Roam: Level 0
 			'#############################################################',
 			'#_________________________________##___#_#__##__________#####',
 			'#____****___##________***___________#____#__##______________#',
 			'#___*_____*_###_______###__________##__#_###________________#',
 			'#_____*___________*_________________________________________#',
-			'#__________###_########___________###__#_#####______________#',
+			'#__________###_########______*____###__#_#####______________#',
 			'###__#__######_________________##########________##_________#',
 			'#####___#####################################################',
 			'#___________##############____________________#########_____#',
 			'#___________#_______________________________________________#',
-			'#__________________________________##__________________####_#',
+			'#______________________*******_____##__________________####_#',
 			'#______##########________________________________#########__#',
 			'####__############_#######_____############______############',
 			'#_#____#_________________#####____________###########___#####',
 			'#_#____#____#####____________#________________###########___#',
 			'#_#____#_____________________###________________________#___#',
-			'#_#____#_____________________#############______________#___#',
+			'#_#____#________******_______#############______________#___#',
 			'#_#____#_____________________###________________________#___#',
 			'#__################_____###############______###########____#',
 			'#_#____#_____________________###________________________#___#',
-			'#_#____#_______________________________####_________________#',
+			'#_#____#_________**_*_*________________####_________________#',
 			'#___________________________#####____________###########____#',
-			'#___________________________________________________________#',
+			'#___________********________________________________________#',
 			'#___________________________________________________________#',
 			'#############################################################',
+		],
 
+		[ // Level 1
+			'_________*',
+			'_____*___*',
+			'____*_____',
+			'___*_#____',
+			'_____#____',
+			'##___#____',
+			'_____#__^_',
+			'__^__#____',
+			'##########',
+		],
+
+		[ // Level 2
+			'__________',
+			'__________',
+			'__________',
+			'__________',
+			'__________',
+			'__________',
+			'__________',
+			'##########',
+		],
+		
 		];
 
 		// convert array of string to 2D char, in order to be mutable object.
-
-		this.map = [];
-		for ( var i = 0; i < this.readableMap.length; i++ ) {
-			var line = [];
-			for ( var j = 0 ; j < this.readableMap[i].length; j++ ) {
-				line.push( this.readableMap[i][j] );
-			}
-			this.map.push( line );
-		}
+		this.level = level;
+		this.initMap( this.level );
 		
 
 		this.setAnchorPoint( cc.p( 0, 0 ) );
@@ -58,6 +77,17 @@ var Map = cc.Node.extend({
 		this.children = [];
 		this.plotMap();
 
+	},
+
+	initMap: function( level ) {
+		this.map = [];
+		for ( var i = 0; i < this.readableMaps[level].length; i++ ) {
+			var line = [];
+			for ( var j = 0 ; j < this.readableMaps[level][i].length; j++ ) {
+				line.push( this.readableMaps[level][i][j] );
+			}
+			this.map.push( line );
+		}
 	},
 
 	setPositionX: function( positionX ) {
@@ -135,7 +165,8 @@ var Map = cc.Node.extend({
 					type = Block.TYPE.DIRT;
 				} else if ( this.map[ r ][ c ] == '*' ) {
 					type = Block.TYPE.COIN;
-					// console.log( "coin=" + r + "," + c)
+				} else if ( this.map[ r ][ c ] == '^' ) {
+					type = Block.TYPE.CHECKPOINT;
 				} else if ( this.map[ r ][ c ] == '#' ) {
 					type = Block.TYPE.DIRT;
 				} else if ( this.map[ r ][ c ] == '_' ) {
@@ -177,16 +208,19 @@ var Map = cc.Node.extend({
 					// console.log((r - 1) + "," + c )
 					if ( this.childrenHash[ (r) + "," + c ].type == Block.TYPE.DIRT ) {
 						this.childrenHash[ (r - 1) + "," + c ].touched();
-					} else {
-
-						if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.COIN ) {
+					} else if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.COIN ) {
 							this.setBlock( r, c, "_" );
 							this.collectedCoin++;
 							this.plotMap();
-						} else {
-							this.childrenHash[ (r) + "," + c ].touched();	
-						}
+					} else if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.CHECKPOINT ) {
+							console.log("sdcsdc")
+							// this.level += 1;
+							// this.initMap( this.level );
+							// this.plotMap();
+					} else {
+						this.childrenHash[ (r) + "," + c ].touched();	
 					}
+					
 				}
 			}
 		}

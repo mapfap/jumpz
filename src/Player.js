@@ -208,7 +208,8 @@ var Player = RigidBody.extend({
 		}
 
 		if ( ! this.isSightOn ) {
-			this.alertLabel.dim( Player.STRING.SIGHT_IS_OFF );
+			// this.alertLabel.dim( Player.STRING.SIGHT_IS_OFF );
+			this.toggleSight();
 			return 0;
 		}
 

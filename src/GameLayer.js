@@ -90,20 +90,31 @@ var GameLayer = cc.LayerColor.extend({
 		this.monster.setAllRigidBodies( this.allRigidBodies );
 
 	},
-	initHelperUI: function() {
-		this.guideLabel = cc.LabelTTF.create( 'Space: jump\nUp: toggle sight\nDown: drag\n', 'Arial', 20 );
-		this.guideLabel.setPosition( new cc.Point( 100, 500 ) );
-		this.guideLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
-		this.addChild( this.guideLabel, 4 );
 
-		this.headLabel = cc.LabelTTF.create( 'JumpZ Puzzle: Alpha Test', 'Arial', 20 );
-		this.headLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2,
-				SCREEN_HEIGHT - 30 ) );
-		this.addChild( this.headLabel, 4 );
+	showCollectedCoin: function() {
+		this.coinLabel.setString( "  x  " + this.map.collectedCoin );
+	},
+
+	initHelperUI: function() {
+		this.coinIcon = cc.Sprite.create( 'images/blocks/coin2.png' );
+		this.coinIcon.setScale( 0.5 );
+		this.coinIcon.setAnchorPoint( new cc.Point( 0 , 0 ) );
+		this.coinIcon.setPosition( new cc.Point( 20 , 510 ) );
+		this.addChild( this.coinIcon, 4 );
+
+		this.coinLabel = cc.LabelTTF.create( '  x  0', 'Arial', 30 );
+		this.coinLabel.setPosition( new cc.Point( 90, 530 ) );
+		this.coinLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
+		this.addChild( this.coinLabel, 4 );
+
+		// this.headLabel = cc.LabelTTF.create( 'JumpZ Puzzle: Alpha Test', 'Arial', 20 );
+		// this.headLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2,
+		// 		SCREEN_HEIGHT - 30 ) );
+		// this.addChild( this.headLabel, 4 );
 	},
 	
 	initMap: function() {
-		this.map = new Map( this.shiftedLayer );
+		this.map = new Map( this.shiftedLayer, 1 );
 		this.map.setPosition( new cc.Point( 0, 0 ) );
 		this.addChild( this.map, 1 );
 
@@ -112,7 +123,6 @@ var GameLayer = cc.LayerColor.extend({
 
 	initBackground: function() {
 		this.background = cc.Sprite.create( 'images/sky.png' );
-		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.addChild( this.background, 0 );
 
@@ -207,6 +217,9 @@ var GameLayer = cc.LayerColor.extend({
 	},
 
 	update: function() {
+
+		this.showCollectedCoin();
+
 		this.tree1.setPositionX( this.shiftedLayer.getPositionX() / 30 + 300 );
 		this.tree1.setPositionY( this.shiftedLayer.getPositionY() / 100 + 120 );
 

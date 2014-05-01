@@ -3,13 +3,18 @@ var Block = cc.Sprite.extend({
 	ctor: function( type, name ) {
 		this._super();
 
-		if ( type == Block.TYPE.COIN ) {
-			// console.log("coin!")
-			// this.createSpinningCoin();
+		// if ( type == Block.TYPE.COIN ) {
+		// 	// console.log("coin!")
+		// 	// this.createSpinningCoin();
+		// 	this.initWithFile( type );
+		// } else if ( type == Block.TYPE.CHECKPOINT ) {
+
+		// 	this.initWithFile( type );
+		// 	// this.setScale( 2 );
+			
+		// } else {
 			this.initWithFile( type );
-		} else {
-			this.initWithFile( type );
-		}
+		// }
 
 		this.setAnchorPoint( cc.p( 0, 0 ) );
 		this.name = name;
@@ -44,7 +49,11 @@ var Block = cc.Sprite.extend({
 
 		case Block.TYPE.COIN:
 			// this.runAction( this.action );
-			console.log( "get coin")
+			// console.log( "get coin")
+			break;
+
+		case Block.TYPE.CHECKPOINT:
+			// GameController.nextLevel();
 			break;
 
 		}
@@ -70,7 +79,8 @@ var Block = cc.Sprite.extend({
 
 Block.TYPE = {
 	AIR: "images/blocks/air.png",
-	COIN: "images/blocks/coin2.png",
+	CHECKPOINT: "images/blocks/checkpoint.png",
+	COIN: "images/blocks/coin.png",
 	DIRT: "images/blocks/dirt.png",
 	DIRT_FLOAT: "images/blocks/dirt_float.png",
 	GRASS: "images/blocks/grass.png",

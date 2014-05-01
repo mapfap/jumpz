@@ -135,13 +135,13 @@ var RigidBody = cc.Sprite.extend({
 		if ( this.velocityX < 0 ) {
 			if ( topLeftCorner.isFree() && bottomLeftCorner.isFree() ) {
 				this.nextPositionX += this.velocityX;
-				this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
+				this.map.touch( [ topLeftCorner, bottomLeftCorner ] );
 				return;
 			}
 		} else if ( this.velocityX > 0 ) {
 			if ( topRightCorner.isFree() && bottomRightCorner.isFree() ) {
 				this.nextPositionX += this.velocityX;
-				this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
+				this.map.touch( [ topRightCorner, bottomRightCorner ] );
 				return;
 			}
 		} else {
@@ -164,14 +164,14 @@ var RigidBody = cc.Sprite.extend({
 				return;
 			} else {
 				this.touchTheGround( bottomLeftCorner, bottomRightCorner );
-				this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
+				this.map.touch( [ bottomLeftCorner, bottomRightCorner ] );
 
 			}
 			
 		} else if ( this.velocityY > 0 ) {
 			if ( topLeftCorner.isFree() && topRightCorner.isFree() ) {
 				this.nextPositionY += this.velocityY;
-				this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
+				this.map.touch( [ topLeftCorner, topRightCorner ] );
 				return;
 			}
 		} else {
@@ -223,9 +223,9 @@ var RigidBody = cc.Sprite.extend({
 		// this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 	},
 
-	checkTouchingAThing: function( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner ) {
-		this.map.touch( [ topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner ] );
-	},
+	// checkTouchingAThing: function( corners ) {
+		// this.map.touch( [ topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner ] );
+	// },
 
 	calculateNextPosition: function( onFocus ) {
 		this.applyGravity();
