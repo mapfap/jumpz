@@ -135,13 +135,13 @@ var RigidBody = cc.Sprite.extend({
 		if ( this.velocityX < 0 ) {
 			if ( topLeftCorner.isFree() && bottomLeftCorner.isFree() ) {
 				this.nextPositionX += this.velocityX;
-				// this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
+				this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 				return;
 			}
 		} else if ( this.velocityX > 0 ) {
 			if ( topRightCorner.isFree() && bottomRightCorner.isFree() ) {
 				this.nextPositionX += this.velocityX;
-				// this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
+				this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 				return;
 			}
 		} else {
