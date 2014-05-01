@@ -3,6 +3,7 @@ var Map = cc.Node.extend({
 	ctor: function( shiftedLayer ) {
 		this._super();
 		this.shiftedLayer = shiftedLayer;
+		this.collectedCoin = 0;
 		// beware BUG here.. "DO NOT" use this value for array range.
 		// this value is numbers of blocks shown in the screen.
 		this.SCREEN_WIDTH = 10;
@@ -11,11 +12,11 @@ var Map = cc.Node.extend({
 		this.readableMap = [
 			'#############################################################',
 			'#_________________________________##___#_#__##__________#####',
-			'#___________##______________________#____#__##______________#',
-			'#_________*_###____________________##__#_###________________#',
-			'#___________________________________________________________#',
+			'#____****___##________***___________#____#__##______________#',
+			'#___*_____*_###_______###__________##__#_###________________#',
+			'#_____*___________*_________________________________________#',
 			'#__________###_########___________###__#_#####______________#',
-			'###_____######_________________##########________##_________#',
+			'###__#__######_________________##########________##_________#',
 			'#####___#####################################################',
 			'#___________##############____________________#########_____#',
 			'#___________#_______________________________________________#',
@@ -134,6 +135,7 @@ var Map = cc.Node.extend({
 					type = Block.TYPE.DIRT;
 				} else if ( this.map[ r ][ c ] == '*' ) {
 					type = Block.TYPE.COIN;
+					// console.log( "coin=" + r + "," + c)
 				} else if ( this.map[ r ][ c ] == '#' ) {
 					type = Block.TYPE.DIRT;
 				} else if ( this.map[ r ][ c ] == '_' ) {
@@ -159,15 +161,47 @@ var Map = cc.Node.extend({
 		}
 	},
 
-	touched: function( blockX, blockY ) {
+	touch: function( corners ) {
+
+		for ( var i = 0; i < corners.length; i++ ) {
+			if ( corners[i].isAThing() ) {
+				var blockX = corners[i].getBlockX();
+				var blockY = corners[i].getBlockY();
+
+				var r = this.SCREEN_HEIGHT - blockY - 1;
+				r += this.shiftValueRow;
+				var c = blockX;
+				c += this.shiftValueColumn;
+				
+				if ( ! this.isOutOfBound( r, c ) ) {
+					// console.log((r - 1) + "," + c )
+					if ( this.childrenHash[ (r) + "," + c ].type == Block.TYPE.DIRT ) {
+						this.childrenHash[ (r - 1) + "," + c ].touched();
+					} else {
+
+						if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.COIN ) {
+							this.setBlock( r, c, "_" );
+							this.collectedCoin++;
+							this.plotMap();
+						} else {
+							this.childrenHash[ (r) + "," + c ].touched();	
+						}
+					}
+				}
+			}
+		}
+	},
+
+	isAThing: function( blockX, blockY ) {
 		var r = this.SCREEN_HEIGHT - blockY - 1;
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
-		
-		if ( ! this.isOutOfBound( r, c ) ) {
-			this.childrenHash[ (r - 1) + "," + c ].touched();
+		if ( this.isOutOfBound( r, c ) ) {
+			return true;
 		}
+
+		return this.map[ r ][ c ] == '#' || this.map[ r ][ c ] == '*';
 	},
 
 	isBlock: function( blockX, blockY ) {

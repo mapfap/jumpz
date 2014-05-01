@@ -135,11 +135,13 @@ var RigidBody = cc.Sprite.extend({
 		if ( this.velocityX < 0 ) {
 			if ( topLeftCorner.isFree() && bottomLeftCorner.isFree() ) {
 				this.nextPositionX += this.velocityX;
+				// this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 				return;
 			}
 		} else if ( this.velocityX > 0 ) {
 			if ( topRightCorner.isFree() && bottomRightCorner.isFree() ) {
 				this.nextPositionX += this.velocityX;
+				// this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 				return;
 			}
 		} else {
@@ -150,18 +152,26 @@ var RigidBody = cc.Sprite.extend({
 		this.velocityX = 0;
 	},
 
+	touchTheGround: function( bottomLeftCorner, bottomRightCorner ) {
+		this.jumpStep = 0;
+		this.map.touch( [ bottomLeftCorner, bottomRightCorner ] );
+	},
+
 	checkTopOrBottomCollision: function( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner ) {
 		if ( this.velocityY < 0 ) {
 			if ( bottomLeftCorner.isFree() && bottomRightCorner.isFree() ) {
 				this.nextPositionY += this.velocityY;
 				return;
 			} else {
-				this.jumpStep = 0;
+				this.touchTheGround( bottomLeftCorner, bottomRightCorner );
+				this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
+
 			}
 			
 		} else if ( this.velocityY > 0 ) {
 			if ( topLeftCorner.isFree() && topRightCorner.isFree() ) {
 				this.nextPositionY += this.velocityY;
+				this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 				return;
 			}
 		} else {
@@ -201,6 +211,20 @@ var RigidBody = cc.Sprite.extend({
 		var bottomLeftCorner = new Corner( new cc.Point( currentPositionX, newPositionY) );
 		var bottomRightCorner = new Corner( new cc.Point( currentPositionX + this.PIXEL_SIZE_WITH_OFFSET, newPositionY) );
 		this.checkTopOrBottomCollision( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
+
+
+		// var concludePositionX = currentPositionX + this.nextPositionX;
+		// var concludePositionY = currentPositionY + this.nextPositionY;
+		// var topLeftCorner = new Corner( new cc.Point( concludePositionX, concludePositionY + this.PIXEL_SIZE_WITH_OFFSET ) );
+		// var topRightCorner = new Corner( new cc.Point( concludePositionX + this.PIXEL_SIZE_WITH_OFFSET , concludePositionY + this.PIXEL_SIZE_WITH_OFFSET) );
+		// var bottomLeftCorner = new Corner( new cc.Point( concludePositionX, concludePositionY) );
+		// var bottomRightCorner = new Corner( new cc.Point( concludePositionX + this.PIXEL_SIZE_WITH_OFFSET, concludePositionY) );
+
+		// this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
+	},
+
+	checkTouchingAThing: function( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner ) {
+		this.map.touch( [ topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner ] );
 	},
 
 	calculateNextPosition: function( onFocus ) {

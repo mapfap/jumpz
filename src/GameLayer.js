@@ -172,7 +172,9 @@ var GameLayer = cc.LayerColor.extend({
 
 		case cc.KEY.a:
 			// console.log( this.player.accumulatedX, this.player.accumulatedY )
-			console.log( this.shiftedLayer.getPosition() )
+			// console.log( this.shiftedLayer.getPosition() )
+			// console.log( this.map.childrenHash )
+			console.log( this.map.collectedCoin )
 
 		default:
 			break;

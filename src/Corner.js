@@ -7,9 +7,20 @@ var Corner = cc.Node.extend({
 		this.y = point.y;
 	},
 
+	getBlockX: function() {
+		return Math.floor( ( this.x - Corner.map.getPositionX() ) / 120 );
+	},
+
+	getBlockY: function() {
+		return Math.floor( ( this.y - Corner.map.getPositionY() ) / 120 );
+	},
+
 	isFree: function() {
-		// console.log( this.map.getPositionY() )
-		return ! Corner.map.isBlock( Math.floor( ( this.x - Corner.map.getPositionX() ) / 120 ) , Math.floor( ( this.y - Corner.map.getPositionY() ) / 120 ) );
+		return ! Corner.map.isBlock( this.getBlockX(), this.getBlockY() );
+	},
+
+	isAThing: function() {
+		return Corner.map.isAThing( this.getBlockX(), this.getBlockY() );
 	},
 
 });

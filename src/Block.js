@@ -5,7 +5,8 @@ var Block = cc.Sprite.extend({
 
 		if ( type == Block.TYPE.COIN ) {
 			// console.log("coin!")
-			this.createSpinningCoin();
+			// this.createSpinningCoin();
+			this.initWithFile( type );
 		} else {
 			this.initWithFile( type );
 		}
@@ -14,18 +15,38 @@ var Block = cc.Sprite.extend({
 		this.name = name;
 		this.type = type;
 
-		if ( this.type == Block.TYPE.GRASS ) {
-			this.animation = new cc.Animation.create();
-			this.animation.addSpriteFrameWithFile( Block.TYPE.GRASS_TOUCHED );
-			this.animation.setDelayPerUnit( 10 );
-			this.GRASS_TOUCHED_ACTION = cc.Animate.create( this.animation );
+		switch ( this.type ) {
+
+		case Block.TYPE.GRASS:
+			var animation = new cc.Animation.create();
+			animation.addSpriteFrameWithFile( Block.TYPE.GRASS_TOUCHED );
+			animation.setDelayPerUnit( 1000 );
+			this.action = cc.Animate.create( animation );
+			break;
+
+		// case Block.TYPE.COIN:
+			// var animation = new cc.Animation.create();
+			// animation.addSpriteFrameWithFile( Block.TYPE.COIN_TOUCH );
+			// animation.setDelayPerUnit( 1000 );
+			// this.action = cc.Animate.create( animation );
+			// break;
+
 		}
 
 	},
 
 	touched: function() {
-		if ( this.type == Block.TYPE.GRASS ) {
-			this.runAction( this.GRASS_TOUCHED_ACTION );
+		switch ( this.type ) {
+
+		case Block.TYPE.GRASS:
+			this.runAction( this.action );
+			break;
+
+		case Block.TYPE.COIN:
+			// this.runAction( this.action );
+			console.log( "get coin")
+			break;
+
 		}
 	},
 
@@ -33,9 +54,9 @@ var Block = cc.Sprite.extend({
 		var animation = new cc.Animation.create();
 		animation.addSpriteFrameWithFile( 'images/coin/coin0.png' );
 		// animation.addSpriteFrameWithFile( 'images/coin/coin1.png' );
-		animation.addSpriteFrameWithFile( 'images/coin/coin2.png' );
+		// animation.addSpriteFrameWithFile( 'images/coin/coin2.png' );
 		// animation.addSpriteFrameWithFile( 'images/coin/coin3.png' );
-		animation.addSpriteFrameWithFile( 'images/coin/coin4.png' );
+		// animation.addSpriteFrameWithFile( 'images/coin/coin4.png' );
 		// animation.addSpriteFrameWithFile( 'images/coin/coin5.png' );
 		// animation.addSpriteFrameWithFile( 'images/coin/coin0.png' );
 		animation.setDelayPerUnit( 0.1 );
@@ -49,7 +70,7 @@ var Block = cc.Sprite.extend({
 
 Block.TYPE = {
 	AIR: "images/blocks/air.png",
-	COIN: "images/blocks/coin.png",
+	COIN: "images/blocks/coin2.png",
 	DIRT: "images/blocks/dirt.png",
 	DIRT_FLOAT: "images/blocks/dirt_float.png",
 	GRASS: "images/blocks/grass.png",
