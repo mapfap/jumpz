@@ -26,6 +26,7 @@
             'src/Inventory.js',
             'src/Cursor.js',
             'src/Corner.js',
+            'src/TutorialLayer.js',
         ]
     };
 

@@ -7,11 +7,13 @@ var GameLayer = cc.LayerColor.extend({
 		this.allRigidBodies = [];
 		this.allShiftableObjects = [];
 
+		this.initTutorialLayer();
+
 		this.initShiftedLayer();
 		this.initMap();
 		this.initBackground();
 		this.initPlayer();
-		this.initMonster();
+		// this.initMonster();
 
 		this.initHelperUI();
 		this.initInventory();
@@ -21,12 +23,20 @@ var GameLayer = cc.LayerColor.extend({
 
 		this.setKeyboardEnabled(true);
 
-		this.scheduleOnce(function(){
-			this.shiftedLayer.addChild( this.monster, 1 );
-			this.monster.scheduleUpdate();
-		}, 1);
+		// this.scheduleOnce(function(){
+			// this.shiftedLayer.addChild( this.monster, 1 );
+			// this.monster.scheduleUpdate();
+		// }, 1);
 
 		return true;
+	},
+
+	initTutorialLayer: function() {
+		this.tutorialLayer = new TutorialLayer();
+		this.tutorialLayer.init();
+		
+
+		this.addChild( this.tutorialLayer, 20 )
 	},
 
 	initInventory: function() {
@@ -138,18 +148,22 @@ var GameLayer = cc.LayerColor.extend({
 
 		case cc.KEY.right:
 			this.player.goRight();
+			this.tutorialLayer.glowArrowRight();
 			break
 
 		case cc.KEY.left:
 			this.player.goLeft();
+			this.tutorialLayer.glowArrowLeft();
 			break;
 
 		case cc.KEY.down:
 			this.player.dragBlock();
+			this.tutorialLayer.glowArrowDown();
 			break;
 
 		case cc.KEY.up:
 			this.player.toggleSight();
+			this.tutorialLayer.glowArrowUp();
 			break;
 
 		case cc.KEY.r:
@@ -166,12 +180,27 @@ var GameLayer = cc.LayerColor.extend({
 	},
 
 	onKeyUp: function( e ) {
-		if ( e == cc.KEY.right ) {
-			this.player.stopRight();
-		}
+		switch ( e ) {
+		case cc.KEY.space:
+			break;
 
-		if ( e == cc.KEY.left ) {
+		case cc.KEY.right:
+			this.player.stopRight();
+			this.tutorialLayer.unGlowArrowRight();
+			break
+
+		case cc.KEY.left:
 			this.player.stopLeft();
+			this.tutorialLayer.unGlowArrowLeft();
+			break;
+
+		case cc.KEY.down:
+			this.tutorialLayer.unGlowArrowDown();
+			break;
+
+		case cc.KEY.up:
+			this.tutorialLayer.unGlowArrowUp();
+			break;
 		}
 	},
 
