@@ -241,14 +241,6 @@ var Player = RigidBody.extend({
 			this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 			this.map.dragBlock( this.aimedBlockX, this.aimedBlockY, this.headingDirection );
 			this.isAiming = false;
-
-			// this.fallingBlock = cc.Sprite.create( 'images/blocks/bone.png' );
-			// this.fallingBlock.setAnchorPoint( cc.p( 0, 0 ) );
-			// this.fallingBlock.setPosition( this.aimedPixel );
-			// this.getParent().addChild( this.fallingBlock, 20 );
-			// var fallAction = cc.MoveTo.create( 0.5, new cc.Point( this.aimedPixel.x , this.aimedPixel.y - 20 ) );
-			// console.log( fallAction );
-			// this.runAction( fallAction );
 		}
 	},
 
@@ -298,20 +290,12 @@ var Player = RigidBody.extend({
 		}
 	},
 
-	update: function() {
-
-		this.aimTarget();
-		this.checkKeyHolded();
-		this.calculateNextPosition();
-
+	handleMainFocus: function() {
 		if ( this.nextPositionX >= RIGHT_FOCUS_BOUND ) {
 			var over = this.nextPositionX - RIGHT_FOCUS_BOUND;
 			this.nextPositionX = RIGHT_FOCUS_BOUND;
-			
 			this.map.setPositionX( this.map.getPositionX() - over );
-			// this.getParent().monster.setPositionX( this.getParent().monster.getPositionX() - over );
 
-			// console.log( this.map.getPositionX())
 			if ( this.map.getPositionX() <= -120 ) {
 				this.map.shiftMap( 0, 1 );
 				this.map.setPositionX( 0 );
@@ -321,9 +305,7 @@ var Player = RigidBody.extend({
 		} else if ( this.nextPositionX <= LEFT_FOCUS_BOUND ) {
 			var over = this.nextPositionX - LEFT_FOCUS_BOUND;
 			this.nextPositionX = LEFT_FOCUS_BOUND;
-
 			this.map.setPositionX( this.map.getPositionX() - over );
-			// this.getParent().monster.setPositionX( this.getParent().monster.getPositionX() - over );
 
 			if ( this.map.getPositionX() >= 120 ) {
 				this.map.shiftMap( 0, -1 );
@@ -335,9 +317,7 @@ var Player = RigidBody.extend({
 		if ( this.nextPositionY >= UPPER_FOCUS_BOUND ) {
 			var over = this.nextPositionY - UPPER_FOCUS_BOUND;
 			this.nextPositionY = UPPER_FOCUS_BOUND;
-
 			this.map.setPositionY( this.map.getPositionY() - over );
-			// this.getParent().monster.setPositionY( this.getParent().monster.getPositionY() - over );
 
 			if ( this.map.getPositionY() <= -120 ) {
 				this.map.shiftMap( -1, 0 );
@@ -347,8 +327,6 @@ var Player = RigidBody.extend({
 		} else if ( this.nextPositionY <= LOWER_FOCUS_BOUND ) {
 			var over = this.nextPositionY - LOWER_FOCUS_BOUND;
 			this.nextPositionY = LOWER_FOCUS_BOUND;
-
-			// this.getParent().monster.setPositionY( this.getParent().monster.getPositionY() - over );
 			this.map.setPositionY( this.map.getPositionY() - over );
 			
 			if ( this.map.getPositionY() >= 120 ) {
@@ -357,23 +335,14 @@ var Player = RigidBody.extend({
 				this.accumulatedY -= 120;
 			}
 		}
+	},
 
-		// console.log( this.nextPositionX );
-
-		// var beforePosition = this.getPosition();
-		this.setPosition( new cc.Point( this.nextPositionX, this.nextPositionY ) );
-		// var afterPosition = this.getPosition();
-
-		// this.accumulatedX += afterPosition.x - beforePosition.x;
-		// this.accumulatedY += afterPosition.y - beforePosition.y;
-
-		// console.log( this.getPositionX() );
-		// if ( this.getPositionX() >= RIGHT_FOCUS_BOUND - 120 ) {
-			// var compensatedPixel = this.getPositionX() - ( RIGHT_FOCUS_BOUND - 120 );
-			// console.log( compensatedPixel );
-			// this.getParent().shiftMap( 0, 1, 0 );
-			// this.setPosition( new cc.Point( this.getPositionX() + compensatedPixel , this.getPositionY() ) );
-		// }
+	update: function() {
+		this.aimTarget();
+		this.checkKeyHolded();
+		this.calculateNextPosition();
+		this.handleMainFocus();
+		this.applyNextPosition();
 	},
 
 	jump: function() {
@@ -396,14 +365,6 @@ var Player = RigidBody.extend({
 		this.flashScreen( 0.1 );
 		
 	},
-
-	// roll: function() {
-	// 	var degree = 0;
-	// 	this.schedule(function(){
-	// 		degree += 3;
-	// 		this.setRotation( degree );
-	// 	}, 0.001 );
-	// },
 
 	flashScreen: function( time ) {
 		this.flash.setOpacity( 150 );
