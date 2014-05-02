@@ -46,7 +46,7 @@ var Map = cc.Node.extend({
 			'___*_#_^__',
 			'_____#____',
 			'##___#____',
-			'_____#___',
+			'_____#____',
 			'_____#___*',
 			'##########',
 		],
@@ -65,11 +65,50 @@ var Map = cc.Node.extend({
 		[ // Level 3
 			'__________',
 			'__________',
+			'___^xxxx__',
+			'_____#____',
+			'___***##_#',
+			'____#_####',
+			'#__#_____#',
+			'##########',
+		],
+
+		[ // Level 4
+			'_________^',
+			'__________',
+			'_______xxx',
+			'__________',
+			'*****_____',
+			'__________',
+			'______**__',
+			'____******',
+			'___*______',
+			'__________',
+			'**________',
+			'______****',
+			'__________',
+			'****______',
+			'__________',
+			'______####',
+			'__________',
+			'###_______',
+			'__________',
+			'________##',
+			'__________',
+			'__________',
+			'###_______',
+			'__________',
+			'__________',
+			'_______###',
+			'__________',
+			'__________',
+			'###_______',
+			'__________',
 			'____xxxx__',
 			'_____#____',
 			'___***##_#',
 			'____#_####',
-			'#__#__##^#',
+			'#__#__##_#',
 			'##########',
 		],
 		
@@ -221,6 +260,7 @@ var Map = cc.Node.extend({
 					// console.log((r - 1) + "," + c )
 
 					// console.log(  this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.CHECKPOINT  );
+					console.log( r + "," + c )
 					if ( this.childrenHash[ (r) + "," + c ].type == Block.TYPE.DIRT ) {
 						this.childrenHash[ (r - 1) + "," + c ].touched();
 					} else if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.COIN ) {
@@ -233,7 +273,7 @@ var Map = cc.Node.extend({
 						}
 
 					} else {
-						this.childrenHash[ (r) + "," + c ].touched();	
+						// this.childrenHash[ (r) + "," + c ].touched();
 					}
 					
 				}
@@ -247,7 +287,7 @@ var Map = cc.Node.extend({
 		var c = blockX;
 		c += this.shiftValueColumn;
 		if ( this.isOutOfBound( r, c ) ) {
-			return true;
+			return false;
 		}
 
 		// return this.map[ r ][ c ] == '#' || this.map[ r ][ c ] == '*';

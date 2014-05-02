@@ -156,7 +156,7 @@ var GameLayer = cc.LayerColor.extend({
 
 		case cc.KEY.enter:
 			if ( this.state == GameLayer.STATE.STOPPED ) {
-				console.log("DELETE")
+				// console.log("DELETE")
 				this.player.nextLevelLayer.removeFromParent();
 				// console.log( this.player.nextLevelLayer.removeFromParent );
 				this.map.level += 1;
@@ -171,6 +171,7 @@ var GameLayer = cc.LayerColor.extend({
 			break;
 
 		case cc.KEY.space:
+		case cc.KEY.up:
 			this.player.jump();
 			break;
 
@@ -184,12 +185,12 @@ var GameLayer = cc.LayerColor.extend({
 			this.tutorialLayer.glowArrowLeft();
 			break;
 
-		case cc.KEY.down:
+		case cc.KEY.z:
 			this.player.dragBlock();
 			this.tutorialLayer.glowArrowDown();
 			break;
 
-		case cc.KEY.up:
+		case cc.KEY.x:
 			this.player.toggleSight();
 			this.tutorialLayer.glowArrowUp();
 			break;
@@ -211,8 +212,10 @@ var GameLayer = cc.LayerColor.extend({
 
 	onKeyUp: function( e ) {
 		switch ( e ) {
-		case cc.KEY.space:
-			break;
+
+			
+		// case cc.KEY.space:
+			// break;
 
 		case cc.KEY.right:
 			this.player.stopRight();
@@ -225,11 +228,11 @@ var GameLayer = cc.LayerColor.extend({
 			break;
 
 		case cc.KEY.down:
-			this.tutorialLayer.unGlowArrowDown();
+			// this.tutorialLayer.unGlowArrowDown();
 			break;
 
 		case cc.KEY.up:
-			this.tutorialLayer.unGlowArrowUp();
+			// this.tutorialLayer.unGlowArrowUp();
 			break;
 		}
 	},

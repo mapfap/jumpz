@@ -9,7 +9,7 @@ var Player = RigidBody.extend({
 		this.accumulatedY = 0;
 
 		this.walkingSpeed = 20;
-		this.jumpingVelocity = [ 40, 50, 60 ],
+		this.jumpingVelocity = [ 0, 50, 60, 60, 60, 60 ],
 
 		this.canJump = true;
 		this.jumpStep = 0;
