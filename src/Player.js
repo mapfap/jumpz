@@ -100,14 +100,16 @@ var Player = RigidBody.extend({
 		
 		this.isSightOn = true;
 
-		this.sight = cc.Sprite.create ( 'images/sight.png' );
+		this.sight = cc.Sprite.create( 'images/sight.png' );
 		this.sight.setPosition( new cc.Point( 10 , 30 ) );
 		this.sight.setAnchorPoint( new cc.Point( -0.001 , 0.5 ) );
 		this.addChild( this.sight );
 	},
 
 	initLabel: function() {
-		this.alertLabel = cc.DimLabel.create( '0', 'Arial', 13 );
+		console.log( DimLabel )
+		console.log( DimLabel.create )
+		this.alertLabel = DimLabel.create( '0', 'Arial', 13 );
 		this.addChild( this.alertLabel );
 		this.alertLabel.setPosition( new cc.Point( 20, 50 ) );
 		this.alertLabel.setColor( new cc.Color3B( 255, 255, 255 ) );
@@ -142,7 +144,7 @@ var Player = RigidBody.extend({
 	},
 
 	popup: function( text ) {
-		var label = cc.DimLabel.create( '0', 'Arial', 13 );
+		var label = DimLabel.create( '0', 'Arial', 13 );
 		this.shiftedLayer.addChild( label );
 		// this.getParent().addChild( label, 100 );
 		label.setScale( 3 );

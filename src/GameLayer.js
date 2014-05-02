@@ -203,7 +203,8 @@ var GameLayer = cc.LayerColor.extend({
 			// console.log( this.player.accumulatedX, this.player.accumulatedY )
 			// console.log( this.shiftedLayer.getPosition() )
 			// console.log( this.map.childrenHash )
-			console.log( this.map.collectedCoin )
+			// console.log( this.map.collectedCoin )
+			console.log( cc.DimLabel.create )
 
 		default:
 			break;
