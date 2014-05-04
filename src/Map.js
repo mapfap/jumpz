@@ -109,7 +109,7 @@ var Map = cc.Node.extend({
 			'____xxxx__',
 			'_____#____',
 			'___#**##_#',
-			'____#_####',
+			'___#######',
 			'#__#__##_#',
 			'##########',
 		],
@@ -136,6 +136,12 @@ var Map = cc.Node.extend({
 		this.playerMarkerPoint = new cc.LayerColor();
 		this.playerMarkerPoint.init( Map.COLOR.RED, this.minimapSize, this.minimapSize );
 		this.minimapController.addChild( this.playerMarkerPoint, 3 );
+	},
+
+	resetMap: function() {
+		this.setPosition( new cc.Point( 0, 0 ) );
+		this.shiftValueRow = 0;
+		this.shiftValueColumn = 0;
 	},
 
 	setPlayerMarker: function( blockX, blockY ) {

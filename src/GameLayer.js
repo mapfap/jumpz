@@ -2,6 +2,8 @@ var GameLayer = cc.LayerColor.extend({
 	
 	init: function() {
 		this._super();
+
+		this.playerStartingPosition = new cc.Point( 120, 120 );
 		this.setPosition( new cc.Point( 0, 0 ) );
 
 		this.allRigidBodies = [];
@@ -54,7 +56,7 @@ var GameLayer = cc.LayerColor.extend({
 	initPlayer: function() {
 		this.player = new Player();
 		this.player.setStatusBar( new StatusBar() );
-		this.player.setPosition( new cc.Point( 200, 240 ) );
+		this.player.setPosition( this.playerStartingPosition );
 		this.addChild( this.player, 2 );
 		this.player.setMap( this.map );
 		// this.allRigidBodies.push( this.player );
@@ -160,14 +162,27 @@ var GameLayer = cc.LayerColor.extend({
 	onKeyDown: function( e ) {
 		switch ( e ) {
 
+		case cc.KEY.q:
+			// this.player.unscheduleUpdate();
+			this.map.resetMap();
+			this.map.level = 1;
+			this.map.initMap( this.map.level );
+			this.map.plotMap();
+			this.player.setPosition( this.playerStartingPosition );
+			// this.player.scheduleUpdate();
+							
+		break;
+
 		case cc.KEY.enter:
 			if ( this.state == GameLayer.STATE.STOPPED ) {
 				// console.log("DELETE")
 				this.player.nextLevelLayer.removeFromParent();
+			this.map.resetMap();
 				// console.log( this.player.nextLevelLayer.removeFromParent );
 				this.map.level += 1;
 				this.map.initMap( this.map.level );
 				this.map.plotMap();
+				this.player.setPosition( this.playerStartingPosition );
 
 				// this.removeChild( this.player.nextLevelLayer );
 				this.player.scheduleUpdate();
