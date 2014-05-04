@@ -10,7 +10,6 @@ var Map = cc.Node.extend({
 		this.SCREEN_WIDTH = 10;
 		this.SCREEN_HEIGHT = 8;
 
-		this.minimapSize = 10;
 		
 		this.readableMaps = [
 
@@ -81,24 +80,24 @@ var Map = cc.Node.extend({
 			'__________',
 			'_______xxx',
 			'__________',
-			'*****_____',
-			'__________',
-			'______**__',
-			'____******',
-			'___*______',
-			'__________',
-			'**________',
-			'______****',
-			'__________',
-			'****______',
-			'__________',
-			'______####',
-			'__________',
 			'###_______',
 			'__________',
-			'________##',
-			'__________',
-			'__________',
+			'______**__',
+			'____#*####',
+			'___****___',
+			'____******',
+			'##__**____',
+			'____**####',
+			'____**____',
+			'####**____',
+			'____**____',
+			'____**####',
+			'____**____',
+			'###_**____',
+			'____**____',
+			'____**__##',
+			'____**____',
+			'____****__',
 			'###_______',
 			'__________',
 			'__________',
@@ -109,7 +108,7 @@ var Map = cc.Node.extend({
 			'__________',
 			'____xxxx__',
 			'_____#____',
-			'___***##_#',
+			'___#**##_#',
 			'____#_####',
 			'#__#__##_#',
 			'##########',
@@ -119,9 +118,11 @@ var Map = cc.Node.extend({
 
 		// convert array of string to 2D char, in order to be mutable object.
 		
+		this.minimapSize = 10;
 		this.initStaticColor();
 		this.miniChildren = [];
 		this.level = level;
+
 		this.initMap( this.level );
 		
 		this.setAnchorPoint( cc.p( 0, 0 ) );
@@ -132,16 +133,32 @@ var Map = cc.Node.extend({
 		this.children = [];
 		this.plotMap();
 
+		this.playerMarkerPoint = new cc.LayerColor();
+		this.playerMarkerPoint.init( Map.COLOR.RED, this.minimapSize, this.minimapSize );
+		this.minimapController.addChild( this.playerMarkerPoint, 3 );
+	},
+
+	setPlayerMarker: function( blockX, blockY ) {
+		var r = this.SCREEN_HEIGHT - blockY - 1;
+		r += this.shiftValueRow;
+		var c = blockX;
+		c += this.shiftValueColumn;
+
+		var posX = c * this.minimapSize;
+		var posY = ( this.map.length - r - 1 ) * this.minimapSize;
+		
+		this.playerMarkerPoint.setPosition( new cc.Point( posX, posY ) );
 	},
 
 	initStaticColor: function() {
-		Map.COLOR.RED = new cc.Color4B( 255, 0, 0, 255 );
-		Map.COLOR.BLUE = new cc.Color4B( 0, 0, 255, 255 );
-		Map.COLOR.GREEN = new cc.Color4B( 0, 255, 0, 255 );
-		Map.COLOR.BLACK = new cc.Color4B( 0, 0, 0, 255 );
-		Map.COLOR.GRAY = new cc.Color4B( 100, 100, 100, 255 );
-		Map.COLOR.YELLOW = new cc.Color4B( 0, 255, 255, 255 );
-		Map.COLOR.WHITE = new cc.Color4B( 255, 255, 255, 255 );
+		var opacity = 100;
+		Map.COLOR.RED = new cc.Color4B( 255, 0, 0, opacity * 2 );
+		Map.COLOR.BLUE = new cc.Color4B( 0, 0, 255, opacity );
+		Map.COLOR.GREEN = new cc.Color4B( 0, 255, 0, opacity * 2 );
+		Map.COLOR.BLACK = new cc.Color4B( 0, 0, 0, opacity );
+		Map.COLOR.GRAY = new cc.Color4B( 100, 100, 100, opacity );
+		Map.COLOR.YELLOW = new cc.Color4B( 255, 255, 0, opacity );
+		Map.COLOR.WHITE = new cc.Color4B( 255, 255, 255, opacity );
 
 	},
 
@@ -170,6 +187,7 @@ var Map = cc.Node.extend({
 				var color = null;
 
 				if ( this.map[ r ][ c ] == '*' ) {
+					// color = Map.COLOR.YELLOW;
 					color = Map.COLOR.WHITE;
 				} else if ( this.map[ r ][ c ] == '^' ) {
 					color = Map.COLOR.GREEN;
@@ -183,12 +201,12 @@ var Map = cc.Node.extend({
 
 				if ( color != null ) {
 					// console.log(color)
-					var posX = c * this.minimapSize + 400;
-					var posY = ( this.map.length - r - 1 ) * this.minimapSize + 400;
+					var posX = c * this.minimapSize;
+					var posY = ( this.map.length - r - 1 ) * this.minimapSize;
 					var s = new cc.LayerColor();
 					s.init( color, this.minimapSize, this.minimapSize );
 					s.setPosition( new cc.Point( posX, posY ) );
-					this.minimapController.addChild( s, 15 );
+					this.minimapController.addChild( s );
 					this.miniChildren.push( s );
 				}
 

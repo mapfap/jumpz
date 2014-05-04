@@ -9,6 +9,8 @@ var GameLayer = cc.LayerColor.extend({
 
 		// this.initTutorialLayer();
 
+		this.initInventory();
+
 		this.initShiftedLayer();
 		this.initMap();
 		this.initBackground();
@@ -16,7 +18,6 @@ var GameLayer = cc.LayerColor.extend({
 		// this.initMonster();
 
 		this.initHelperUI();
-		this.initInventory();
 
 		this.scheduleUpdate();
 		this.player.scheduleUpdate();
@@ -41,7 +42,7 @@ var GameLayer = cc.LayerColor.extend({
 	},
 
 	initInventory: function() {
-		this.inventory = new Inventory();
+		this.inventory = new Inventory( 500, 400 );
 		this.addChild( this.inventory, 3 );
 
 		this.cursor = new Cursor();
@@ -120,7 +121,7 @@ var GameLayer = cc.LayerColor.extend({
 	},
 	
 	initMap: function() {
-		this.map = new Map( this, this.shiftedLayer, 1 );
+		this.map = new Map( this.inventory, this.shiftedLayer, 1 );
 		this.map.setPosition( new cc.Point( 0, 0 ) );
 		this.addChild( this.map, 1 );
 

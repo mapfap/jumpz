@@ -1,25 +1,23 @@
 var Inventory = cc.LayerColor.extend({
 
-	ctor: function() {
+	ctor: function( width, height ) {
 		this._super();
+		this.width = width;
+		this.height = height;
 		this.init();
 	},
 	
 	init: function() {
 
 		// MOUSE IS DISABLE UNTIL CURSOR IS SET.
-
-		this.width = 300;
-		this.height = 200;
-
-		this._super( new cc.Color4B(100, 100, 100, 127), this.width, this.height );
+		this._super( new cc.Color4B(100, 100, 100, 0), this.width, this.height );
 		this.setAnchorPoint( new cc.Point( 0, 0 ) );
 		// this.setPosition( new cc.Point( 800, 100 ) );
-		this.setPosition( new cc.Point( 10000, 100 ) );
+		this.setPosition( new cc.Point( 100, 100 ) );
 
-		this.label = cc.LabelTTF.create( 'UI จ้า', 'Arial', 25 );
-		this.label.setPosition( 35, this.height - 25 );
-		this.addChild( this.label );
+		// this.label = cc.LabelTTF.create( 'Minimap', 'Arial', 25 );
+		// this.label.setPosition( 35, this.height - 25 );
+		// this.addChild( this.label );
 		
 		return true;
 	},

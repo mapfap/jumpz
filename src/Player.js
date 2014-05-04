@@ -9,7 +9,8 @@ var Player = RigidBody.extend({
 		this.accumulatedY = 0;
 
 		this.walkingSpeed = 20;
-		this.jumpingVelocity = [ 0, 50, 60, 60, 60, 60 ],
+		this.jumpingVelocity = [ 0, 50, 60, ];
+		this.weakJumpVelocity = 0; 
 
 		this.canJump = true;
 		this.jumpStep = 0;
@@ -35,6 +36,23 @@ var Player = RigidBody.extend({
 		this.initLabel();
 
 		this.schedule( this.energyDrain, 1 );
+	},
+
+	setMap: function( map ) {
+		// this._super( map );
+		this.map = map;
+		this.setMarkerToMinimap();
+	},
+
+	setPosition: function( point ) {
+		this._super( point );
+		if ( this.map ) {
+			this.setMarkerToMinimap();
+		}
+	},
+
+	setMarkerToMinimap: function() {
+		this.map.setPlayerMarker( (this.getPositionX() / 120 - this.map.getPositionX() / 120), ( this.getPositionY() / 120 - this.map.getPositionY() / 120) );
 	},
 
 	showNextLevelPopup: function() {
@@ -352,7 +370,14 @@ var Player = RigidBody.extend({
 			return 0;
 		}
 		this.jumpStep += 1;
-		this.setVelocityY(this.jumpingVelocity[ this.jumpStep ]);
+		this.setVelocityY( this.getJumpingVelocity( this.jumpStep ) );
+	},
+
+	getJumpingVelocity: function( jumpStep ) {
+		if ( jumpStep < this.jumpingVelocity.length ) {
+			return this.jumpingVelocity[ jumpStep ]
+		}
+		return this.weakJumpVelocity;
 	},
 
 	takeDamage: function( direction ) {
