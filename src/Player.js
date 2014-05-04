@@ -107,8 +107,8 @@ var Player = RigidBody.extend({
 	},
 
 	initLabel: function() {
-		console.log( DimLabel )
-		console.log( DimLabel.create )
+		// console.log( DimLabel )
+		// console.log( DimLabel.create )
 		this.alertLabel = DimLabel.create( '0', 'Arial', 13 );
 		this.addChild( this.alertLabel );
 		this.alertLabel.setPosition( new cc.Point( 20, 50 ) );

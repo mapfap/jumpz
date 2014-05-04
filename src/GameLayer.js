@@ -56,14 +56,14 @@ var GameLayer = cc.LayerColor.extend({
 		this.player.setPosition( new cc.Point( 200, 240 ) );
 		this.addChild( this.player, 2 );
 		this.player.setMap( this.map );
-		this.allRigidBodies.push( this.player );
-		this.allShiftableObjects.push( this.player );
+		// this.allRigidBodies.push( this.player );
+		// this.allShiftableObjects.push( this.player );
 		this.player.setAllRigidBodies( this.allRigidBodies );
 
 		this.crosshair = new cc.Sprite.create( 'images/crosshair.png' );
 		this.crosshair.setAnchorPoint( new cc.Point( 0, 0 ) );
 		this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
-		this.allShiftableObjects.push( this.crosshair );
+		// this.allShiftableObjects.push( this.crosshair );
 		this.addChild( this.crosshair, 3 );
 		this.player.setCrosshair( this.crosshair );
 
@@ -120,7 +120,7 @@ var GameLayer = cc.LayerColor.extend({
 	},
 	
 	initMap: function() {
-		this.map = new Map( this.shiftedLayer, 1 );
+		this.map = new Map( this, this.shiftedLayer, 1 );
 		this.map.setPosition( new cc.Point( 0, 0 ) );
 		this.addChild( this.map, 1 );
 
@@ -182,22 +182,22 @@ var GameLayer = cc.LayerColor.extend({
 
 		case cc.KEY.right:
 			this.player.goRight();
-			this.tutorialLayer.glowArrowRight();
+			// this.tutorialLayer.glowArrowRight();
 			break
 
 		case cc.KEY.left:
 			this.player.goLeft();
-			this.tutorialLayer.glowArrowLeft();
+			// this.tutorialLayer.glowArrowLeft();
 			break;
 
 		case cc.KEY.z:
 			this.player.dragBlock();
-			this.tutorialLayer.glowArrowDown();
+			// this.tutorialLayer.glowArrowDown();
 			break;
 
 		case cc.KEY.x:
 			this.player.toggleSight();
-			this.tutorialLayer.glowArrowUp();
+			// this.tutorialLayer.glowArrowUp();
 			break;
 
 		case cc.KEY.r:
@@ -225,12 +225,12 @@ var GameLayer = cc.LayerColor.extend({
 
 		case cc.KEY.right:
 			this.player.stopRight();
-			this.tutorialLayer.unGlowArrowRight();
+			// this.tutorialLayer.unGlowArrowRight();
 			break
 
 		case cc.KEY.left:
 			this.player.stopLeft();
-			this.tutorialLayer.unGlowArrowLeft();
+			// this.tutorialLayer.unGlowArrowLeft();
 			break;
 
 		case cc.KEY.down:

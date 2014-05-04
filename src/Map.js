@@ -1,13 +1,16 @@
 var Map = cc.Node.extend({
 
-	ctor: function( shiftedLayer, level ) {
+	ctor: function( minimapController, shiftedLayer, level ) {
 		this._super();
+		this.minimapController = minimapController;
 		this.shiftedLayer = shiftedLayer;
 		this.collectedCoin = 0;
 		// beware BUG here.. "DO NOT" use this value for array range.
 		// this value is numbers of blocks shown in the screen.
 		this.SCREEN_WIDTH = 10;
 		this.SCREEN_HEIGHT = 8;
+
+		this.minimapSize = 10;
 		
 		this.readableMaps = [
 
@@ -115,10 +118,12 @@ var Map = cc.Node.extend({
 		];
 
 		// convert array of string to 2D char, in order to be mutable object.
+		
+		this.initStaticColor();
+		this.miniChildren = [];
 		this.level = level;
 		this.initMap( this.level );
 		
-
 		this.setAnchorPoint( cc.p( 0, 0 ) );
 		this.childrenHash = {};
 
@@ -126,6 +131,17 @@ var Map = cc.Node.extend({
 		this.shiftValueColumn = 0;
 		this.children = [];
 		this.plotMap();
+
+	},
+
+	initStaticColor: function() {
+		Map.COLOR.RED = new cc.Color4B( 255, 0, 0, 255 );
+		Map.COLOR.BLUE = new cc.Color4B( 0, 0, 255, 255 );
+		Map.COLOR.GREEN = new cc.Color4B( 0, 255, 0, 255 );
+		Map.COLOR.BLACK = new cc.Color4B( 0, 0, 0, 255 );
+		Map.COLOR.GRAY = new cc.Color4B( 100, 100, 100, 255 );
+		Map.COLOR.YELLOW = new cc.Color4B( 0, 255, 255, 255 );
+		Map.COLOR.WHITE = new cc.Color4B( 255, 255, 255, 255 );
 
 	},
 
@@ -137,6 +153,48 @@ var Map = cc.Node.extend({
 				line.push( this.readableMaps[level][i][j] );
 			}
 			this.map.push( line );
+		}
+
+		this.initMinimap();
+	},
+
+	initMinimap: function() {
+		for ( var i = 0; i < this.miniChildren.length; i++ ) {
+			this.minimapController.removeChild( this.miniChildren[i] );
+		}
+		this.miniChildren = [];
+
+		for ( var r = 0; r < this.map.length; r++ ) {
+			for ( var c = 0; c < this.map[0].length; c++ ) {
+
+				var color = null;
+
+				if ( this.map[ r ][ c ] == '*' ) {
+					color = Map.COLOR.WHITE;
+				} else if ( this.map[ r ][ c ] == '^' ) {
+					color = Map.COLOR.GREEN;
+				} else if ( this.map[ r ][ c ] == 'x' ) {
+					color = Map.COLOR.BLACK;
+				} else if ( this.map[ r ][ c ] == '#' ) {
+					color = Map.COLOR.BLACK;
+				} else if ( this.map[ r ][ c ] == '_' ) {
+					color = Map.COLOR.WHITE;
+				}
+
+				if ( color != null ) {
+					// console.log(color)
+					var posX = c * this.minimapSize + 400;
+					var posY = ( this.map.length - r - 1 ) * this.minimapSize + 400;
+					var s = new cc.LayerColor();
+					s.init( color, this.minimapSize, this.minimapSize );
+					s.setPosition( new cc.Point( posX, posY ) );
+					this.minimapController.addChild( s, 15 );
+					this.miniChildren.push( s );
+				}
+
+				color = null;
+				
+			}
 		}
 	},
 
@@ -152,6 +210,7 @@ var Map = cc.Node.extend({
 
 	setBlock: function( r, c, value ) {
 		this.map[ r ][ c ] = value;
+		this.initMinimap();
 	},
 
 	dragBlock: function( blockX, blockY, headingDirection ) {
@@ -260,7 +319,7 @@ var Map = cc.Node.extend({
 					// console.log((r - 1) + "," + c )
 
 					// console.log(  this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.CHECKPOINT  );
-					console.log( r + "," + c )
+					// console.log( r + "," + c )
 					if ( this.childrenHash[ (r) + "," + c ].type == Block.TYPE.DIRT ) {
 						this.childrenHash[ (r - 1) + "," + c ].touched();
 					} else if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.COIN ) {
@@ -322,3 +381,13 @@ var Map = cc.Node.extend({
 	},
 
 });
+
+Map.COLOR = {
+	RED: null,
+	BLUE: null,
+	GREEN: null,
+	BLACK: null,
+	GRAY: null,
+	YELLOW: null,
+	WHITE: null,
+}
