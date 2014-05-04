@@ -15,7 +15,8 @@ var RigidBody = cc.Sprite.extend({
 		this.allRigidBodies = null;
 
 		this.PIXEL_SIZE = 120;
-		this.PIXEL_SIZE_WITH_OFFSET = this.PIXEL_SIZE - 1;
+		this.PIXEL_SIZE_WITH_OFFSET = this.PIXEL_SIZE - 5;
+		this.REAL_BOTTOM_LEFT = 3;
 		this.walkingSpeed = 0;
 
 		this.headingDirection = RigidBody.DIRECTION.RIGHT;
@@ -161,11 +162,10 @@ var RigidBody = cc.Sprite.extend({
 		if ( this.velocityY < 0 ) {
 			if ( bottomLeftCorner.isFree() && bottomRightCorner.isFree() ) {
 				this.nextPositionY += this.velocityY;
+				this.map.touch( [ bottomLeftCorner, bottomRightCorner ] );
 				return;
 			} else {
 				this.touchTheGround( bottomLeftCorner, bottomRightCorner );
-				this.map.touch( [ bottomLeftCorner, bottomRightCorner ] );
-
 			}
 			
 		} else if ( this.velocityY > 0 ) {
@@ -184,10 +184,10 @@ var RigidBody = cc.Sprite.extend({
 	},
 
 	checkCollision: function() {
-		var currentPositionX = this.getPositionX();
-		var currentPositionY = this.getPositionY();
-		var newPositionX = this.getPositionX() + this.velocityX;
-		var newPositionY = this.getPositionY() + this.velocityY;
+		var currentPositionX = this.getPositionX() + this.REAL_BOTTOM_LEFT ;
+		var currentPositionY = this.getPositionY() + this.REAL_BOTTOM_LEFT ;
+		var newPositionX = this.getPositionX() + this.velocityX + this.REAL_BOTTOM_LEFT ;
+		var newPositionY = this.getPositionY() + this.velocityY + this.REAL_BOTTOM_LEFT ;
 
 		// var newTopLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY + this.PIXEL_SIZE ) );
 		// var newTopRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE , newPositionY + this.PIXEL_SIZE) );

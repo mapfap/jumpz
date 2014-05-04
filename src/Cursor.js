@@ -2,12 +2,13 @@ var Cursor = cc.Sprite.extend({
 
 	ctor: function() {
 		this._super();
-		this.initAnimation();
+		this.setScale( 0.2 );
+		this.setAnchorPoint( new cc.Point( 0, 1 ) );
+		this.initWithFile( 'images/cursor.png' );
+		// this.initAnimation();
 	},
 
 	initAnimation: function() {
-		this.setScale( 0.2 );
-		this.setAnchorPoint( new cc.Point( 0, 1 ) );
 
 		var animation = new cc.Animation.create();
 		// animation.addSpriteFrameWithFile( 'images/poring0.png' );
