@@ -35,7 +35,7 @@ var Player = RigidBody.extend({
 		this.initAimingSystem();
 		this.initLabel();
 
-		this.schedule( this.energyDrain, 1 );
+		// this.schedule( this.energyDrain, 1 );
 	},
 
 	setMap: function( map ) {
@@ -257,7 +257,7 @@ var Player = RigidBody.extend({
 		}
 
 		if ( this.isAiming ) {
-			this.increaseEnergy( -30 );
+			this.increaseEnergy( -5 );
 			this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 			this.map.dragBlock( this.aimedBlockX, this.aimedBlockY, this.headingDirection );
 			this.isAiming = false;
