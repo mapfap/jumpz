@@ -36,12 +36,26 @@ var Map = cc.Node.extend({
 			'#_#____#_____________________###________________________#___#',
 			'#_#____#_________**_*_*________________####_________________#',
 			'#___________________________#####____________###########____#',
-			'#___________********________________________________________#',
+			'#___________********_______________________^________________#',
 			'#___________________________________________________________#',
 			'#############################################################',
 		],
 
 		[ // Level 1
+			'_____________________*',
+			'___________________^_*',
+			'_________________####*',
+			'_____*_______________*',
+			'____*_########________',
+			'___*_#________________',
+			'_________________#____',
+			'##___#__####__________',
+			'____*_*_*_*_*_*_**____',
+			'______________________*',
+			'######################',
+		],
+
+		[ // Level 2
 			'_________*',
 			'_____*___*',
 			'____*_____',
@@ -53,7 +67,7 @@ var Map = cc.Node.extend({
 			'##########',
 		],
 
-		[ // Level 2
+		[ // Level 3
 			'**********',
 			'__________',
 			'^____#____',
@@ -64,7 +78,7 @@ var Map = cc.Node.extend({
 			'##########',
 		],
 
-		[ // Level 3
+		[ // Level 4
 			'__________',
 			'__________',
 			'___^xxxx__',
@@ -75,7 +89,7 @@ var Map = cc.Node.extend({
 			'##########',
 		],
 
-		[ // Level 4
+		[ // Level 5
 			'_________^',
 			'__________',
 			'_______xxx',
@@ -133,8 +147,27 @@ var Map = cc.Node.extend({
 		this.children = [];
 		this.plotMap();
 
-		this.playerMarkerPoint = new cc.LayerColor();
-		this.playerMarkerPoint.init( Map.COLOR.RED, this.minimapSize, this.minimapSize );
+		this.initPlayerMarker();
+		
+	},
+
+	initPlayerMarker: function() {
+
+		// this.playerMarkerPoint = new cc.LayerColor();
+		// this.playerMarkerPoint.init( Map.COLOR.RED, this.minimapSize, this.minimapSize );
+		
+		this.playerMarkerPoint = new cc.Sprite.create('images/marker.png');
+		var animation = new cc.Animation.create();
+		animation.addSpriteFrameWithFile( 'images/marker.png' );
+		animation.addSpriteFrameWithFile( 'images/marker_none.png' );
+		animation.addSpriteFrameWithFile( 'images/marker.png' );
+		animation.setDelayPerUnit( 0.3 );
+		// var movingAction = cc.Animate.create( animation );
+
+		var movingAction = cc.RepeatForever.create( cc.Animate
+				.create( animation ) );
+		this.playerMarkerPoint.runAction( movingAction );
+		this.playerMarkerPoint.setAnchorPoint( new cc.Point( 0, 0 ) );
 		this.minimapController.addChild( this.playerMarkerPoint, 3 );
 	},
 
@@ -349,6 +382,7 @@ var Map = cc.Node.extend({
 					} else if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.COIN ) {
 							this.setBlock( r, c, "_" );
 							this.collectedCoin++;
+							this.getParent().player.popup( "$" );
 							this.plotMap();
 					} else if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.CHECKPOINT ) {
 						if ( this.getParent().state == GameLayer.STATE.STARTED ) {
