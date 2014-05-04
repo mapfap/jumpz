@@ -7,7 +7,7 @@ var GameLayer = cc.LayerColor.extend({
 		this.allRigidBodies = [];
 		this.allShiftableObjects = [];
 
-		this.initTutorialLayer();
+		// this.initTutorialLayer();
 
 		this.initShiftedLayer();
 		this.initMap();
@@ -93,18 +93,23 @@ var GameLayer = cc.LayerColor.extend({
 	},
 
 	showCollectedCoin: function() {
-		this.coinLabel.setString( "  x  " + this.map.collectedCoin );
+		this.coinLabel.setString( this.map.collectedCoin );
 	},
 
 	initHelperUI: function() {
 		this.coinIcon = cc.Sprite.create( 'images/blocks/coin.png' );
 		this.coinIcon.setScale( 0.5 );
-		this.coinIcon.setAnchorPoint( new cc.Point( 0 , 0 ) );
-		this.coinIcon.setPosition( new cc.Point( 20 , 510 ) );
+		this.coinIcon.setAnchorPoint( new cc.Point( 0, 0 ) );
+		this.coinIcon.setPosition( new cc.Point( 20, 510 ) );
 		this.addChild( this.coinIcon, 4 );
 
-		this.coinLabel = cc.LabelTTF.create( '  x  0', 'Arial', 30 );
-		this.coinLabel.setPosition( new cc.Point( 90, 530 ) );
+		var xLabel = cc.LabelTTF.create( 'x', 'Arial', 30 );
+		xLabel.setPosition( new cc.Point( 85, 532 ) );
+		xLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
+		this.addChild( xLabel, 4 );
+
+		this.coinLabel = cc.LabelTTF.create( '', 'Arial', 30 );
+		this.coinLabel.setPosition( new cc.Point( 120, 532 ) );
 		this.coinLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.addChild( this.coinLabel, 4 );
 
