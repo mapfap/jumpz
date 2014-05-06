@@ -35,6 +35,8 @@ var Player = RigidBody.extend({
 		this.initAimingSystem();
 		this.initLabel();
 
+		this.rightOffsetForAim = 10;
+
 		// this.schedule( this.energyDrain, 1 );
 	},
 
@@ -96,25 +98,36 @@ var Player = RigidBody.extend({
 	},
 
 	initAimingSystem: function() {
-		//[ y, x, theta ]
+		//[ x, y, theta ]
 		this.aimOrders = [
-			[ 0, 0, 0 ],
-			[ 1, 1, -45 ],
-			[ 2, 1, -30],
-			[ 1, 2, -75 ],
-			[ 2, 2, -45 ],
-			[ 3, 2, -30 ],
-			[ 1, 3, -80 ],
-			[ 2, 3, -50 ],
-			[ 3, 3, -45 ],
-			[ 0, 1, 0 ],
-			[ 1, 1, 0 ],
-			[ 2, 0, -0 ],
-			[ 3, 0, -0 ],
+
+		[ 1, 0, 0 ],
+		[ 1, 1, -45 ],
+		[ 2, 0, 0 ],
+		[ 2, 1, -26 ],
+		[ 1, 2, -64 ],
+		[ 2, 2, -45 ],
+		[ 3, 0, 0 ],
+		[ 3, 1, -18 ],
+
+			// [ 0, 0, 0 ],
+			// [ 1, 1, -45 ],
+			// [ 2, 1, -30],
+			// [ 1, 2, -75 ],
+			// [ 2, 2, -45 ],
+			// [ 3, 2, -30 ],
+			// [ 1, 3, -80 ],
+			// [ 2, 3, -50 ],
+			// [ 3, 3, -45 ],
+			// [ 0, 1, 0 ],
+			// [ 1, 0, 0 ],
+			// [ 1, 1, 0 ],
+			// [ 2, 0, -0 ],
+			// [ 3, 0, -0 ],
 		];
 
 		this.isAiming = false;
-		this.aimedPixel = null;
+		this.aimedPixelPoint = null;
 		this.aimedBlockX = 0;
 		this.aimedBlockY = 0;
 		
@@ -217,33 +230,52 @@ var Player = RigidBody.extend({
 	},
 
 	aimTarget: function() {
+		
+	  	var currentPositionX = this.getPositionX();
+	  	var currentPositionY = this.getPositionY();
+	  	var currentPositionXReferToMap = currentPositionX ;//+ this.map.getPositionX();
+	  	var currentPositionYReferToMap = currentPositionY ;//+ this.map.getPositionY();
+	  	var currentBlockX = Math.floor( currentPositionXReferToMap / BLOCK_PIXEL );
+	  	var currentBlockY = Math.floor( currentPositionYReferToMap / BLOCK_PIXEL );
+		
+		if ( this.headingDirection == RigidBody.DIRECTION.RIGHT) {
+		  	currentPositionXReferToMap += BLOCK_PIXEL - this.rightOffsetForAim;
+		}
+	  	
 		for ( var i = 0; i < this.aimOrders.length; i++ ) {
 		  	var aim = this.aimOrders[i];
-		  	var aimPixelX = aim[ 0 ] * BLOCK_PIXEL * this.headingDirection + this.reducePixel( this.getPositionX() );
-		  	var aimPixelY = aim[ 1 ] * BLOCK_PIXEL + this.reducePixel( this.getPositionY() );
 
-		  	console.log( this.reducePixel( this.getPositionY() ) )
-		  	this.aimedBlockX = this.convertPixelToBlock( aimPixelX );
-		  	this.aimedBlockY = this.convertPixelToBlock( aimPixelY );
+		  	this.aimedBlockX = currentBlockX + aim[ 0 ] * this.headingDirection;
+		  	this.aimedBlockY = currentBlockY + aim[ 1 ];
+
+		  	// console.log( this.aimedBlockX, this.aimedBlockY )
 
 		  	if ( this.map.isAimable( this.aimedBlockX, this.aimedBlockY ) ) {
-			    this.aimedPixel = new cc.Point( aimPixelX + this.map.getPositionX() , aimPixelY + this.map.getPositionY() );
-			    this.crosshair.setPosition( this.aimedPixel ); 
+			    // this.aimedPixelPoint = new cc.Point( this.aimedBlockX * BLOCK_PIXEL, this.aimedBlockY * BLOCK_PIXEL );
+			    // console.log( this.aimedBlockX *BLOCK_PIXEL )
+			    // this.crosshair.setPosition( this.aimedPixelPoint );
+			    
+			    // this.crosshair.setPosition( new cc.Point(500,500) );
+
 			    this.isAiming = true;
 
 			    var blockDirection = this.map.getBlockDirection( this.aimedBlockX, this.aimedBlockY, this.headingDirection );
+		   		// console.log ( blockDirection )
 
 			   	switch( blockDirection ) {
 				case Player.BLOCK_DIRECTION.FALL:
+					this.crosshair.setPosition( this.aimedBlockX * BLOCK_PIXEL + this.map.getPositionX(), this.aimedBlockY * BLOCK_PIXEL + this.map.getPositionY() );
 			    	this.crosshair.setRotation( 0 );
 					break;
 
 				case Player.BLOCK_DIRECTION.SLIDE:
 			    	if (  this.headingDirection == RigidBody.DIRECTION.LEFT ) {
-						this.crosshair.setPosition( aimPixelX + BLOCK_PIXEL + this.map.getPositionX() , aimPixelY + this.map.getPositionY() );
+						this.crosshair.setPosition( this.aimedBlockX * BLOCK_PIXEL + BLOCK_PIXEL + this.map.getPositionX(), this.aimedBlockY * BLOCK_PIXEL + this.map.getPositionY() );
+
 			    		this.crosshair.setRotation( -90 );
 			    	} else {
-						this.crosshair.setPosition( aimPixelX + this.map.getPositionX() , aimPixelY + BLOCK_PIXEL + this.map.getPositionY() );
+						this.crosshair.setPosition( this.aimedBlockX * BLOCK_PIXEL + this.map.getPositionX(), this.aimedBlockY * BLOCK_PIXEL + BLOCK_PIXEL + this.map.getPositionY() );
+						// console.log( this.crosshair.getPositionX() )
 			    		this.crosshair.setRotation( 90 );
 			    	}
 					break;
@@ -389,11 +421,11 @@ var Player = RigidBody.extend({
 	},
 
 	update: function() {
-		this.aimTarget();
 		this.checkKeyHolded();
 		this.calculateNextPosition();
 		this.handleMainFocus();
 		this.applyNextPosition();
+		this.aimTarget();
 	},
 
 	jump: function() {

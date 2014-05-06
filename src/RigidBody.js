@@ -14,8 +14,34 @@ var RigidBody = cc.Sprite.extend({
 		this.map = null;
 		this.allRigidBodies = null;
 
-		this.blockPixelWithOffset = BLOCK_PIXEL - 12;
-		this.REAL_BOTTOM_LEFT = 0;
+		// this.blockPixelWithOffset = BLOCK_PIXEL - 0;
+
+		this.offset = {
+
+			bottomLeft: {
+				x: 1,
+				y: 0,
+			},
+
+			bottomRight: {
+				x: -2,
+				y: 0,
+			},
+
+			topRight: {
+				x: -20,
+				y: -30,
+			},
+
+			topLeft: {
+				x: 10,
+				y: -30,
+			},
+
+		};
+
+		// console.log( this.offset.bottomRight.x )
+
 		this.walkingSpeed = 0;
 
 		this.headingDirection = RigidBody.DIRECTION.RIGHT;
@@ -43,7 +69,7 @@ var RigidBody = cc.Sprite.extend({
 
 	isFlying: function() {
 		var bottomLeftCorner = new Corner( new cc.Point( this.getPositionX(), this.getPositionY() + this.velocityY ) , this.map );
-		var bottomRightCorner = new Corner( new cc.Point( this.getPositionX() + this.blockPixelWithOffset, this.getPositionY() + this.velocityY  ), this.map );
+		var bottomRightCorner = new Corner( new cc.Point( this.getPositionX() + this.offset.bottomRight.x, this.getPositionY() + this.velocityY + this.offset.bottomRight.y ), this.map );
 		return bottomLeftCorner.isFree() && bottomRightCorner.isFree();
 	},
 
@@ -183,10 +209,10 @@ var RigidBody = cc.Sprite.extend({
 	},
 
 	checkCollision: function() {
-		var currentPositionX = this.getPositionX() + this.REAL_BOTTOM_LEFT ;
-		var currentPositionY = this.getPositionY() + this.REAL_BOTTOM_LEFT ;
-		var newPositionX = this.getPositionX() + this.velocityX + this.REAL_BOTTOM_LEFT ;
-		var newPositionY = this.getPositionY() + this.velocityY + this.REAL_BOTTOM_LEFT ;
+		var currentPositionX = this.getPositionX();
+		var currentPositionY = this.getPositionY();
+		var newPositionX = this.getPositionX() + this.velocityX;
+		var newPositionY = this.getPositionY() + this.velocityY;
 
 		// var newTopLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY + BLOCK_PIXEL) );
 		// var newTopRightCorner = new Corner( new cc.Point( newPositionX + BLOCK_PIXEL, newPositionY + BLOCK_PIXEL) );
@@ -198,17 +224,17 @@ var RigidBody = cc.Sprite.extend({
 		// var currentBottomRightCorner = new Corner( new cc.Point( currentPositionX + BLOCK_PIXEL, currentPositionY) );
 
 		// new X but, current Y 
-		var topLeftCorner = new Corner( new cc.Point( newPositionX, currentPositionY + this.blockPixelWithOffset ) );
-		var topRightCorner = new Corner( new cc.Point( newPositionX + this.blockPixelWithOffset , currentPositionY + this.blockPixelWithOffset) );
-		var bottomLeftCorner = new Corner( new cc.Point( newPositionX, currentPositionY) );
-		var bottomRightCorner = new Corner( new cc.Point( newPositionX + this.blockPixelWithOffset, currentPositionY) );
+		var topLeftCorner = new Corner( new cc.Point( newPositionX + this.offset.topLeft.x, BLOCK_PIXEL + currentPositionY + this.offset.topLeft.y ) );
+		var topRightCorner = new Corner( new cc.Point( BLOCK_PIXEL + newPositionX + this.offset.topRight.x , BLOCK_PIXEL + currentPositionY + this.offset.topRight.y ) );
+		var bottomLeftCorner = new Corner( new cc.Point( newPositionX + this.offset.bottomLeft.x , currentPositionY + this.offset.bottomLeft.y ) );
+		var bottomRightCorner = new Corner( new cc.Point( BLOCK_PIXEL +  newPositionX + this.offset.bottomRight.x, currentPositionY + this.offset.bottomRight.y ) );
 		this.checkLeftOrRightCollision( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 		
 		// new X and, new Y 
-		var topLeftCorner = new Corner( new cc.Point( currentPositionX, newPositionY + this.blockPixelWithOffset ) );
-		var topRightCorner = new Corner( new cc.Point( currentPositionX + this.blockPixelWithOffset , newPositionY + this.blockPixelWithOffset) );
-		var bottomLeftCorner = new Corner( new cc.Point( currentPositionX, newPositionY) );
-		var bottomRightCorner = new Corner( new cc.Point( currentPositionX + this.blockPixelWithOffset, newPositionY) );
+		var topLeftCorner = new Corner( new cc.Point( currentPositionX + this.offset.topLeft.x, BLOCK_PIXEL + newPositionY + this.offset.topLeft.y ) );
+		var topRightCorner = new Corner( new cc.Point( BLOCK_PIXEL + currentPositionX + this.offset.topRight.x , BLOCK_PIXEL + newPositionY + this.offset.topRight.y ) );
+		var bottomLeftCorner = new Corner( new cc.Point( currentPositionX + this.offset.bottomLeft.x, newPositionY + this.offset.bottomLeft.y ) );
+		var bottomRightCorner = new Corner( new cc.Point( BLOCK_PIXEL + currentPositionX + this.offset.bottomRight.x, newPositionY + this.offset.bottomRight.y ) );
 		this.checkTopOrBottomCollision( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 
 
