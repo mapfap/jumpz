@@ -1,18 +1,26 @@
 var Corner = cc.Node.extend({
 	
-	ctor: function( point ) {
+	ctor: function( isOnFocus, point ) {
 		this._super();
 
 		this.x = point.x;
 		this.y = point.y;
+
+		this.isOnFocus = isOnFocus;
 	},
 
 	getBlockX: function() {
-		return Math.floor( ( this.x - Corner.map.getPositionX() ) / BLOCK_PIXEL );
+		if ( this.isOnFocus ) {
+			return Math.floor( ( this.x - Corner.map.getPositionX() ) / BLOCK_PIXEL );
+		}
+		return Math.floor( ( this.x + Corner.shiftedLayer.getPositionX() ) / BLOCK_PIXEL ); 
 	},
 
 	getBlockY: function() {
-		return Math.floor( ( this.y - Corner.map.getPositionY() ) / BLOCK_PIXEL );
+		if ( this.isOnFocus ) {
+			return Math.floor( ( this.y - Corner.map.getPositionY() ) / BLOCK_PIXEL );
+		}
+		return Math.floor( ( this.y + Corner.shiftedLayer.getPositionY() ) / BLOCK_PIXEL );
 	},
 
 	isFree: function() {
@@ -26,3 +34,4 @@ var Corner = cc.Node.extend({
 });
 
 Corner.map = null;
+Corner.shiftedLayer = null;

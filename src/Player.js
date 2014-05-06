@@ -1,7 +1,7 @@
 var Player = RigidBody.extend({
 
-	ctor: function() {
-		this._super();
+	ctor: function( isOnFocus ) {
+		this._super( isOnFocus );
 
 		this.energyDrainRate = -2; // per second
 
@@ -185,10 +185,6 @@ var Player = RigidBody.extend({
 		this.crosshair = crosshair;
 	},
 
-	setShiftedLayer: function( shiftedLayer ){
-		this.shiftedLayer = shiftedLayer;
-	},
-
 	popup: function( text ) {
 		var label = DimLabel.create( '0', 'Arial', 13 );
 		this.shiftedLayer.addChild( label );
@@ -326,7 +322,7 @@ var Player = RigidBody.extend({
 		}
 
 		if ( this.isAiming ) {
-			this.increaseEnergy( -5 );
+			this.increaseEnergy( -10 );
 			this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 			this.map.dragBlock( this.aimedBlockX, this.aimedBlockY, this.headingDirection );
 			this.isAiming = false;

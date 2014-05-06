@@ -1,8 +1,8 @@
 var Monster = RigidBody.extend({
 
-	ctor: function( size ) {
+	ctor: function( isOnFocus, size ) {
 
-		this._super();
+		this._super( isOnFocus );
 		this.setScale( size );
 
 		this.walkingSpeed = 3;
@@ -22,6 +22,30 @@ var Monster = RigidBody.extend({
 
 		this.ground = null;
 		this.map = null;
+
+		this.offset = {
+
+			bottomLeft: {
+				x: 0,
+				y: 0,
+			},
+
+			bottomRight: {
+				x: 0,
+				y: 0,
+			},
+
+			topRight: {
+				x: 0,
+				y: 0,
+			},
+
+			topLeft: {
+				x: 0,
+				y: 0,
+			},
+
+		};
 
 	},
 

@@ -1,9 +1,10 @@
 var RigidBody = cc.Sprite.extend({
-	ctor: function() {
+	ctor: function( isOnfocus ) {
 		this._super();
 
 		this.velocityY = 0;
 		this.velocityX = 0;
+		this.isOnfocus = isOnfocus;
 
 		this.nextPositionX = 0;
 		this.nextPositionY = 0;
@@ -21,6 +22,10 @@ var RigidBody = cc.Sprite.extend({
 
 		this.headingDirection = RigidBody.DIRECTION.RIGHT;
 		this.setFlippedX( true );
+	},
+
+	setShiftedLayer: function( shiftedLayer ) {
+		this.shiftedLayer = shiftedLayer;
 	},
 
 	convertPixelToBlock: function( coordinate, isFloor ) {
@@ -43,8 +48,8 @@ var RigidBody = cc.Sprite.extend({
 	},
 
 	isFlying: function() {
-		var bottomLeftCorner = new Corner( new cc.Point( this.getPositionX(), this.getPositionY() + this.velocityY ) , this.map );
-		var bottomRightCorner = new Corner( new cc.Point( this.getPositionX() + this.offset.bottomRight.x, this.getPositionY() + this.velocityY + this.offset.bottomRight.y ), this.map );
+		var bottomLeftCorner = new Corner( this.isOnfocus, new cc.Point( this.getPositionX(), this.getPositionY() + this.velocityY ) , this.map );
+		var bottomRightCorner = new Corner( this.isOnfocus, new cc.Point( this.getPositionX() + this.offset.bottomRight.x, this.getPositionY() + this.velocityY + this.offset.bottomRight.y ), this.map );
 		return bottomLeftCorner.isFree() && bottomRightCorner.isFree();
 	},
 
@@ -189,43 +194,21 @@ var RigidBody = cc.Sprite.extend({
 		var newPositionX = this.getPositionX() + this.velocityX;
 		var newPositionY = this.getPositionY() + this.velocityY;
 
-		// var newTopLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY + BLOCK_PIXEL) );
-		// var newTopRightCorner = new Corner( new cc.Point( newPositionX + BLOCK_PIXEL, newPositionY + BLOCK_PIXEL) );
-		// var newBottomLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY) );
-		// var newBottomRightCorner = new Corner( new cc.Point( newPositionX + BLOCK_PIXEL, newPositionY) );
-		// var currentTopLeftCorner = new Corner( new cc.Point( currentPositionX, currentPositionY + BLOCK_PIXEL) );
-		// var currentTopRightCorner = new Corner( new cc.Point( currentPositionX + BLOCK_PIXEL, currentPositionY + BLOCK_PIXEL) );
-		// var currentBottomLeftCorner = new Corner( new cc.Point( currentPositionX, currentPositionY) );
-		// var currentBottomRightCorner = new Corner( new cc.Point( currentPositionX + BLOCK_PIXEL, currentPositionY) );
-
 		// new X but, current Y 
-		var topLeftCorner = new Corner( new cc.Point( newPositionX + this.offset.topLeft.x, BLOCK_PIXEL + currentPositionY + this.offset.topLeft.y ) );
-		var topRightCorner = new Corner( new cc.Point( BLOCK_PIXEL + newPositionX + this.offset.topRight.x , BLOCK_PIXEL + currentPositionY + this.offset.topRight.y ) );
-		var bottomLeftCorner = new Corner( new cc.Point( newPositionX + this.offset.bottomLeft.x , currentPositionY + this.offset.bottomLeft.y ) );
-		var bottomRightCorner = new Corner( new cc.Point( BLOCK_PIXEL +  newPositionX + this.offset.bottomRight.x, currentPositionY + this.offset.bottomRight.y ) );
+		var topLeftCorner = new Corner( this.isOnfocus, new cc.Point( newPositionX + this.offset.topLeft.x, BLOCK_PIXEL + currentPositionY + this.offset.topLeft.y ) );
+		var topRightCorner = new Corner( this.isOnfocus, new cc.Point( BLOCK_PIXEL + newPositionX + this.offset.topRight.x , BLOCK_PIXEL + currentPositionY + this.offset.topRight.y ) );
+		var bottomLeftCorner = new Corner( this.isOnfocus, new cc.Point( newPositionX + this.offset.bottomLeft.x , currentPositionY + this.offset.bottomLeft.y ) );
+		var bottomRightCorner = new Corner( this.isOnfocus, new cc.Point( BLOCK_PIXEL +  newPositionX + this.offset.bottomRight.x, currentPositionY + this.offset.bottomRight.y ) );
 		this.checkLeftOrRightCollision( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 		
 		// new X and, new Y 
-		var topLeftCorner = new Corner( new cc.Point( currentPositionX + this.offset.topLeft.x, BLOCK_PIXEL + newPositionY + this.offset.topLeft.y ) );
-		var topRightCorner = new Corner( new cc.Point( BLOCK_PIXEL + currentPositionX + this.offset.topRight.x , BLOCK_PIXEL + newPositionY + this.offset.topRight.y ) );
-		var bottomLeftCorner = new Corner( new cc.Point( currentPositionX + this.offset.bottomLeft.x, newPositionY + this.offset.bottomLeft.y ) );
-		var bottomRightCorner = new Corner( new cc.Point( BLOCK_PIXEL + currentPositionX + this.offset.bottomRight.x, newPositionY + this.offset.bottomRight.y ) );
+		var topLeftCorner = new Corner( this.isOnfocus, new cc.Point( currentPositionX + this.offset.topLeft.x, BLOCK_PIXEL + newPositionY + this.offset.topLeft.y ) );
+		var topRightCorner = new Corner( this.isOnfocus, new cc.Point( BLOCK_PIXEL + currentPositionX + this.offset.topRight.x , BLOCK_PIXEL + newPositionY + this.offset.topRight.y ) );
+		var bottomLeftCorner = new Corner( this.isOnfocus, new cc.Point( currentPositionX + this.offset.bottomLeft.x, newPositionY + this.offset.bottomLeft.y ) );
+		var bottomRightCorner = new Corner( this.isOnfocus, new cc.Point( BLOCK_PIXEL + currentPositionX + this.offset.bottomRight.x, newPositionY + this.offset.bottomRight.y ) );
 		this.checkTopOrBottomCollision( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 
-
-		// var concludePositionX = currentPositionX + this.nextPositionX;
-		// var concludePositionY = currentPositionY + this.nextPositionY;
-		// var topLeftCorner = new Corner( new cc.Point( concludePositionX, concludePositionY + this.blockPixelWithOffset ) );
-		// var topRightCorner = new Corner( new cc.Point( concludePositionX + this.blockPixelWithOffset , concludePositionY + this.blockPixelWithOffset) );
-		// var bottomLeftCorner = new Corner( new cc.Point( concludePositionX, concludePositionY) );
-		// var bottomRightCorner = new Corner( new cc.Point( concludePositionX + this.blockPixelWithOffset, concludePositionY) );
-
-		// this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 	},
-
-	// checkTouchingAThing: function( corners ) {
-		// this.map.touch( [ topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner ] );
-	// },
 
 	calculateNextPosition: function( onFocus ) {
 		this.applyGravity();
