@@ -23,7 +23,7 @@
             'src/DimLabel.js',
             'src/Monster.js',
             'src/PatrolMonster.js',
-            'src/Inventory.js',
+            'src/MinimapController.js',
             'src/Cursor.js',
             'src/Corner.js',
             'src/TutorialLayer.js',

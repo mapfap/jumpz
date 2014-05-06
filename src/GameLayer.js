@@ -11,7 +11,7 @@ var GameLayer = cc.LayerColor.extend({
 
 		// this.initTutorialLayer();
 
-		this.initInventory();
+		this.initMinimapController();
 
 		this.initShiftedLayer();
 		this.initMap();
@@ -41,13 +41,13 @@ var GameLayer = cc.LayerColor.extend({
 		this.addChild( this.tutorialLayer, 20 );
 	},
 
-	initInventory: function() {
-		this.inventory = new Inventory( 500, 400 );
-		this.addChild( this.inventory, 3 );
+	initMinimapController: function() {
+		this.minimap = new MinimapController( MAXIMUM_MINIMAP_SIZE, MAXIMUM_MINIMAP_SIZE );
+		this.addChild( this.minimap, 3 );
 
 		this.cursor = new Cursor();
 		this.addChild( this.cursor, 5 );
-		this.inventory.setCursor( this.cursor );
+		this.minimap.setCursor( this.cursor );
 	},
 
 	initPlayer: function() {
@@ -60,12 +60,28 @@ var GameLayer = cc.LayerColor.extend({
 		// this.allShiftableObjects.push( this.player );
 		this.player.setAllRigidBodies( this.allRigidBodies );
 
-		this.crosshair = new cc.Sprite.create( 'images/crosshair.png' );
+		this.crosshair = new cc.Sprite.create( 'images/crosshair/0.png' );
 		this.crosshair.setAnchorPoint( new cc.Point( 0, 0 ) );
 		this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 		this.crosshair.setScale( GLOBAL_SCALE );
 		// this.allShiftableObjects.push( this.crosshair );
 		this.addChild( this.crosshair, 3 );
+
+		var cAnimation = new cc.Animation.create();
+		// cAnimation.addSpriteFrameWithFile( 'images/crosshair/0.png' );
+		cAnimation.addSpriteFrameWithFile( 'images/crosshair/1.png' );
+		// cAnimation.addSpriteFrameWithFile( 'images/crosshair/1.png' );
+		// cAnimation.addSpriteFrameWithFile( 'images/crosshair/1.png' );
+		cAnimation.addSpriteFrameWithFile( 'images/crosshair/2.png' );
+		cAnimation.addSpriteFrameWithFile( 'images/crosshair/2.png' );
+		cAnimation.addSpriteFrameWithFile( 'images/crosshair/3.png' );
+		cAnimation.addSpriteFrameWithFile( 'images/crosshair/3.png' );
+		cAnimation.addSpriteFrameWithFile( 'images/crosshair/3.png' );
+		cAnimation.setDelayPerUnit( 0.1 );
+		var cAction = cc.RepeatForever.create( cc.Animate.create( cAnimation ) );
+		this.crosshair.runAction( cAction );
+
+
 		this.player.setCrosshair( this.crosshair );
 
 		// var flash = cc.Sprite.create ( 'images/blocks/dirt.png' );
@@ -99,16 +115,16 @@ var GameLayer = cc.LayerColor.extend({
 		this.coinIcon = cc.Sprite.create( 'images/blocks/coin.png' );
 		this.coinIcon.setScale( 0.5 );
 		this.coinIcon.setAnchorPoint( new cc.Point( 0, 0 ) );
-		this.coinIcon.setPosition( new cc.Point( 20, 510 ) );
+		this.coinIcon.setPosition( new cc.Point( 20, SCREEN_HEIGHT - 90 ) );
 		this.addChild( this.coinIcon, 4 );
 
 		var xLabel = cc.LabelTTF.create( 'x', 'Arial', 30 );
-		xLabel.setPosition( new cc.Point( 85, 532 ) );
+		xLabel.setPosition( new cc.Point( 85, SCREEN_HEIGHT - 70 ) );
 		xLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.addChild( xLabel, 4 );
 
 		this.coinLabel = cc.LabelTTF.create( '', 'Arial', 30 );
-		this.coinLabel.setPosition( new cc.Point( 120, 532 ) );
+		this.coinLabel.setPosition( new cc.Point( 120, SCREEN_HEIGHT - 70 ) );
 		this.coinLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.addChild( this.coinLabel, 4 );
 
@@ -119,7 +135,7 @@ var GameLayer = cc.LayerColor.extend({
 	},
 	
 	initMap: function() {
-		this.map = new Map( this.inventory, this.shiftedLayer, 0 );
+		this.map = new Map( this.minimap, this.shiftedLayer, FIRST_LEVEL );
 		this.map.setPosition( new cc.Point( 0, 0 ) );
 		this.addChild( this.map, 1 );
 
@@ -131,18 +147,18 @@ var GameLayer = cc.LayerColor.extend({
 		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.addChild( this.background, 0 );
 
-		// this.tree1 = cc.Sprite.create( 'images/tree1.png' );
-		// // this.tree1.setPosition( new cc.Point( 500 , 200 ) );
-		// this.tree1.setScale( 2.5 );
-		// this.tree1.setOpacity( 0 );
-		// this.addChild( this.tree1, 0 );
+		this.tree1 = cc.Sprite.create( 'images/tree1.png' );
+		// this.tree1.setPosition( new cc.Point( 500 , 200 ) );
+		this.tree1.setScale( 2.5 );
+		this.tree1.setOpacity( 100 );
+		this.addChild( this.tree1, 0 );
 
-		// this.tree2 = cc.Sprite.create( 'images/tree2.png' );
-		// // this.tree2.setPosition( new cc.Point( 900 , 300 ) );
-		// this.tree2.setScale( 5 );
-		// this.tree2.setOpacity( 30 );
-		// this.tree2.setScaleY( 7 );
-		// this.addChild( this.tree2, 0 );
+		this.tree2 = cc.Sprite.create( 'images/tree2.png' );
+		// this.tree2.setPosition( new cc.Point( 900 , 300 ) );
+		this.tree2.setScale( 5 );
+		this.tree2.setOpacity( 130 );
+		this.tree2.setScaleY( 7 );
+		this.addChild( this.tree2, 0 );
 
 		// this.tree3 = cc.Sprite.create( 'images/tree1.png' );
 		// this.tree3.setOpacity( 10 );
@@ -219,10 +235,6 @@ var GameLayer = cc.LayerColor.extend({
 			break
 
 		case cc.KEY.a:
-			// console.log( this.player.accumulatedX, this.player.accumulatedY )
-			// console.log( this.shiftedLayer.getPosition() )
-			// console.log( this.map.childrenHash )
-			// console.log( this.map.collectedCoin )
 			console.log( cc.DimLabel.create )
 
 		default:
@@ -258,29 +270,16 @@ var GameLayer = cc.LayerColor.extend({
 	},
 
 	update: function() {
-
 		this.showCollectedCoin();
 
-		// this.tree1.setPositionX( this.shiftedLayer.getPositionX() / 30 + 300 );
-		// this.tree1.setPositionY( this.shiftedLayer.getPositionY() / 100 + 120 );
+		this.tree1.setPositionX( this.shiftedLayer.getPositionX() * 0.3 + 300 );
+		this.tree1.setPositionY( this.shiftedLayer.getPositionY() * 0.5 + 120 );
 
-		// this.tree2.setPositionX( this.shiftedLayer.getPositionX() / 10 + 900 );
-		// this.tree2.setPositionY( this.shiftedLayer.getPositionY() / 100 + 110 );
-
-		// this.tree1.setPositionY( this.tree1.getPositionY() + row * 40 );
-		// this.tree1.setPositionX( this.tree1.getPositionX() - column * 10 );
-	
-		// this.tree2.setPositionY( this.tree2.getPositionY() + row * 40 );
-		// this.tree2.setPositionX( this.tree2.getPositionX() - column * 20 );
+		this.tree2.setPositionX( this.shiftedLayer.getPositionX() * 0.8 + 900 );
+		this.tree2.setPositionY( this.shiftedLayer.getPositionY() * 0.5 + 110 );
 	},
 
 	// shiftMap: function( row , column, compensatedPixel ) {
-		// this.tree1.setPositionY( this.tree1.getPositionY() + row * 40 );
-		// this.tree1.setPositionX( this.tree1.getPositionX() - column * 10 );
-		// this.tree2.setPositionY( this.tree2.getPositionY() + row * 40 );
-		// this.tree2.setPositionX( this.tree2.getPositionX() - column * 20 );
-		// this.map.shiftMap( row, column );
-
 		// this.allShiftableObjects.forEach(function( o ){
 			// o.setPosition( new cc.Point( o.getPositionX() + 120 * -column + compensatedPixel , o.getPositionY() + 120 * row ) );
 		// }, this);

@@ -3,8 +3,8 @@ var g_resources = [
 	{ src: "images/cursor.png" },
 	{ src: "images/marker.png" },
 	{ src: "images/marker_none.png" },
-	{ src: "images/arrow_glow.png" },
-	{ src: "images/arrow.png" },
+	// { src: "images/arrow_glow.png" },
+	// { src: "images/arrow.png" },
 	{ src: "images/bar_bg.png" },
 	{ src: "images/bar_border.png" },
 	{ src: "images/blocks/air.png" },
@@ -23,7 +23,7 @@ var g_resources = [
 	// { src: "images/coin/coin4.png" },
 	// { src: "images/coin/coin5.png" },
 
-	{ src: "images/crosshair.png" },
+	// { src: "images/crosshair.png" },
 	{ src: "images/hp_green.png" },
 	// { src: "images/monsters/soul0.png" },
 	// { src: "images/monsters/soul1.png" },
@@ -37,7 +37,13 @@ var g_resources = [
 	{ src: "images/sight.png" },
 	{ src: "images/sky.png" },
 	{ src: "images/sp.png" },
-	{ src: "images/tree1.png" },
-	{ src: "images/tree2.png" },
+	// { src: "images/tree1.png" },
+	// { src: "images/tree2.png" },
+
+	
+	{ src: "images/crosshair/0.png" },
+	{ src: "images/crosshair/1.png" },
+	{ src: "images/crosshair/2.png" },
+	{ src: "images/crosshair/3.png" },
 
 ];

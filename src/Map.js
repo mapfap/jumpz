@@ -26,8 +26,26 @@ var Map = cc.Node.extend({
 			'_______#_____###_______',
 			'____#____###______#####',
 			'_#____________#####____',
-			'#_#____________________',
+			'#*#^___________________',
 			'#######################',
+		],
+
+		[ // Level 1
+		
+			'______________________^',
+			'________________#######',
+			'________________#######',
+			'______________######___',
+			'_________######________',
+			'_________####__________',
+			'_________####__________',
+			'_________####__________',
+			'_________####__________',
+			'_______________________',
+			'_______________________',
+			'_______________________',
+			'#######################',
+
 		],
 
 
@@ -179,7 +197,7 @@ var Map = cc.Node.extend({
 
 		// convert array of string to 2D char, in order to be mutable object.
 		
-		this.minimapSize = 10;
+		
 		this.initStaticColor();
 		this.miniChildren = [];
 		this.level = level;
@@ -204,6 +222,7 @@ var Map = cc.Node.extend({
 		// this.playerMarkerPoint.init( Map.COLOR.RED, this.minimapSize, this.minimapSize );
 		
 		this.playerMarkerPoint = new cc.Sprite.create('images/marker.png');
+		this.playerMarkerPoint.setScale( this.playerMarkerPointScale );
 		var animation = new cc.Animation.create();
 		animation.addSpriteFrameWithFile( 'images/marker.png' );
 		animation.addSpriteFrameWithFile( 'images/marker_none.png' );
@@ -262,6 +281,13 @@ var Map = cc.Node.extend({
 	},
 
 	initMinimap: function() {
+
+		var max = Math.max( this.map.length, this.map[0].length );
+		this.minimapSize = Math.floor( MAXIMUM_MINIMAP_SIZE / max );
+		this.minimapController.resize( this.minimapSize * this.map[0].length, this.minimapSize * this.map.length );
+		this.minimapController.setText( this.level );
+		this.playerMarkerPointScale = Math.ceil( this.minimapSize / 40 );
+
 		for ( var i = 0; i < this.miniChildren.length; i++ ) {
 			this.minimapController.removeChild( this.miniChildren[i] );
 		}
@@ -443,6 +469,11 @@ var Map = cc.Node.extend({
 
 					// console.log(  this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.CHECKPOINT  );
 					// console.log( r + "," + c )
+
+					if ( this.childrenHash[ (r) + "," + c ] == null ) {
+						return -1;
+					}
+
 					if ( this.childrenHash[ (r) + "," + c ].type == Block.TYPE.DIRT ) {
 						this.childrenHash[ (r - 1) + "," + c ].touched();
 					} else if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.COIN ) {

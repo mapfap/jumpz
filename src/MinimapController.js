@@ -1,10 +1,22 @@
-var Inventory = cc.LayerColor.extend({
+var MinimapController = cc.LayerColor.extend({
 
 	ctor: function( width, height ) {
 		this._super();
 		this.width = width;
 		this.height = height;
 		this.init();
+		this.padding = 10;
+	},
+
+	resize: function( width, height ) {
+		this.width = width;
+		this.height = height;
+		this.setPosition( new cc.Point( SCREEN_WIDTH - width - this.padding, SCREEN_HEIGHT - height - this.padding ) );
+		this.label.setPosition( 30, -15 );
+	},
+
+	setText: function( text ) {
+		this.label.setString( 'Level: ' + text );
 	},
 	
 	init: function() {
@@ -13,11 +25,10 @@ var Inventory = cc.LayerColor.extend({
 		this._super( new cc.Color4B(100, 100, 100, 0), this.width, this.height );
 		this.setAnchorPoint( new cc.Point( 0, 0 ) );
 		// this.setPosition( new cc.Point( 800, 100 ) );
-		this.setPosition( new cc.Point( 100, 100 ) );
+		this.setPosition( new cc.Point( SCREEN_WIDTH - MAXIMUM_MINIMAP_SIZE - this.padding, SCREEN_HEIGHT - MAXIMUM_MINIMAP_SIZE - this.padding ) );
 
-		// this.label = cc.LabelTTF.create( 'Minimap', 'Arial', 25 );
-		// this.label.setPosition( 35, this.height - 25 );
-		// this.addChild( this.label );
+		this.label = cc.LabelTTF.create( 'Level: ', 'Arial', 18 );
+		this.addChild( this.label );
 		
 		return true;
 	},
@@ -53,7 +64,7 @@ var Inventory = cc.LayerColor.extend({
 		var mousePosition = e.getLocation();
 		var uiPosition = this.getPosition();
 		if ( this.isEventHappenInArea( mousePosition, uiPosition ) ) {
-			console.log("CLICK!");
+			// console.log("CLICK!");
 			this.onDrag = true;
 			this.offsetPosition = new cc.Point( mousePosition.x - uiPosition.x, mousePosition.y - uiPosition.y );
 		}

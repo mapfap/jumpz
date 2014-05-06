@@ -4,21 +4,7 @@ var Block = cc.Sprite.extend({
 		this._super();
 		this.setScale( GLOBAL_SCALE );
 
-		// if ( type == Block.TYPE.COIN ) {
-		// 	// console.log("coin!")
-		// 	// this.createSpinningCoin();
-		// 	this.initWithFile( type );
-		// } else if ( type == Block.TYPE.CHECKPOINT ) {
-
-		// 	this.initWithFile( type );
-		// 	// this.setScale( 2 );
-			
-		// } else {
-			this.initWithFile( type );
-		// }
-		// if ( type == Block.TYPE.CHECKPOINT ) {
-			// this.setScale( 2 );
-		// }
+		this.initWithFile( type );
 
 		this.setAnchorPoint( cc.p( 0, 0 ) );
 		this.name = name;
@@ -32,14 +18,6 @@ var Block = cc.Sprite.extend({
 			animation.setDelayPerUnit( 1000 );
 			this.action = cc.Animate.create( animation );
 			break;
-
-		// case Block.TYPE.COIN:
-			// var animation = new cc.Animation.create();
-			// animation.addSpriteFrameWithFile( Block.TYPE.COIN_TOUCH );
-			// animation.setDelayPerUnit( 1000 );
-			// this.action = cc.Animate.create( animation );
-			// break;
-
 		}
 
 	},
@@ -62,22 +40,6 @@ var Block = cc.Sprite.extend({
 
 		}
 	},
-
-	// createSpinningCoin: function() {
-		// var animation = new cc.Animation.create();
-		// animation.addSpriteFrameWithFile( 'images/coin/coin0.png' );
-		// animation.addSpriteFrameWithFile( 'images/coin/coin1.png' );
-		// animation.addSpriteFrameWithFile( 'images/coin/coin2.png' );
-		// animation.addSpriteFrameWithFile( 'images/coin/coin3.png' );
-		// animation.addSpriteFrameWithFile( 'images/coin/coin4.png' );
-		// animation.addSpriteFrameWithFile( 'images/coin/coin5.png' );
-		// animation.addSpriteFrameWithFile( 'images/coin/coin0.png' );
-	// 	animation.setDelayPerUnit( 0.1 );
-
-	// 	var movingAction = cc.RepeatForever.create( cc.Animate
-	// 			.create( animation ) );
-	// 	this.runAction( movingAction );
-	// },
 	
 });
 
