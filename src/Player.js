@@ -35,7 +35,32 @@ var Player = RigidBody.extend({
 		this.initAimingSystem();
 		this.initLabel();
 
-		this.rightOffsetForAim = 10;
+		this.rightOffsetForAim = 0;
+		this.yOffsettForAim = 0;
+
+		this.offset = {
+
+			bottomLeft: {
+				x: 9,
+				y: 0,
+			},
+
+			bottomRight: {
+				x: -12,
+				y: 0,
+			},
+
+			topRight: {
+				x: -12,
+				y: -30,
+			},
+
+			topLeft: {
+				x: 15,
+				y: -30,
+			},
+
+		};
 
 		// this.schedule( this.energyDrain, 1 );
 	},
@@ -100,30 +125,17 @@ var Player = RigidBody.extend({
 	initAimingSystem: function() {
 		//[ x, y, theta ]
 		this.aimOrders = [
+			[ 1, 0, 0 ],
+			[ 1, 1, -45 ],
 
-		[ 1, 0, 0 ],
-		[ 1, 1, -45 ],
-		[ 2, 0, 0 ],
-		[ 2, 1, -26 ],
-		[ 1, 2, -64 ],
-		[ 2, 2, -45 ],
-		[ 3, 0, 0 ],
-		[ 3, 1, -18 ],
+			[ 2, 0, 0 ],
+			[ 2, 1, -26 ],
 
-			// [ 0, 0, 0 ],
-			// [ 1, 1, -45 ],
-			// [ 2, 1, -30],
-			// [ 1, 2, -75 ],
-			// [ 2, 2, -45 ],
-			// [ 3, 2, -30 ],
-			// [ 1, 3, -80 ],
-			// [ 2, 3, -50 ],
-			// [ 3, 3, -45 ],
-			// [ 0, 1, 0 ],
-			// [ 1, 0, 0 ],
-			// [ 1, 1, 0 ],
-			// [ 2, 0, -0 ],
-			// [ 3, 0, -0 ],
+			[ 1, 2, -64 ],
+			[ 2, 2, -45 ],
+			
+			[ 3, 0, 0 ],
+			[ 3, 1, -18 ],
 		];
 
 		this.isAiming = false;
@@ -233,13 +245,13 @@ var Player = RigidBody.extend({
 		
 	  	var currentPositionX = this.getPositionX();
 	  	var currentPositionY = this.getPositionY();
-	  	var currentPositionXReferToMap = currentPositionX ;//+ this.map.getPositionX();
-	  	var currentPositionYReferToMap = currentPositionY ;//+ this.map.getPositionY();
+	  	var currentPositionXReferToMap = currentPositionX - this.map.getPositionX();
+	  	var currentPositionYReferToMap = currentPositionY - this.map.getPositionY();
 	  	var currentBlockX = Math.floor( currentPositionXReferToMap / BLOCK_PIXEL );
 	  	var currentBlockY = Math.floor( currentPositionYReferToMap / BLOCK_PIXEL );
 		
 		if ( this.headingDirection == RigidBody.DIRECTION.RIGHT) {
-		  	currentPositionXReferToMap += BLOCK_PIXEL - this.rightOffsetForAim;
+		  	currentPositionXReferToMap += BLOCK_PIXEL + this.rightOffsetForAim;
 		}
 	  	
 		for ( var i = 0; i < this.aimOrders.length; i++ ) {
@@ -248,19 +260,13 @@ var Player = RigidBody.extend({
 		  	this.aimedBlockX = currentBlockX + aim[ 0 ] * this.headingDirection;
 		  	this.aimedBlockY = currentBlockY + aim[ 1 ];
 
-		  	// console.log( this.aimedBlockX, this.aimedBlockY )
+		  	// console.log( this.map.isAimable( this.aimedBlockX, this.aimedBlockY ) )
 
 		  	if ( this.map.isAimable( this.aimedBlockX, this.aimedBlockY ) ) {
-			    // this.aimedPixelPoint = new cc.Point( this.aimedBlockX * BLOCK_PIXEL, this.aimedBlockY * BLOCK_PIXEL );
-			    // console.log( this.aimedBlockX *BLOCK_PIXEL )
-			    // this.crosshair.setPosition( this.aimedPixelPoint );
-			    
-			    // this.crosshair.setPosition( new cc.Point(500,500) );
 
 			    this.isAiming = true;
 
 			    var blockDirection = this.map.getBlockDirection( this.aimedBlockX, this.aimedBlockY, this.headingDirection );
-		   		// console.log ( blockDirection )
 
 			   	switch( blockDirection ) {
 				case Player.BLOCK_DIRECTION.FALL:
@@ -275,7 +281,6 @@ var Player = RigidBody.extend({
 			    		this.crosshair.setRotation( -90 );
 			    	} else {
 						this.crosshair.setPosition( this.aimedBlockX * BLOCK_PIXEL + this.map.getPositionX(), this.aimedBlockY * BLOCK_PIXEL + BLOCK_PIXEL + this.map.getPositionY() );
-						// console.log( this.crosshair.getPositionX() )
 			    		this.crosshair.setRotation( 90 );
 			    	}
 					break;
@@ -294,6 +299,7 @@ var Player = RigidBody.extend({
 		  		return;
 		  	}
 		}
+
 		this.noAiming();
 	},
 

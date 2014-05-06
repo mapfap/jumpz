@@ -15,31 +15,6 @@ var RigidBody = cc.Sprite.extend({
 		this.allRigidBodies = null;
 
 		// this.blockPixelWithOffset = BLOCK_PIXEL - 0;
-
-		this.offset = {
-
-			bottomLeft: {
-				x: 1,
-				y: 0,
-			},
-
-			bottomRight: {
-				x: -2,
-				y: 0,
-			},
-
-			topRight: {
-				x: -20,
-				y: -30,
-			},
-
-			topLeft: {
-				x: 10,
-				y: -30,
-			},
-
-		};
-
 		// console.log( this.offset.bottomRight.x )
 
 		this.walkingSpeed = 0;
