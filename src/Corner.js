@@ -8,11 +8,11 @@ var Corner = cc.Node.extend({
 	},
 
 	getBlockX: function() {
-		return Math.floor( ( this.x - Corner.map.getPositionX() ) / 120 );
+		return Math.floor( ( this.x - Corner.map.getPositionX() ) / BLOCK_PIXEL );
 	},
 
 	getBlockY: function() {
-		return Math.floor( ( this.y - Corner.map.getPositionY() ) / 120 );
+		return Math.floor( ( this.y - Corner.map.getPositionY() ) / BLOCK_PIXEL );
 	},
 
 	isFree: function() {

@@ -52,7 +52,7 @@ var Player = RigidBody.extend({
 	},
 
 	setMarkerToMinimap: function() {
-		this.map.setPlayerMarker( (this.getPositionX() / 120 - this.map.getPositionX() / 120), ( this.getPositionY() / 120 - this.map.getPositionY() / 120) );
+		this.map.setPlayerMarker( (this.getPositionX() / BLOCK_PIXEL - this.map.getPositionX() / BLOCK_PIXEL), ( this.getPositionY() / BLOCK_PIXEL - this.map.getPositionY() / BLOCK_PIXEL) );
 	},
 
 	showNextLevelPopup: function() {
@@ -79,7 +79,7 @@ var Player = RigidBody.extend({
 	},
 
 	initAnimation: function() {
-		this.setScale( 3 );
+		this.setScale( 3 * GLOBAL_SCALE );
 
 		var animation = new cc.Animation.create();
 		animation.addSpriteFrameWithFile( 'images/poring0.png' );
@@ -96,7 +96,9 @@ var Player = RigidBody.extend({
 	},
 
 	initAimingSystem: function() {
+		//[ y, x, theta ]
 		this.aimOrders = [
+			[ 0, 0, 0 ],
 			[ 1, 1, -45 ],
 			[ 2, 1, -30],
 			[ 1, 2, -75 ],
@@ -105,7 +107,8 @@ var Player = RigidBody.extend({
 			[ 1, 3, -80 ],
 			[ 2, 3, -50 ],
 			[ 3, 3, -45 ],
-			[ 1, 0, -0 ],
+			[ 0, 1, 0 ],
+			[ 1, 1, 0 ],
 			[ 2, 0, -0 ],
 			[ 3, 0, -0 ],
 		];
@@ -166,7 +169,7 @@ var Player = RigidBody.extend({
 		this.shiftedLayer.addChild( label );
 		// this.getParent().addChild( label, 100 );
 		label.setScale( 3 );
-		label.setPosition( new cc.Point( this.getPositionX() - this.shiftedLayer.getPositionX(), (this.getPositionY() + this.PIXEL_SIZE) - this.shiftedLayer.getPositionY() ) );
+		label.setPosition( new cc.Point( this.getPositionX() - this.shiftedLayer.getPositionX(), (this.getPositionY() + BLOCK_PIXEL) - this.shiftedLayer.getPositionY() ) );
 		label.setColor( new cc.Color3B( 255, 255, 255 ) );
 		label.enableStroke( new cc.Color3B( 100, 100, 100 ), 3 );
 		label.popup( text );
@@ -215,33 +218,61 @@ var Player = RigidBody.extend({
 
 	aimTarget: function() {
 		for ( var i = 0; i < this.aimOrders.length; i++ ) {
-	  	var aim = this.aimOrders[i];
-	  	var aimPixelX = aim[ 0 ] * this.PIXEL_SIZE * this.headingDirection + this.reducePixel( this.getPositionX() );
-	  	var aimPixelY = aim[ 1 ] * this.PIXEL_SIZE + this.reducePixel( this.getPositionY() );
+		  	var aim = this.aimOrders[i];
+		  	var aimPixelX = aim[ 0 ] * BLOCK_PIXEL * this.headingDirection + this.reducePixel( this.getPositionX() );
+		  	var aimPixelY = aim[ 1 ] * BLOCK_PIXEL + this.reducePixel( this.getPositionY() );
 
-	  	this.aimedBlockX = this.convertPixelToBlock( aimPixelX );
-	  	this.aimedBlockY = this.convertPixelToBlock( aimPixelY );
+		  	console.log( this.reducePixel( this.getPositionY() ) )
+		  	this.aimedBlockX = this.convertPixelToBlock( aimPixelX );
+		  	this.aimedBlockY = this.convertPixelToBlock( aimPixelY );
 
-	  	if ( this.map.isAimable( this.aimedBlockX, this.aimedBlockY ) ) {
-		    this.aimedPixel = new cc.Point( aimPixelX + this.map.getPositionX() , aimPixelY + this.map.getPositionY() );
-		    this.crosshair.setPosition( this.aimedPixel ); 
-		    this.isAiming = true;
-		    if ( this.headingDirection == RigidBody.DIRECTION.LEFT ) {
-		    	this.sight.setRotation( 180 - aim[ 2 ] );
-		    } else {
-			    this.sight.setRotation( aim[2] );
-		    }
-	  		break;
-	  	}
-	  	this.crosshair.setPosition( new cc.Point( -1000, 0 ));
+		  	if ( this.map.isAimable( this.aimedBlockX, this.aimedBlockY ) ) {
+			    this.aimedPixel = new cc.Point( aimPixelX + this.map.getPositionX() , aimPixelY + this.map.getPositionY() );
+			    this.crosshair.setPosition( this.aimedPixel ); 
+			    this.isAiming = true;
+
+			    var blockDirection = this.map.getBlockDirection( this.aimedBlockX, this.aimedBlockY, this.headingDirection );
+
+			   	switch( blockDirection ) {
+				case Player.BLOCK_DIRECTION.FALL:
+			    	this.crosshair.setRotation( 0 );
+					break;
+
+				case Player.BLOCK_DIRECTION.SLIDE:
+			    	if (  this.headingDirection == RigidBody.DIRECTION.LEFT ) {
+						this.crosshair.setPosition( aimPixelX + BLOCK_PIXEL + this.map.getPositionX() , aimPixelY + this.map.getPositionY() );
+			    		this.crosshair.setRotation( -90 );
+			    	} else {
+						this.crosshair.setPosition( aimPixelX + this.map.getPositionX() , aimPixelY + BLOCK_PIXEL + this.map.getPositionY() );
+			    		this.crosshair.setRotation( 90 );
+			    	}
+					break;
+
+				case Player.BLOCK_DIRECTION.NONE:
+					this.noAiming();
+					break;
+			   	}
+			   
+			    if ( this.headingDirection == RigidBody.DIRECTION.LEFT ) {
+			    	this.sight.setRotation( 180 - aim[ 2 ] );
+			    } else {
+				    this.sight.setRotation( aim[ 2 ] );
+			    }
+		  		
+		  		return;
+		  	}
+		}
+		this.noAiming();
+	},
+
+	noAiming: function() {
+		this.crosshair.setPosition( new cc.Point( -1000, 0 ));
 	    this.isAiming = false;
 	    if ( this.headingDirection == RigidBody.DIRECTION.LEFT ) {
 		    this.sight.setRotation( -180 );
-		  } else {
+		} else {
 		  	this.sight.setRotation( -0 );
-		  }
-
-	  }
+		}
 	},
 
 	dragBlock: function() {
@@ -316,10 +347,10 @@ var Player = RigidBody.extend({
 			this.nextPositionX = RIGHT_FOCUS_BOUND;
 			this.map.setPositionX( this.map.getPositionX() - over );
 
-			if ( this.map.getPositionX() <= -120 ) {
+			if ( this.map.getPositionX() <= -BLOCK_PIXEL ) {
 				this.map.shiftMap( 0, 1 );
 				this.map.setPositionX( 0 );
-				this.accumulatedX += 120;
+				this.accumulatedX += BLOCK_PIXEL;
 			}
 
 		} else if ( this.nextPositionX <= LEFT_FOCUS_BOUND ) {
@@ -327,10 +358,10 @@ var Player = RigidBody.extend({
 			this.nextPositionX = LEFT_FOCUS_BOUND;
 			this.map.setPositionX( this.map.getPositionX() - over );
 
-			if ( this.map.getPositionX() >= 120 ) {
+			if ( this.map.getPositionX() >= BLOCK_PIXEL ) {
 				this.map.shiftMap( 0, -1 );
 				this.map.setPositionX( 0 );
-				this.accumulatedX -= 120;
+				this.accumulatedX -= BLOCK_PIXEL;
 			}
 		}
 
@@ -339,20 +370,20 @@ var Player = RigidBody.extend({
 			this.nextPositionY = UPPER_FOCUS_BOUND;
 			this.map.setPositionY( this.map.getPositionY() - over );
 
-			if ( this.map.getPositionY() <= -120 ) {
+			if ( this.map.getPositionY() <= -BLOCK_PIXEL ) {
 				this.map.shiftMap( -1, 0 );
 				this.map.setPositionY( 0 );
-				this.accumulatedY += 120;
+				this.accumulatedY += BLOCK_PIXEL;
 			}
 		} else if ( this.nextPositionY <= LOWER_FOCUS_BOUND ) {
 			var over = this.nextPositionY - LOWER_FOCUS_BOUND;
 			this.nextPositionY = LOWER_FOCUS_BOUND;
 			this.map.setPositionY( this.map.getPositionY() - over );
 			
-			if ( this.map.getPositionY() >= 120 ) {
+			if ( this.map.getPositionY() >= BLOCK_PIXEL ) {
 				this.map.shiftMap( 1, 0 );
 				this.map.setPositionY( 0 );
-				this.accumulatedY -= 120;
+				this.accumulatedY -= BLOCK_PIXEL;
 			}
 		}
 	},
@@ -401,6 +432,12 @@ var Player = RigidBody.extend({
 	},
 
 });
+
+Player.BLOCK_DIRECTION = {
+	NONE: 0,
+	FALL: 1,
+	SLIDE: 2,
+}
 
 Player.STRING = {
 	NEED_ENERGY: "NEED ENERGY !",

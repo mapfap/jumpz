@@ -38,9 +38,7 @@ var GameLayer = cc.LayerColor.extend({
 	initTutorialLayer: function() {
 		this.tutorialLayer = new TutorialLayer();
 		this.tutorialLayer.init();
-		this.addChild( this.tutorialLayer, 20 )
-
-		
+		this.addChild( this.tutorialLayer, 20 );
 	},
 
 	initInventory: function() {
@@ -50,7 +48,6 @@ var GameLayer = cc.LayerColor.extend({
 		this.cursor = new Cursor();
 		this.addChild( this.cursor, 5 );
 		this.inventory.setCursor( this.cursor );
-
 	},
 
 	initPlayer: function() {
@@ -66,6 +63,7 @@ var GameLayer = cc.LayerColor.extend({
 		this.crosshair = new cc.Sprite.create( 'images/crosshair.png' );
 		this.crosshair.setAnchorPoint( new cc.Point( 0, 0 ) );
 		this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
+		this.crosshair.setScale( GLOBAL_SCALE );
 		// this.allShiftableObjects.push( this.crosshair );
 		this.addChild( this.crosshair, 3 );
 		this.player.setCrosshair( this.crosshair );
@@ -80,8 +78,7 @@ var GameLayer = cc.LayerColor.extend({
 
 		this.player.setShiftedLayer( this.shiftedLayer );
 
-		this.player.toggleSight();
-
+		// this.player.toggleSight();
 	},
 
 	initMonster: function() {
@@ -92,7 +89,6 @@ var GameLayer = cc.LayerColor.extend({
 		this.allRigidBodies.push( this.monster );
 		this.allShiftableObjects.push( this.monster );
 		this.monster.setAllRigidBodies( this.allRigidBodies );
-
 	},
 
 	showCollectedCoin: function() {
@@ -123,7 +119,7 @@ var GameLayer = cc.LayerColor.extend({
 	},
 	
 	initMap: function() {
-		this.map = new Map( this.inventory, this.shiftedLayer, 1 );
+		this.map = new Map( this.inventory, this.shiftedLayer, 0 );
 		this.map.setPosition( new cc.Point( 0, 0 ) );
 		this.addChild( this.map, 1 );
 
@@ -135,23 +131,25 @@ var GameLayer = cc.LayerColor.extend({
 		this.background.setAnchorPoint( new cc.Point( 0 , 0 ) );
 		this.addChild( this.background, 0 );
 
-		this.tree1 = cc.Sprite.create( 'images/tree1.png' );
-		// this.tree1.setPosition( new cc.Point( 500 , 200 ) );
-		this.tree1.setScale( 2.5 );
-		this.addChild( this.tree1, 0 );
+		// this.tree1 = cc.Sprite.create( 'images/tree1.png' );
+		// // this.tree1.setPosition( new cc.Point( 500 , 200 ) );
+		// this.tree1.setScale( 2.5 );
+		// this.tree1.setOpacity( 0 );
+		// this.addChild( this.tree1, 0 );
 
-		this.tree2 = cc.Sprite.create( 'images/tree2.png' );
-		// this.tree2.setPosition( new cc.Point( 900 , 300 ) );
-		this.tree2.setScale( 5 );
-		this.tree2.setScaleY( 7 );
-		this.addChild( this.tree2, 0 );
+		// this.tree2 = cc.Sprite.create( 'images/tree2.png' );
+		// // this.tree2.setPosition( new cc.Point( 900 , 300 ) );
+		// this.tree2.setScale( 5 );
+		// this.tree2.setOpacity( 30 );
+		// this.tree2.setScaleY( 7 );
+		// this.addChild( this.tree2, 0 );
 
-		this.tree3 = cc.Sprite.create( 'images/tree1.png' );
-		this.tree3.setOpacity( 50 );
-		// this.tree2.setPosition( new cc.Point( 900 , 300 ) );
-		this.tree3.setScaleX( 6 );
-		this.tree3.setPosition( 1000, 600 );
-		this.shiftedLayer.addChild( this.tree3, 0 );
+		// this.tree3 = cc.Sprite.create( 'images/tree1.png' );
+		// this.tree3.setOpacity( 10 );
+		// // this.tree2.setPosition( new cc.Point( 900 , 300 ) );
+		// this.tree3.setScaleX( 6 );
+		// this.tree3.setPosition( 1000, 600 );
+		// this.shiftedLayer.addChild( this.tree3, 0 );
 	},
 
 	initShiftedLayer: function() {
@@ -263,11 +261,11 @@ var GameLayer = cc.LayerColor.extend({
 
 		this.showCollectedCoin();
 
-		this.tree1.setPositionX( this.shiftedLayer.getPositionX() / 30 + 300 );
-		this.tree1.setPositionY( this.shiftedLayer.getPositionY() / 100 + 120 );
+		// this.tree1.setPositionX( this.shiftedLayer.getPositionX() / 30 + 300 );
+		// this.tree1.setPositionY( this.shiftedLayer.getPositionY() / 100 + 120 );
 
-		this.tree2.setPositionX( this.shiftedLayer.getPositionX() / 10 + 900 );
-		this.tree2.setPositionY( this.shiftedLayer.getPositionY() / 100 + 110 );
+		// this.tree2.setPositionX( this.shiftedLayer.getPositionX() / 10 + 900 );
+		// this.tree2.setPositionY( this.shiftedLayer.getPositionY() / 100 + 110 );
 
 		// this.tree1.setPositionY( this.tree1.getPositionY() + row * 40 );
 		// this.tree1.setPositionX( this.tree1.getPositionX() - column * 10 );

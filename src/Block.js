@@ -2,6 +2,7 @@ var Block = cc.Sprite.extend({
 
 	ctor: function( type, name ) {
 		this._super();
+		this.setScale( GLOBAL_SCALE );
 
 		// if ( type == Block.TYPE.COIN ) {
 		// 	// console.log("coin!")

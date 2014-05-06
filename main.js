@@ -19,6 +19,7 @@ var cocos2dApp = cc.Application.extend({
         // turn on display FPS
         director.setDisplayStats( this.config[ 'showFPS' ] );
 
+
         // set FPS. the default value is 1.0/60 if you don't call this
         director.setAnimationInterval( 1.0 / this.config[ 'frameRate' ] );
 
@@ -30,13 +31,20 @@ var cocos2dApp = cc.Application.extend({
     }
 });
 
-var SCREEN_WIDTH = 1080;
-var SCREEN_HEIGHT = 600;
+var GLOBAL_SCALE = 0.8;
+var BLOCK_PIXEL = 120 * GLOBAL_SCALE; // 96
 
-var RIGHT_FOCUS_BOUND = 840 - 120;
-var LEFT_FOCUS_BOUND = 240;
-var UPPER_FOCUS_BOUND = 480 - 120;
-var LOWER_FOCUS_BOUND = 120;
+var BLOCK_WIDTH_NUMBER = 10;
+var BLOCK_HEIGHT_NUMBER = 5;
+
+var SCREEN_WIDTH = BLOCK_PIXEL * BLOCK_WIDTH_NUMBER; // 960
+var SCREEN_HEIGHT = BLOCK_PIXEL * BLOCK_HEIGHT_NUMBER; // 480
+
+var LEFT_FOCUS_BOUND = BLOCK_PIXEL * 2;
+var RIGHT_FOCUS_BOUND = SCREEN_WIDTH  - LEFT_FOCUS_BOUND;
+
+var LOWER_FOCUS_BOUND = BLOCK_PIXEL;
+var UPPER_FOCUS_BOUND = SCREEN_HEIGHT - ( LOWER_FOCUS_BOUND * 2 );
 
 
 var myApp = new cocos2dApp( StartScene );

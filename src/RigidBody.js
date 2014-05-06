@@ -14,9 +14,8 @@ var RigidBody = cc.Sprite.extend({
 		this.map = null;
 		this.allRigidBodies = null;
 
-		this.PIXEL_SIZE = 120;
-		this.PIXEL_SIZE_WITH_OFFSET = this.PIXEL_SIZE - 5;
-		this.REAL_BOTTOM_LEFT = 3;
+		this.blockPixelWithOffset = BLOCK_PIXEL - 12;
+		this.REAL_BOTTOM_LEFT = 0;
 		this.walkingSpeed = 0;
 
 		this.headingDirection = RigidBody.DIRECTION.RIGHT;
@@ -25,17 +24,17 @@ var RigidBody = cc.Sprite.extend({
 
 	convertPixelToBlock: function( coordinate, isFloor ) {
 		if ( isFloor === null ) {
-			return Math.round( coordinate / this.PIXEL_SIZE );
+			return Math.round( coordinate / BLOCK_PIXEL);
 		}
 		if ( isFloor ) {
-			return Math.floor( coordinate / this.PIXEL_SIZE );
+			return Math.floor( coordinate / BLOCK_PIXEL);
 		}
 
-		return Math.ceil( coordinate / this.PIXEL_SIZE );
+		return Math.ceil( coordinate / BLOCK_PIXEL);
 	},
 
 	convertBlockToPixel: function( coordinate ) {
-		return coordinate * this.PIXEL_SIZE;
+		return coordinate * BLOCK_PIXEL;
 	},
 
 	reducePixel: function( coordinate ) {
@@ -44,7 +43,7 @@ var RigidBody = cc.Sprite.extend({
 
 	isFlying: function() {
 		var bottomLeftCorner = new Corner( new cc.Point( this.getPositionX(), this.getPositionY() + this.velocityY ) , this.map );
-		var bottomRightCorner = new Corner( new cc.Point( this.getPositionX() + this.PIXEL_SIZE_WITH_OFFSET, this.getPositionY() + this.velocityY  ), this.map );
+		var bottomRightCorner = new Corner( new cc.Point( this.getPositionX() + this.blockPixelWithOffset, this.getPositionY() + this.velocityY  ), this.map );
 		return bottomLeftCorner.isFree() && bottomRightCorner.isFree();
 	},
 
@@ -58,8 +57,8 @@ var RigidBody = cc.Sprite.extend({
 			var thatPositionX = that.getPositionX();
 			var thatPositionY = that.getPositionY();
 
-			if ( Math.abs( thisPositionY - thatPositionY ) < this.PIXEL_SIZE) {
-				if ( Math.abs( thisPositionX - thatPositionX ) < this.PIXEL_SIZE) {
+			if ( Math.abs( thisPositionY - thatPositionY ) < BLOCK_PIXEL) {
+				if ( Math.abs( thisPositionX - thatPositionX ) < BLOCK_PIXEL) {
 					if ( this !== that ) {
 						if ( that instanceof Player ) {
 							var direction = 1;
@@ -189,36 +188,36 @@ var RigidBody = cc.Sprite.extend({
 		var newPositionX = this.getPositionX() + this.velocityX + this.REAL_BOTTOM_LEFT ;
 		var newPositionY = this.getPositionY() + this.velocityY + this.REAL_BOTTOM_LEFT ;
 
-		// var newTopLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY + this.PIXEL_SIZE ) );
-		// var newTopRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE , newPositionY + this.PIXEL_SIZE) );
+		// var newTopLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY + BLOCK_PIXEL) );
+		// var newTopRightCorner = new Corner( new cc.Point( newPositionX + BLOCK_PIXEL, newPositionY + BLOCK_PIXEL) );
 		// var newBottomLeftCorner = new Corner( new cc.Point( newPositionX, newPositionY) );
-		// var newBottomRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE, newPositionY) );
-		// var currentTopLeftCorner = new Corner( new cc.Point( currentPositionX, currentPositionY + this.PIXEL_SIZE ) );
-		// var currentTopRightCorner = new Corner( new cc.Point( currentPositionX + this.PIXEL_SIZE , currentPositionY + this.PIXEL_SIZE) );
+		// var newBottomRightCorner = new Corner( new cc.Point( newPositionX + BLOCK_PIXEL, newPositionY) );
+		// var currentTopLeftCorner = new Corner( new cc.Point( currentPositionX, currentPositionY + BLOCK_PIXEL) );
+		// var currentTopRightCorner = new Corner( new cc.Point( currentPositionX + BLOCK_PIXEL, currentPositionY + BLOCK_PIXEL) );
 		// var currentBottomLeftCorner = new Corner( new cc.Point( currentPositionX, currentPositionY) );
-		// var currentBottomRightCorner = new Corner( new cc.Point( currentPositionX + this.PIXEL_SIZE, currentPositionY) );
+		// var currentBottomRightCorner = new Corner( new cc.Point( currentPositionX + BLOCK_PIXEL, currentPositionY) );
 
 		// new X but, current Y 
-		var topLeftCorner = new Corner( new cc.Point( newPositionX, currentPositionY + this.PIXEL_SIZE_WITH_OFFSET ) );
-		var topRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE_WITH_OFFSET , currentPositionY + this.PIXEL_SIZE_WITH_OFFSET) );
+		var topLeftCorner = new Corner( new cc.Point( newPositionX, currentPositionY + this.blockPixelWithOffset ) );
+		var topRightCorner = new Corner( new cc.Point( newPositionX + this.blockPixelWithOffset , currentPositionY + this.blockPixelWithOffset) );
 		var bottomLeftCorner = new Corner( new cc.Point( newPositionX, currentPositionY) );
-		var bottomRightCorner = new Corner( new cc.Point( newPositionX + this.PIXEL_SIZE_WITH_OFFSET, currentPositionY) );
+		var bottomRightCorner = new Corner( new cc.Point( newPositionX + this.blockPixelWithOffset, currentPositionY) );
 		this.checkLeftOrRightCollision( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 		
 		// new X and, new Y 
-		var topLeftCorner = new Corner( new cc.Point( currentPositionX, newPositionY + this.PIXEL_SIZE_WITH_OFFSET ) );
-		var topRightCorner = new Corner( new cc.Point( currentPositionX + this.PIXEL_SIZE_WITH_OFFSET , newPositionY + this.PIXEL_SIZE_WITH_OFFSET) );
+		var topLeftCorner = new Corner( new cc.Point( currentPositionX, newPositionY + this.blockPixelWithOffset ) );
+		var topRightCorner = new Corner( new cc.Point( currentPositionX + this.blockPixelWithOffset , newPositionY + this.blockPixelWithOffset) );
 		var bottomLeftCorner = new Corner( new cc.Point( currentPositionX, newPositionY) );
-		var bottomRightCorner = new Corner( new cc.Point( currentPositionX + this.PIXEL_SIZE_WITH_OFFSET, newPositionY) );
+		var bottomRightCorner = new Corner( new cc.Point( currentPositionX + this.blockPixelWithOffset, newPositionY) );
 		this.checkTopOrBottomCollision( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 
 
 		// var concludePositionX = currentPositionX + this.nextPositionX;
 		// var concludePositionY = currentPositionY + this.nextPositionY;
-		// var topLeftCorner = new Corner( new cc.Point( concludePositionX, concludePositionY + this.PIXEL_SIZE_WITH_OFFSET ) );
-		// var topRightCorner = new Corner( new cc.Point( concludePositionX + this.PIXEL_SIZE_WITH_OFFSET , concludePositionY + this.PIXEL_SIZE_WITH_OFFSET) );
+		// var topLeftCorner = new Corner( new cc.Point( concludePositionX, concludePositionY + this.blockPixelWithOffset ) );
+		// var topRightCorner = new Corner( new cc.Point( concludePositionX + this.blockPixelWithOffset , concludePositionY + this.blockPixelWithOffset) );
 		// var bottomLeftCorner = new Corner( new cc.Point( concludePositionX, concludePositionY) );
-		// var bottomRightCorner = new Corner( new cc.Point( concludePositionX + this.PIXEL_SIZE_WITH_OFFSET, concludePositionY) );
+		// var bottomRightCorner = new Corner( new cc.Point( concludePositionX + this.blockPixelWithOffset, concludePositionY) );
 
 		// this.checkTouchingAThing( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner );
 	},

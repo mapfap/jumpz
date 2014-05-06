@@ -7,11 +7,22 @@ var Map = cc.Node.extend({
 		this.collectedCoin = 0;
 		// beware BUG here.. "DO NOT" use this value for array range.
 		// this value is numbers of blocks shown in the screen.
-		this.SCREEN_WIDTH = 10;
-		this.SCREEN_HEIGHT = 8;
+		//BLOCK_WIDTH_NUMBER BLOCK_HEIGHT_NUMBER
 
 		
 		this.readableMaps = [
+
+		[ // Level 1
+			'______________________',
+			'______________________',
+			'______________________',
+			'______________________',
+			'______________________',
+			'______##______________',
+			'______________________',
+			'______________##______',
+			'######################',
+		],
 
 
 		[ // Level 1
@@ -23,8 +34,8 @@ var Map = cc.Node.extend({
 			'___*_#________________',
 			'_________________#____',
 			'##___#__####__________',
-			'____*_*_*_*_*_*_**____',
-			'______________________*',
+			'____________*_*_**____',
+			'______________________',
 			'######################',
 		],
 
@@ -38,6 +49,34 @@ var Map = cc.Node.extend({
 			'_____#____',
 			'_____#___*',
 			'##########',
+		],
+
+		[
+			'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+			'xxx__________________xxxxx_____________________#_________xx',
+			'xx___**_________________x______________________#_________xx',
+			'x____##__*****__###_________***__##__****___#######______xx',
+			'x___xxxxxxxxxxxxxxxx_____**xxxxxxxxxxxxxxxxxxxxxxxx______xx',
+			'x___xxxxxxxxxxxxxxxxx_**_xxx***###__##########___________xx',
+			'x__xxxxxxxxxxxxxxxxxxxxxxx******_____#########_____######xx',
+			'x_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx___#########_________**xx',
+			'xxx###############################_________________######xx',
+			'xxx__##_*******___#_#________##**___________________****_xx',
+			'xxx__##_*******___#*#________#_**___###############_****_xx',
+			'xxx__####################____xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+			'xxx__#####################____#######_________###########xx',
+			'xxx__######################____####__________***____#####xx',
+			'xxx__#######################________******___###_______#xxx',
+			'xxx__xxxxxxxxxxxxxxxxxxxxxxxx_______******__#####_______xxx',
+			'xxx___***_**______xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx___xxx',
+			'xxx__********_____############################_____##___xxx',
+			'xxx___******__################################*******__#xxx',
+			'xxx____****_______###################################___xxx',
+			'xxx_____**______________________________________________xxx',
+			'xxx############_________________________________________xxx',
+			'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx__xxxxxxxxxxxxxxxxxxxxxxxxx',
+			'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx^_____xxxxxxxxxxxxxxxxxxxxxxx',
+			'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
 		],
 
 		[ // Level 3
@@ -100,6 +139,7 @@ var Map = cc.Node.extend({
 			'#__#__##_#',
 			'##########',
 		],
+
 		
 		[ // Free Roam: Level 0
 			'#############################################################',
@@ -179,7 +219,7 @@ var Map = cc.Node.extend({
 	},
 
 	setPlayerMarker: function( blockX, blockY ) {
-		var r = this.SCREEN_HEIGHT - blockY - 1;
+		var r = BLOCK_HEIGHT_NUMBER - blockY - 1;
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
@@ -258,12 +298,12 @@ var Map = cc.Node.extend({
 
 	setPositionX: function( positionX ) {
 		this._super( positionX );
-		this.shiftedLayer.setPosition( this.shiftValueColumn * -120 + this.getPositionX(), this.shiftValueRow * 120 + this.getPositionY() );
+		this.shiftedLayer.setPosition( this.shiftValueColumn * -BLOCK_PIXEL + this.getPositionX(), this.shiftValueRow * BLOCK_PIXEL + this.getPositionY() );
 	},
 
 	setPositionY: function( positionY ) {
 		this._super( positionY );
-		this.shiftedLayer.setPosition( this.shiftValueColumn * -120 + this.getPositionX(), this.shiftValueRow * 120 + this.getPositionY() );
+		this.shiftedLayer.setPosition( this.shiftValueColumn * -BLOCK_PIXEL + this.getPositionX(), this.shiftValueRow * BLOCK_PIXEL + this.getPositionY() );
 	},
 
 	setBlock: function( r, c, value ) {
@@ -271,14 +311,33 @@ var Map = cc.Node.extend({
 		this.initMinimap();
 	},
 
-	dragBlock: function( blockX, blockY, headingDirection ) {
-		var r = this.SCREEN_HEIGHT - blockY - 1;
+	getBlockDirection: function( blockX, blockY, headingDirection ) {
+		var r = BLOCK_HEIGHT_NUMBER - blockY - 1;
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
 
 		if ( this.map[ r + 1 ][ c ] != '_' ) {
-			console.log("PULL");
+			if ( this.map[ r ][ c - headingDirection ] == '_' ) {
+				return Player.BLOCK_DIRECTION.SLIDE;
+			} else {
+				return Player.BLOCK_DIRECTION.NONE;
+			}
+		} else if ( this.map[ r + 1 ][ c ] == '_' ) {
+			return Player.BLOCK_DIRECTION.FALL;
+		}
+
+		return Player.BLOCK_DIRECTION.NONE;
+	},
+
+	dragBlock: function( blockX, blockY, headingDirection ) {
+		var r = BLOCK_HEIGHT_NUMBER - blockY - 1;
+		r += this.shiftValueRow;
+		var c = blockX;
+		c += this.shiftValueColumn;
+
+		if ( this.map[ r + 1 ][ c ] != '_' ) {
+			// console.log("PULL");
 
 			if ( this.map[ r ][ c - headingDirection ] == '_' ) {
 				this.map[ r ][ c - headingDirection ] = '#'
@@ -323,8 +382,8 @@ var Map = cc.Node.extend({
 		}
 		this.children = [];
 
-		for ( var r = this.shiftValueRow - 1; r < this.SCREEN_HEIGHT + this.shiftValueRow + 1; r++ ) {
-			for ( var c = this.shiftValueColumn - 1; c < this.SCREEN_WIDTH + this.shiftValueColumn + 1; c++ ) {
+		for ( var r = this.shiftValueRow - 1; r < BLOCK_HEIGHT_NUMBER + this.shiftValueRow + 1; r++ ) {
+			for ( var c = this.shiftValueColumn - 1; c < BLOCK_WIDTH_NUMBER + this.shiftValueColumn + 1; c++ ) {
 
 				var type = null;
 				// console.log( "r"+r +"...c"+c);
@@ -347,8 +406,8 @@ var Map = cc.Node.extend({
 				if ( type != null ) {
 					var name = r + "," + c;
 					var s = new Block( type, name );
-					var posX = ( c - this.shiftValueColumn ) * 120;
-					var posY = ( this.SCREEN_HEIGHT - ( r - this.shiftValueRow ) - 1 ) * 120;
+					var posX = ( c - this.shiftValueColumn ) * BLOCK_PIXEL;
+					var posY = ( BLOCK_HEIGHT_NUMBER - ( r - this.shiftValueRow ) - 1 ) * BLOCK_PIXEL;
 					s.setPosition( new cc.Point( posX, posY ) );
 					this.addChild( s );
 					this.children.push( s );
@@ -368,7 +427,7 @@ var Map = cc.Node.extend({
 				var blockX = corners[i].getBlockX();
 				var blockY = corners[i].getBlockY();
 
-				var r = this.SCREEN_HEIGHT - blockY - 1;
+				var r = BLOCK_HEIGHT_NUMBER - blockY - 1;
 				r += this.shiftValueRow;
 				var c = blockX;
 				c += this.shiftValueColumn;
@@ -400,7 +459,7 @@ var Map = cc.Node.extend({
 	},
 
 	isAThing: function( blockX, blockY ) {
-		var r = this.SCREEN_HEIGHT - blockY - 1;
+		var r = BLOCK_HEIGHT_NUMBER - blockY - 1;
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
@@ -413,7 +472,7 @@ var Map = cc.Node.extend({
 	},
 
 	isBlock: function( blockX, blockY ) {
-		var r = this.SCREEN_HEIGHT - blockY - 1;
+		var r = BLOCK_HEIGHT_NUMBER - blockY - 1;
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
@@ -425,13 +484,15 @@ var Map = cc.Node.extend({
 	},
 
 	isAimable: function( blockX, blockY ) {
-		var r = this.SCREEN_HEIGHT - blockY - 1;
+		// console.log( blockX, blockY )
+		var r = BLOCK_HEIGHT_NUMBER - blockY - 1;
 		r += this.shiftValueRow;
 		var c = blockX;
 		c += this.shiftValueColumn;
 		if ( this.isOutOfBound( r, c ) ) {
 			return false;
 		}
+		// console.log(r, c)
 		return this.map[ r ][ c ] == '#';
 	},
 
