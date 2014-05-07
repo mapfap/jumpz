@@ -32,6 +32,7 @@ var GameLayer = cc.LayerColor.extend({
 		// 	this.monster.scheduleUpdate();
 		// }, 1);
 
+		cc.AudioEngine.getInstance().playMusic( 'sounds/Old Souls.mp3', true );
 		return true;
 	},
 
@@ -259,7 +260,7 @@ var GameLayer = cc.LayerColor.extend({
 			break;
 
 		case cc.KEY.r:
-			this.player.increaseEnergy( 100 );
+			this.player.buyEnergy();
 			break
 
 		case cc.KEY.a:

@@ -52,6 +52,13 @@ var g_resources = [
 	{ src: "images/checkpoint/3.png" },
 	{ src: "images/checkpoint/4.png" },
 
+	{ src: "sounds/jump.mp3" },
+	{ src: "sounds/drag.mp3" },
+	{ src: "sounds/coin.mp3" },
+	{ src: "sounds/alert.mp3" },
+	{ src: "sounds/checkpoint.mp3" },
+	{ src: "sounds/buy.mp3" },
 
+	{ src: "sounds/Old Souls.mp3" }, // 3.7 MB
 
 ];

@@ -103,21 +103,27 @@ var Player = RigidBody.extend({
 		// console.log("-=------------=-=-")
 		this.nextLevelLayer = new cc.LayerColor.create( new cc.Color4B( 0, 0, 0, 0 ) );
 		this.nextLevelLayer.init();
+		cc.AudioEngine.getInstance().playEffect( 'sounds/checkpoint.mp3');
 		// this.nextLevelLayer.setOpacity( 0 );
 		this.getParent().addChild( this.nextLevelLayer, 21 )
 		
-		this.nextLevelLabel = cc.LabelTTF.create( 'Level: ' + ( this.map.level ), 'Arial', 60 );
-		this.nextLevelLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 40 ) );
+		this.nextLevelLabel = cc.LabelTTF.create( 'Level: ' + ( this.map.level ), 'Arial', 55 );
+		this.nextLevelLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 80 ) );
 		this.nextLevelLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.nextLevelLayer.addChild( this.nextLevelLabel );
 
-		this.coinResult = cc.LabelTTF.create( 'Coin collected: ' + ( this.map.collectedCoin ) + ' / ' + ( this.map.availableCoin ) , 'Arial', 30 );
-		this.coinResult.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10 ) );
+		this.coinResult = cc.LabelTTF.create( 'Coin collected: ' + ( this.map.collectedCoin ) + ' / ' + ( this.map.availableCoin ) , 'Arial', 18 );
+		this.coinResult.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 25 ) );
 		this.coinResult.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.nextLevelLayer.addChild( this.coinResult );
 
+		this.timeResult = cc.LabelTTF.create( 'Time used: ' + ( this.map.timeUsed ) + ' s.' , 'Arial', 18 );
+		this.timeResult.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 5 ) );
+		this.timeResult.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
+		this.nextLevelLayer.addChild( this.timeResult );
+
 		this.enterLabel = cc.LabelTTF.create( 'Enter to continue..', 'Arial', 30 );
-		this.enterLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 60 ) );
+		this.enterLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80 ) );
 		this.enterLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.nextLevelLayer.addChild( this.enterLabel );
 
@@ -181,7 +187,7 @@ var Player = RigidBody.extend({
 		this.alertLabel = DimLabel.create( '0', 'Arial', 13 );
 		this.addChild( this.alertLabel );
 		this.alertLabel.setPosition( new cc.Point( 20, 50 ) );
-		this.alertLabel.setColor( new cc.Color3B( 255, 255, 255 ) );
+		this.alertLabel.setColor( new cc.Color3B( 255, 10, 10 ) );
 		this.alertLabel.enableStroke( new cc.Color3B( 100, 100, 100 ), 3 );
 	},
 
@@ -195,6 +201,7 @@ var Player = RigidBody.extend({
 
 			if ( this.isEnergyEmpty() ) {
 				this.alertLabel.dim( Player.STRING.NEED_ENERGY );
+				cc.AudioEngine.getInstance().playEffect( 'sounds/alert.mp3');
 				return 0;
 			}
 
@@ -337,6 +344,7 @@ var Player = RigidBody.extend({
 	dragBlock: function() {
 		if ( this.isEnergyEmpty() ) {
 			this.alertLabel.dim( Player.STRING.NEED_ENERGY );
+			cc.AudioEngine.getInstance().playEffect( 'sounds/alert.mp3');
 			return 0;
 		}
 
@@ -348,6 +356,7 @@ var Player = RigidBody.extend({
 
 		if ( this.isAiming ) {
 			this.increaseEnergy( -10 );
+			cc.AudioEngine.getInstance().playEffect( 'sounds/drag.mp3');
 			this.dragUse += 1;
 			this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 			this.map.dragBlock( this.aimedBlockX, this.aimedBlockY, this.headingDirection );
@@ -460,6 +469,8 @@ var Player = RigidBody.extend({
 		if ( this.jumpStep >= this.maxJump ) {
 			return 0;
 		}
+		console.log("ps")
+		cc.AudioEngine.getInstance().playEffect( 'sounds/jump.mp3');
 		this.jumpStep += 1;
 		this.jumpUse += 1;
 		this.setVelocityY( this.getJumpingVelocity( this.jumpStep ) );
@@ -495,6 +506,26 @@ var Player = RigidBody.extend({
 	collectACoin: function() {
 		this.popup( "$", Player.COLOR.YELLOW );
 		this.totalCoin += 1;
+		cc.AudioEngine.getInstance().playEffect( 'sounds/coin.mp3');
+		this.getParent().showCollectedCoin();
+	},
+
+	buyEnergy: function() {
+		if ( this.totalCoin == 0) {
+			this.alertLabel.dim( Player.STRING.NEED_COIN );
+			cc.AudioEngine.getInstance().playEffect( 'sounds/alert.mp3');
+			return 0;
+		}
+
+		if ( this.energy == this.MAXIMUM_ENERGY ) {
+			this.alertLabel.dim( Player.STRING.FULL );
+			cc.AudioEngine.getInstance().playEffect( 'sounds/alert.mp3');
+			return 0;
+		}
+
+		this.increaseEnergy( 1 );
+		cc.AudioEngine.getInstance().playEffect( 'sounds/buy.mp3');
+		this.totalCoin -= 1;
 		this.getParent().showCollectedCoin();
 	},
 
@@ -517,6 +548,8 @@ Player.BLOCK_DIRECTION = {
 }
 
 Player.STRING = {
+	FULL: "FULL !",
+	NEED_COIN: "NEED COIN !",
 	NEED_ENERGY: "NEED ENERGY !",
-	SIGHT_IS_OFF: "SIGHT IS OFF !",
+	// SIGHT_IS_OFF: "SIGHT IS OFF !",
 }
