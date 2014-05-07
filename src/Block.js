@@ -11,7 +11,7 @@ var Block = cc.Sprite.extend({
 		case Block.TYPE.CHECKPOINT:
 			var randomStart = ( Math.floor( Math.random() * 4 ) );
 			this.initWithFile( "images/checkpoint/" + randomStart + ".png" );
-			console.log( randomStart )
+			// console.log( randomStart )
 			var animation = new cc.Animation.create();
 			animation.addSpriteFrameWithFile( "images/checkpoint/0.png" );
 			animation.addSpriteFrameWithFile( "images/checkpoint/1.png" );
