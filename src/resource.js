@@ -46,4 +46,12 @@ var g_resources = [
 	{ src: "images/crosshair/2.png" },
 	{ src: "images/crosshair/3.png" },
 
+	{ src: "images/checkpoint/0.png" },
+	{ src: "images/checkpoint/1.png" },
+	{ src: "images/checkpoint/2.png" },
+	{ src: "images/checkpoint/3.png" },
+	{ src: "images/checkpoint/4.png" },
+
+
+
 ];

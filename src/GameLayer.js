@@ -204,6 +204,17 @@ var GameLayer = cc.LayerColor.extend({
 							
 		break;
 
+		case cc.KEY.t:
+			// this.player.unscheduleUpdate();
+			this.map.resetMap();
+			this.map.level += 1;
+			this.map.initMap( this.map.level );
+			this.map.plotMap();
+			this.player.setPosition( this.playerStartingPosition );
+			// this.player.scheduleUpdate();
+							
+		break;
+
 		case cc.KEY.enter:
 			if ( this.state == GameLayer.STATE.STOPPED ) {
 				// console.log("DELETE")
