@@ -26,11 +26,11 @@ var GameLayer = cc.LayerColor.extend({
 		this.setKeyboardEnabled( true );
 		this.state = GameLayer.STATE.STARTED;
 
-		this.initMonster();
-		this.scheduleOnce(function(){
-			this.shiftedLayer.addChild( this.monster, 1 );
-			this.monster.scheduleUpdate();
-		}, 1);
+		// this.initMonster();
+		// this.scheduleOnce(function(){
+		// 	this.shiftedLayer.addChild( this.monster, 1 );
+		// 	this.monster.scheduleUpdate();
+		// }, 1);
 
 		return true;
 	},
@@ -109,7 +109,11 @@ var GameLayer = cc.LayerColor.extend({
 	},
 
 	showCollectedCoin: function() {
-		this.coinLabel.setString( this.map.collectedCoin );
+		this.coinLabel.setString( this.player.totalCoin );
+		this.coinIconColored.setOpacity( 255 );
+		this.scheduleOnce(function(){
+			this.coinIconColored.setOpacity( 0 );
+		}, 0.1);
 	},
 
 	initHelperUI: function() {
@@ -119,12 +123,23 @@ var GameLayer = cc.LayerColor.extend({
 		this.coinIcon.setPosition( new cc.Point( 20, SCREEN_HEIGHT - 90 ) );
 		this.addChild( this.coinIcon, 4 );
 
+		this.coinIconColored = cc.Sprite.create( 'images/blocks/coin_colored.png' );
+		this.coinIconColored.setScale( 0.5 );
+		this.coinIconColored.setAnchorPoint( new cc.Point( 0, 0 ) );
+		this.coinIconColored.setPosition( new cc.Point( 20, SCREEN_HEIGHT - 90 ) );
+		this.addChild( this.coinIconColored, 5 );
+		this.coinIconColored.setOpacity( 0 );
+
+
+
+		// console.log( (new Date()) this.map.startTime)
+
 		var xLabel = cc.LabelTTF.create( 'x', 'Arial', 30 );
 		xLabel.setPosition( new cc.Point( 85, SCREEN_HEIGHT - 70 ) );
 		xLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.addChild( xLabel, 4 );
 
-		this.coinLabel = cc.LabelTTF.create( '', 'Arial', 30 );
+		this.coinLabel = cc.LabelTTF.create( '0', 'Arial', 30 );
 		this.coinLabel.setPosition( new cc.Point( 120, SCREEN_HEIGHT - 70 ) );
 		this.coinLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.addChild( this.coinLabel, 4 );
@@ -272,7 +287,7 @@ var GameLayer = cc.LayerColor.extend({
 	},
 
 	update: function() {
-		this.showCollectedCoin();
+		// this.showCollectedCoin();
 
 		this.tree1.setPositionX( this.shiftedLayer.getPositionX() * 0.3 + 300 );
 		this.tree1.setPositionY( this.shiftedLayer.getPositionY() * 0.5 + 120 );

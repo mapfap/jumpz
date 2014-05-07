@@ -15,7 +15,7 @@ var Block = cc.Sprite.extend({
 		case Block.TYPE.GRASS:
 			var animation = new cc.Animation.create();
 			animation.addSpriteFrameWithFile( Block.TYPE.GRASS_TOUCHED );
-			animation.setDelayPerUnit( 1000 );
+			animation.setDelayPerUnit( 1 );
 			this.action = cc.Animate.create( animation );
 			break;
 		}

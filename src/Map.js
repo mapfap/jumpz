@@ -4,22 +4,32 @@ var Map = cc.Node.extend({
 		this._super();
 		this.minimapController = minimapController;
 		this.shiftedLayer = shiftedLayer;
-		this.collectedCoin = 0;
+		
 		// beware BUG here.. "DO NOT" use this value for array range.
 		// this value is numbers of blocks shown in the screen.
 		//BLOCK_WIDTH_NUMBER BLOCK_HEIGHT_NUMBER
 
 		
 		this.readableMaps = [
+		
+		// [
+		// 	'#######################',
+		// 	'#######################',
+		// 	'#######################',
+		// 	'_______________________',
+		// 	'#######################',
+		// 	'#######################',
+		// 	'#######################',
+		// ],
 
 		[ // Level 1
 			'_________#_______#_____',
 			'_________#_______#_____',
 			'_________#_______#_____',
 			'_________#_______#_____',
-			'_________#_______#_____',
+			'________*#_______#_____',
 			'_________#_____________',
-			'_________________#_____',
+			'______***________#_____',
 			'__#_#____#_______#_____',
 			'###_#################_#',
 			'___#_________########__',
@@ -32,7 +42,7 @@ var Map = cc.Node.extend({
 
 		[ // Level 1
 		
-			'______________________^',
+			'______________****____^',
 			'________________#######',
 			'________________#######',
 			'______________######___',
@@ -40,13 +50,33 @@ var Map = cc.Node.extend({
 			'_________####__________',
 			'_________####__________',
 			'_________####__________',
-			'_________####__________',
+			'_____*___####__________',
+			'_____**________________',
+			'_____***_______________',
+			'_______________________',
+			'#######################',
+
+		],
+
+		[ // Level 1
+		
+			'______________________^',
+			'_______________________',
+			'_______________________',
+			'_______________________',
+			'_________#######_______',
+			'_________#######_______',
+			'_________###^###_______',
+			'_________#######_______',
+			'_________#######_______',
 			'_______________________',
 			'_______________________',
 			'_______________________',
 			'#######################',
 
 		],
+
+		
 
 
 		[ // Level 1
@@ -193,6 +223,22 @@ var Map = cc.Node.extend({
 			'#############################################################',
 		],
 
+		[
+			'###############################################################################################',
+			'#_________#___#____#_____#____#___#_##________________________________________________________#',
+			// '#_______**************************************************************************************#',
+			// '#_____________________________________________________________________________________________#',
+			'#_______#######################################################################################',
+			'#__##_________________xXXXXXXXXX____**_________________##________###########_________________^#',
+			'#####_______________________________xx__*______________##_______*************_________________#',
+			'#####___#########___x#####x_____________#______________##______****#**#**#****______####______#',
+			'#*******#*******_______****x__#_________#______________##_____*****************_____####______#',
+			'#*******#*x#x#x#***#___x###x***********###_____________##____****#****#****#****____XXXXXX#####',
+			'#*******#*x##x##***x___xxxxxxx##########xx###############___*********************_____________#',
+			'#*******#xxxxx#x***#______________________***************_____________________________________#',
+			'###############################################################################################',
+		],
+
 		];
 
 		// convert array of string to 2D char, in order to be mutable object.
@@ -277,10 +323,16 @@ var Map = cc.Node.extend({
 			this.map.push( line );
 		}
 
-		this.initMinimap();
+		this.initMinimap( true );
 	},
 
-	initMinimap: function() {
+	initMinimap: function( isFirstTime ) {
+		
+		if ( isFirstTime ) {
+			// this.startTime = new Date();
+			this.collectedCoin = 0;
+			this.availableCoin = 0;
+		}
 
 		var max = Math.max( this.map.length, this.map[0].length );
 		this.minimapSize = Math.floor( MAXIMUM_MINIMAP_SIZE / max );
@@ -300,6 +352,9 @@ var Map = cc.Node.extend({
 
 				if ( this.map[ r ][ c ] == '*' ) {
 					// color = Map.COLOR.YELLOW;
+					if ( isFirstTime ) {
+						this.availableCoin += 1;
+					}
 					color = Map.COLOR.WHITE;
 				} else if ( this.map[ r ][ c ] == '^' ) {
 					color = Map.COLOR.GREEN;
@@ -326,6 +381,7 @@ var Map = cc.Node.extend({
 				
 			}
 		}
+		// console.log( this.availableCoin )
 	},
 
 	setPositionX: function( positionX ) {
@@ -340,7 +396,7 @@ var Map = cc.Node.extend({
 
 	setBlock: function( r, c, value ) {
 		this.map[ r ][ c ] = value;
-		this.initMinimap();
+		this.initMinimap( false );
 	},
 
 	getBlockDirection: function( blockX, blockY, headingDirection ) {
@@ -478,11 +534,12 @@ var Map = cc.Node.extend({
 						this.childrenHash[ (r - 1) + "," + c ].touched();
 					} else if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.COIN ) {
 							this.setBlock( r, c, "_" );
-							this.collectedCoin++;
-							this.getParent().player.popup( "$" );
+							this.collectedCoin += 1;
+							this.getParent().player.collectACoin();
 							this.plotMap();
 					} else if ( this.childrenHash[ (r) + "," + c ].type  == Block.TYPE.CHECKPOINT ) {
 						if ( this.getParent().state == GameLayer.STATE.STARTED ) {
+
 							this.getParent().player.showNextLevelPopup();
 						}
 

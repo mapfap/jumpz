@@ -3,6 +3,10 @@ var Player = RigidBody.extend({
 	ctor: function( isOnFocus ) {
 		this._super( isOnFocus );
 
+		this.initStaticColor();
+		this.dragUse = 0;
+		this.totalCoin = 0;
+
 		this.energyDrainRate = -2; // per second
 
 		this.accumulatedX = 0;
@@ -65,6 +69,17 @@ var Player = RigidBody.extend({
 		// this.schedule( this.energyDrain, 1 );
 	},
 
+	initStaticColor: function() {
+		Player.COLOR.RED = new cc.Color3B( 255, 0, 0 );
+		Player.COLOR.BLUE = new cc.Color3B( 0, 0, 255 );
+		Player.COLOR.GREEN = new cc.Color3B( 0, 255, 0 );
+		Player.COLOR.BLACK = new cc.Color3B( 0, 0, 0 );
+		Player.COLOR.GRAY = new cc.Color3B( 100, 100, 100 );
+		Player.COLOR.YELLOW = new cc.Color3B( 255, 255, 0 );
+		Player.COLOR.WHITE = new cc.Color3B( 255, 255, 255 );
+
+	},
+
 	setMap: function( map ) {
 		// this._super( map );
 		this.map = map;
@@ -83,16 +98,23 @@ var Player = RigidBody.extend({
 	},
 
 	showNextLevelPopup: function() {
+
+		
 		// console.log("-=------------=-=-")
 		this.nextLevelLayer = new cc.LayerColor.create( new cc.Color4B( 0, 0, 0, 0 ) );
 		this.nextLevelLayer.init();
 		// this.nextLevelLayer.setOpacity( 0 );
 		this.getParent().addChild( this.nextLevelLayer, 21 )
 		
-		this.nextLevelLabel = cc.LabelTTF.create( 'Level: ' + ( this.map.level + 1 ), 'Arial', 60 );
+		this.nextLevelLabel = cc.LabelTTF.create( 'Level: ' + ( this.map.level ), 'Arial', 60 );
 		this.nextLevelLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 40 ) );
 		this.nextLevelLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
 		this.nextLevelLayer.addChild( this.nextLevelLabel );
+
+		this.coinResult = cc.LabelTTF.create( 'Coin collected: ' + ( this.map.collectedCoin ) + ' / ' + ( this.map.availableCoin ) , 'Arial', 30 );
+		this.coinResult.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10 ) );
+		this.coinResult.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
+		this.nextLevelLayer.addChild( this.coinResult );
 
 		this.enterLabel = cc.LabelTTF.create( 'Enter to continue..', 'Arial', 30 );
 		this.enterLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 60 ) );
@@ -100,6 +122,7 @@ var Player = RigidBody.extend({
 		this.nextLevelLayer.addChild( this.enterLabel );
 
 
+		this.map.collectedCoin = 0;
 		this.getParent().state = GameLayer.STATE.STOPPED;
 		this.unscheduleUpdate();
 		// console.log( this.getParent().state );
@@ -185,14 +208,16 @@ var Player = RigidBody.extend({
 		this.crosshair = crosshair;
 	},
 
-	popup: function( text ) {
+	popup: function( text, color ) {
 		var label = DimLabel.create( '0', 'Arial', 13 );
 		this.shiftedLayer.addChild( label );
 		// this.getParent().addChild( label, 100 );
 		label.setScale( 3 );
 		label.setPosition( new cc.Point( this.getPositionX() - this.shiftedLayer.getPositionX(), (this.getPositionY() + BLOCK_PIXEL) - this.shiftedLayer.getPositionY() ) );
-		label.setColor( new cc.Color3B( 255, 255, 255 ) );
-		label.enableStroke( new cc.Color3B( 100, 100, 100 ), 3 );
+		label.setColor( color );
+		// label.enableStroke( color, 2 );
+		// label.setColor( Player.COLOR.BLACK );
+		label.enableStroke( Player.COLOR.BLACK, 2 );
 		label.popup( text );
 	},
 
@@ -201,7 +226,7 @@ var Player = RigidBody.extend({
 		if ( amount > 0 ) {
 			text = "+" + amount;
 		}
-		this.popup( text );
+		this.popup( text, Player.COLOR.BLUE );
 
 		this.energy += amount;
 		if ( this.energy >= this.MAXIMUM_ENERGY ) {
@@ -323,6 +348,7 @@ var Player = RigidBody.extend({
 
 		if ( this.isAiming ) {
 			this.increaseEnergy( -10 );
+			this.dragUse += 1;
 			this.crosshair.setPosition( new cc.Point( -1000, 0 ) );
 			this.map.dragBlock( this.aimedBlockX, this.aimedBlockY, this.headingDirection );
 			this.isAiming = false;
@@ -435,6 +461,7 @@ var Player = RigidBody.extend({
 			return 0;
 		}
 		this.jumpStep += 1;
+		this.jumpUse += 1;
 		this.setVelocityY( this.getJumpingVelocity( this.jumpStep ) );
 	},
 
@@ -465,7 +492,23 @@ var Player = RigidBody.extend({
 		}, time );
 	},
 
+	collectACoin: function() {
+		this.popup( "$", Player.COLOR.YELLOW );
+		this.totalCoin += 1;
+		this.getParent().showCollectedCoin();
+	},
+
 });
+
+Player.COLOR = {
+	RED: null,
+	BLUE: null,
+	GREEN: null,
+	BLACK: null,
+	GRAY: null,
+	YELLOW: null,
+	WHITE: null,
+}
 
 Player.BLOCK_DIRECTION = {
 	NONE: 0,
