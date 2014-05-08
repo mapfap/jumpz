@@ -3,15 +3,23 @@ var GameLayer = cc.LayerColor.extend({
 	init: function() {
 		this._super();
 
-
-		this.playerStartingPosition = new cc.Point( 120, 120 );
+		this.state = GameLayer.STATE.GUIDE;
+		this.showGuide();
+		this.setKeyboardEnabled( true );
 		this.setPosition( new cc.Point( 0, 0 ) );
+		
+		return true;
+	},
 
-		// this.allRigidBodies = [];
-		// this.allShiftableObjects = [];
+	showGuide: function() {
+		this.guide = cc.Sprite.create( 'images/guide.png' );
+		this.guide.setPosition( new cc.Point( 0 , 0 ) );
+		this.guide.setAnchorPoint( new cc.Point( 0 , 0 ) );
+		this.addChild( this.guide, 0 );
+	},
 
-		// this.initTutorialLayer();
-
+	startGame: function() {
+		this.playerStartingPosition = new cc.Point( 120, 120 );
 		this.initMinimapController();
 
 		this.initShiftedLayer();
@@ -24,12 +32,14 @@ var GameLayer = cc.LayerColor.extend({
 		this.scheduleUpdate();
 		this.player.scheduleUpdate();
 
-		this.setKeyboardEnabled( true );
 		this.state = GameLayer.STATE.STARTED;
 
 		cc.AudioEngine.getInstance().playMusic( 'sounds/Old Souls.mp3', true );
 		this.monsters = [];
-		return true;
+
+		this.guide.removeFromParent();
+		this.state = GameLayer.STATE.STARTED;
+
 	},
 
 	initTutorialLayer: function() {
@@ -267,6 +277,10 @@ var GameLayer = cc.LayerColor.extend({
 				this.state = GameLayer.STATE.STARTED;
 				// console.log("")
 			}
+
+			if ( this.state == GameLayer.STATE.GUIDE ) {
+				this.startGame();
+			}
 							
 			break;
 
@@ -385,4 +399,5 @@ GameLayer.STATE = {
 	STOPPED: 0,
 	STARTED: 1,
 	OVER: 2,
+	GUIDE: 3,
 }

@@ -60,6 +60,7 @@ var g_resources = [
 	{ src: "sounds/buy.mp3" },
 	{ src: "sounds/whack.mp3" },
 
-	{ src: "sounds/Old Souls.mp3" }, // 3.7 MB
+	// { src: "sounds/Old Souls.mp3" }, // 3.7 MB
 
+	{ src: "images/guide.png" },
 ];

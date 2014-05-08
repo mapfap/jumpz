@@ -514,7 +514,7 @@ var Player = RigidBody.extend({
 
 	takeDamage: function( direction ) {
 		cc.AudioEngine.getInstance().playEffect( 'sounds/whack.mp3');
-		this.increaseHealth( -20 );
+		this.increaseHealth( -50 );
 		this.setVelocityX( 100 * direction );
 		this.setVelocityY( 30 );
 		this.scheduleOnce(function(){
@@ -558,7 +558,7 @@ var Player = RigidBody.extend({
 			return 0;
 		}
 
-		this.increaseEnergy( 1 );
+		this.increaseEnergy( 3 );
 		cc.AudioEngine.getInstance().playEffect( 'sounds/buy.mp3');
 		this.totalCoin -= 1;
 		this.getParent().showCollectedCoin();
