@@ -170,6 +170,7 @@ var RigidBody = cc.Sprite.extend({
 				this.map.touch( [ bottomLeftCorner, bottomRightCorner ] );
 				return;
 			} else {
+				// console.log( this.velocityY )
 				this.touchTheGround( bottomLeftCorner, bottomRightCorner );
 			}
 			

@@ -564,6 +564,34 @@ var Player = RigidBody.extend({
 		this.getParent().showCollectedCoin();
 	},
 
+	checkTopOrBottomCollision: function( topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner ) {
+		if ( this.velocityY < 0 ) {
+			if ( bottomLeftCorner.isFree() && bottomRightCorner.isFree() ) {
+				this.nextPositionY += this.velocityY;
+				this.map.touch( [ bottomLeftCorner, bottomRightCorner ] );
+				return;
+			} else {
+				// console.log( this.velocityY )
+				if ( this.velocityY < -80 )
+				this.takeDamage( this.velocityY );
+				this.touchTheGround( bottomLeftCorner, bottomRightCorner );
+			}
+			
+		} else if ( this.velocityY > 0 ) {
+			if ( topLeftCorner.isFree() && topRightCorner.isFree() ) {
+				this.nextPositionY += this.velocityY;
+				this.map.touch( [ topLeftCorner, topRightCorner ] );
+				return;
+			}
+		} else {
+			return;
+		}
+
+		this.nextPositionY = this.getPositionY();
+		this.velocityY = 0;
+
+	},
+
 });
 
 Player.COLOR = {
