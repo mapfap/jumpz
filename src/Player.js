@@ -469,7 +469,6 @@ var Player = RigidBody.extend({
 		if ( this.jumpStep >= this.maxJump ) {
 			return 0;
 		}
-		console.log("ps")
 		cc.AudioEngine.getInstance().playEffect( 'sounds/jump.mp3');
 		this.jumpStep += 1;
 		this.jumpUse += 1;

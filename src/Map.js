@@ -27,6 +27,19 @@ var Map = cc.Node.extend({
 		// ],
 
 		[ // Level 1
+			'_______________________',
+			'_______________________',
+			'_______________________',
+			'_______________________',
+			'_______________________',
+			'_______________________',
+			'__________________#____',
+			'__________________o____',
+			'____________o__________',
+			'#######################',
+		],
+
+		[ // Level 1
 			'_________#_______#_____',
 			'_________#_______#_____',
 			'_________#_______#_____',
@@ -377,6 +390,7 @@ var Map = cc.Node.extend({
 	initMinimap: function( isFirstTime ) {
 		
 		if ( isFirstTime ) {
+			this.monsterFirstTime = {};
 			this.collectedCoin = 0;
 			this.availableCoin = 0;
 			this.timeUsed = 0; // seconds
@@ -412,6 +426,8 @@ var Map = cc.Node.extend({
 				} else if ( this.map[ r ][ c ] == '#' ) {
 					color = Map.COLOR.BLACK;
 				} else if ( this.map[ r ][ c ] == '_' ) {
+					color = Map.COLOR.WHITE;
+				} else if ( this.map[ r ][ c ] == 'o' ) {
 					color = Map.COLOR.WHITE;
 				}
 
@@ -454,13 +470,13 @@ var Map = cc.Node.extend({
 		var c = blockX;
 		c += this.shiftValueColumn;
 
-		if ( this.map[ r + 1 ][ c ] != '_' ) {
-			if ( this.map[ r ][ c - headingDirection ] == '_' ) {
+		if ( this.map[ r + 1 ][ c ] != '_' && this.map[ r + 1 ][ c ] != 'o' ) {
+			if ( this.map[ r ][ c - headingDirection ] == '_' || this.map[ r ][ c - headingDirection ] == 'o' ) {
 				return Player.BLOCK_DIRECTION.SLIDE;
 			} else {
 				return Player.BLOCK_DIRECTION.NONE;
 			}
-		} else if ( this.map[ r + 1 ][ c ] == '_' ) {
+		} else if ( this.map[ r + 1 ][ c ] == '_' || this.map[ r + 1 ][ c ] == 'o' ) {
 			return Player.BLOCK_DIRECTION.FALL;
 		}
 
@@ -473,10 +489,10 @@ var Map = cc.Node.extend({
 		var c = blockX;
 		c += this.shiftValueColumn;
 
-		if ( this.map[ r + 1 ][ c ] != '_' ) {
+		if ( this.map[ r + 1 ][ c ] != '_' && this.map[ r + 1 ][ c ] != 'o') {
 			// console.log("PULL");
 
-			if ( this.map[ r ][ c - headingDirection ] == '_' ) {
+			if ( this.map[ r ][ c - headingDirection ] == '_' || this.map[ r ][ c - headingDirection ] == 'o' ) {
 				this.map[ r ][ c - headingDirection ] = '#'
 				this.map[ r ][ c ] = '_'
 				this.plotMap();
@@ -524,19 +540,34 @@ var Map = cc.Node.extend({
 
 				var type = null;
 				// console.log( "r"+r +"...c"+c);
+
+
 				if ( this.isOutOfBound( r, c ) ) {
 					type = Block.TYPE.DIRT;
-				} else if ( this.map[ r ][ c ] == '*' ) {
-					type = Block.TYPE.COIN;
-				} else if ( this.map[ r ][ c ] == '^' ) {
-					type = Block.TYPE.CHECKPOINT;
-				} else if ( this.map[ r ][ c ] == 'x' ) {
-					type = Block.TYPE.METAL;
-				} else if ( this.map[ r ][ c ] == '#' ) {
-					type = Block.TYPE.DIRT;
-				} else if ( this.map[ r ][ c ] == '_' ) {
-					if ( this.map[ r + 1 ][ c ] == '#' ) {
-						type = Block.TYPE.GRASS;
+				} else {
+					switch ( this.map[ r ][ c ] ) {
+					case 'o':
+						if ( this.monsterFirstTime[r + "," + c] == null ) {
+							console.log("CREATE MONSTER!")
+							this.monsterFirstTime[r + "," + c] = true;
+						}
+					case '_':
+						if ( this.map[ r + 1 ][ c ] == '#' ) {
+							type = Block.TYPE.GRASS;
+						}
+						break;
+					case '#':
+						type = Block.TYPE.DIRT;
+						break;
+					case '*':
+						type = Block.TYPE.COIN;
+						break;
+					case 'x':
+						type = Block.TYPE.METAL;
+						break;				
+					case '^':
+						type = Block.TYPE.CHECKPOINT;
+						break;
 					}
 				}
 
@@ -611,7 +642,7 @@ var Map = cc.Node.extend({
 		}
 
 		// return this.map[ r ][ c ] == '#' || this.map[ r ][ c ] == '*';
-		return this.map[ r ][ c ] != '_';
+		return this.map[ r ][ c ] != '_' && this.map[ r ][ c ] != 'o';
 	},
 
 	isBlock: function( blockX, blockY ) {
