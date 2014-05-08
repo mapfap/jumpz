@@ -13,14 +13,19 @@ var Corner = cc.Node.extend({
 		if ( this.isOnFocus ) {
 			return Math.floor( ( this.x - Corner.map.getPositionX() ) / BLOCK_PIXEL );
 		}
-		return Math.floor( ( this.x + Corner.shiftedLayer.getPositionX() ) / BLOCK_PIXEL ); 
+		// console.log( Math.floor( ( Corner.shiftedLayer.getPositionX() - this.x ) / BLOCK_PIXEL ) + 3 ); 
+		return Math.floor( ( Corner.shiftedLayer.getPositionX() + this.x ) / BLOCK_PIXEL ); 
+		// return Math.floor( ( this.x  ) / BLOCK_PIXEL ); 
 	},
 
 	getBlockY: function() {
 		if ( this.isOnFocus ) {
 			return Math.floor( ( this.y - Corner.map.getPositionY() ) / BLOCK_PIXEL );
 		}
-		return Math.floor( ( this.y + Corner.shiftedLayer.getPositionY() ) / BLOCK_PIXEL );
+		// console.log( Math.floor( ( Corner.shiftedLayer.getPositionY() - this.y ) / BLOCK_PIXEL ) - 5 )
+		// console.log( Math.floor( ( Corner.shiftedLayer.getPositionY() - this.y ) / BLOCK_PIXEL ) - 5 )
+		return Math.floor( ( Corner.shiftedLayer.getPositionY() + this.y ) / BLOCK_PIXEL ); 
+		// return Math.floor( ( this.y  ) / BLOCK_PIXEL );
 	},
 
 	isFree: function() {

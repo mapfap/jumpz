@@ -58,6 +58,7 @@ var g_resources = [
 	{ src: "sounds/alert.mp3" },
 	{ src: "sounds/checkpoint.mp3" },
 	{ src: "sounds/buy.mp3" },
+	{ src: "sounds/whack.mp3" },
 
 	{ src: "sounds/Old Souls.mp3" }, // 3.7 MB
 

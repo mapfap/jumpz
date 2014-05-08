@@ -3,11 +3,12 @@ var GameLayer = cc.LayerColor.extend({
 	init: function() {
 		this._super();
 
+
 		this.playerStartingPosition = new cc.Point( 120, 120 );
 		this.setPosition( new cc.Point( 0, 0 ) );
 
-		this.allRigidBodies = [];
-		this.allShiftableObjects = [];
+		// this.allRigidBodies = [];
+		// this.allShiftableObjects = [];
 
 		// this.initTutorialLayer();
 
@@ -26,13 +27,8 @@ var GameLayer = cc.LayerColor.extend({
 		this.setKeyboardEnabled( true );
 		this.state = GameLayer.STATE.STARTED;
 
-		// this.initMonster();
-		// this.scheduleOnce(function(){
-		// 	this.shiftedLayer.addChild( this.monster, 1 );
-		// 	this.monster.scheduleUpdate();
-		// }, 1);
-
 		cc.AudioEngine.getInstance().playMusic( 'sounds/Old Souls.mp3', true );
+		this.monsters = [];
 		return true;
 	},
 
@@ -59,7 +55,7 @@ var GameLayer = cc.LayerColor.extend({
 		this.player.setMap( this.map );
 		// this.allRigidBodies.push( this.player );
 		// this.allShiftableObjects.push( this.player );
-		this.player.setAllRigidBodies( this.allRigidBodies );
+		// this.player.setAllRigidBodies( this.allRigidBodies );
 
 		this.crosshair = new cc.Sprite.create( 'images/crosshair/0.png' );
 		this.crosshair.setAnchorPoint( new cc.Point( 0, 0 ) );
@@ -98,15 +94,21 @@ var GameLayer = cc.LayerColor.extend({
 		// this.player.toggleSight();
 	},
 
-	initMonster: function() {
-		this.monster = new PatrolMonster( false, Monster.SIZE.MEDIUM );
-		this.monster.setPosition( new cc.Point( 500, 200 ) );
-		this.monster.setAnchorPoint( new cc.Point( 0, -0.2 ) )
-		this.monster.setMap( this.map );
-		this.allRigidBodies.push( this.monster );
-		this.allShiftableObjects.push( this.monster );
-		this.monster.setAllRigidBodies( this.allRigidBodies );
-		this.monster.setShiftedLayer( this.shiftedLayer );
+	spawnMonster: function( x, y ) {
+		var monster = new PatrolMonster( false, Monster.SIZE.MEDIUM );
+		// monster.setMap( this.map );
+		// monster.setShiftedLayer( this.shiftedLayer );
+		monster.setPosition( new cc.Point( x - this.shiftedLayer.getPositionX() - 20 , 100 + y - this.shiftedLayer.getPositionY() ) );
+		this.shiftedLayer.addChild( monster );
+		this.monsters.push( monster );
+	},
+
+	removeMonsters: function() {
+		for ( var i = 0; i < this.monsters.length; i++ ) {
+			this.shiftedLayer.removeChild( this.monsters[i] );
+			// console.log("clear")
+		}
+		this.monsters = [];
 	},
 
 	showCollectedCoin: function() {
@@ -187,6 +189,7 @@ var GameLayer = cc.LayerColor.extend({
 
 	initShiftedLayer: function() {
 		this.shiftedLayer = new cc.LayerColor();
+		this.shiftedLayer.setPosition( new cc.Point( 0, 0 ) );
 		this.addChild( this.shiftedLayer, 9 );
 		Corner.shiftedLayer = this.shiftedLayer;
 	},
@@ -195,9 +198,21 @@ var GameLayer = cc.LayerColor.extend({
 		switch ( e ) {
 
 		case cc.KEY.q:
+			this.removeMonsters();
 			// this.player.unscheduleUpdate();
 			this.map.resetMap();
-			this.map.level = 1;
+			this.map.level = 0;
+			this.map.initMap( this.map.level );
+			this.map.plotMap();
+			this.player.setPosition( this.playerStartingPosition );
+			// this.player.scheduleUpdate();
+							
+		break;
+
+		case cc.KEY.y:
+			this.removeMonsters();
+			// this.player.unscheduleUpdate();
+			this.map.resetMap();
 			this.map.initMap( this.map.level );
 			this.map.plotMap();
 			this.player.setPosition( this.playerStartingPosition );
@@ -206,6 +221,7 @@ var GameLayer = cc.LayerColor.extend({
 		break;
 
 		case cc.KEY.t:
+			this.removeMonsters();
 			// this.player.unscheduleUpdate();
 			this.map.resetMap();
 			this.map.level += 1;
@@ -218,9 +234,10 @@ var GameLayer = cc.LayerColor.extend({
 
 		case cc.KEY.enter:
 			if ( this.state == GameLayer.STATE.STOPPED ) {
+				this.removeMonsters();
 				// console.log("DELETE")
 				this.player.nextLevelLayer.removeFromParent();
-			this.map.resetMap();
+				this.map.resetMap();
 				// console.log( this.player.nextLevelLayer.removeFromParent );
 				this.map.level += 1;
 				this.map.initMap( this.map.level );
@@ -230,6 +247,25 @@ var GameLayer = cc.LayerColor.extend({
 				// this.removeChild( this.player.nextLevelLayer );
 				this.player.scheduleUpdate();
 				this.state = GameLayer.STATE.STARTED;
+			} 
+			if ( this.state == GameLayer.STATE.OVER ) {
+
+				this.removeMonsters();
+				this.player.gameoverLayer.removeFromParent();
+				this.map.resetMap();
+				this.map.level = 0;
+				this.map.initMap( this.map.level );
+				this.map.plotMap();
+				this.player.totalCoin = 0;
+				this.player.increaseHealth( this.player.MAXIMUM_HEALTH ); 
+				this.player.increaseEnergy( this.player.MAXIMUM_ENERGY, true );
+				this.player.setPosition( this.playerStartingPosition );
+
+				// this.removeChild( this.player.nextLevelLayer );
+				this.player.scheduleUpdate();
+				this.scheduleUpdate();
+				this.state = GameLayer.STATE.STARTED;
+				// console.log("")
 			}
 							
 			break;
@@ -274,10 +310,6 @@ var GameLayer = cc.LayerColor.extend({
 	onKeyUp: function( e ) {
 		switch ( e ) {
 
-			
-		// case cc.KEY.space:
-			// break;
-
 		case cc.KEY.right:
 			this.player.stopRight();
 			// this.tutorialLayer.unGlowArrowRight();
@@ -298,8 +330,35 @@ var GameLayer = cc.LayerColor.extend({
 		}
 	},
 
+	checkMonstersAttack: function() {
+		for ( var i = 0; i < this.monsters.length; i++ ) {
+			if ( this.isHit( this.player, this.monsters[i] ) ) {
+				this.player.takeDamage();
+				// this.shiftedLayer.removeChild( this.monsters[i] );
+			}
+		}
+	},
+
+	isHit: function( obj1, obj2 ) {
+		var rect1 = obj1.getBoundingBoxToWorld();
+		var rect2 = obj2.getBoundingBoxToWorld();
+		rect1.width = 120;
+		rect1.height = 120;
+
+		// var rect2 = cc.rect( obj2.x + 50, obj2.y + 50, obj2.width - 50, obj2.height - 50 );
+		// var obj2 = obj2.getBoundingBoxToWorld();
+		// console.log( rect1.x, rect1.y, rect1.width, rect1.height )
+		// console.log( rect2.x, rect2.y, rect2.width, rect2.height )
+		// console.log( obj2.x, obj2.y, obj2.width, obj2.height )
+		// console.log( "-----------------------")
+		// rect2 = cc.rect( obj2.x + 60, obj2.y + 60, obj2.width - 20, obj2.height - 20 );
+
+		return cc.rectOverlapsRect( rect1, rect2 );
+	},
+
 	update: function() {
-		// this.showCollectedCoin();
+
+		this.checkMonstersAttack();
 
 		this.tree1.setPositionX( this.shiftedLayer.getPositionX() * 0.3 + 300 );
 		this.tree1.setPositionY( this.shiftedLayer.getPositionY() * 0.5 + 120 );
@@ -307,12 +366,6 @@ var GameLayer = cc.LayerColor.extend({
 		this.tree2.setPositionX( this.shiftedLayer.getPositionX() * 0.8 + 900 );
 		this.tree2.setPositionY( this.shiftedLayer.getPositionY() * 0.5 + 110 );
 	},
-
-	// shiftMap: function( row , column, compensatedPixel ) {
-		// this.allShiftableObjects.forEach(function( o ){
-			// o.setPosition( new cc.Point( o.getPositionX() + 120 * -column + compensatedPixel , o.getPositionY() + 120 * row ) );
-		// }, this);
-	// },
 
 });
 
@@ -331,4 +384,5 @@ var StartScene = cc.Scene.extend({
 GameLayer.STATE = {
 	STOPPED: 0,
 	STARTED: 1,
+	OVER: 2,
 }

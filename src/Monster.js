@@ -1,4 +1,4 @@
-var Monster = RigidBody.extend({
+var Monster = cc.Sprite.extend({
 
 	ctor: function( isOnFocus, size ) {
 
@@ -47,12 +47,14 @@ var Monster = RigidBody.extend({
 
 		};
 
+		this.setAnchorPoint( new cc.Point( 0, 0 ) );
+		this.scheduleUpdate();
 	},
 
-	update: function() {
-		this.calculateNextPosition();
-		this.applyNextPosition();
-	},
+	// update: function() {
+	// 	this.calculateNextPosition();
+	// 	this.applyNextPosition();
+	// },
 
 
 });

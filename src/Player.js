@@ -228,12 +228,14 @@ var Player = RigidBody.extend({
 		label.popup( text );
 	},
 
-	increaseEnergy: function( amount ) {
+	increaseEnergy: function( amount, noPopup ) {
 		text = amount;
 		if ( amount > 0 ) {
 			text = "+" + amount;
 		}
-		this.popup( text, Player.COLOR.BLUE );
+		if ( ! noPopup ){
+			this.popup( text, Player.COLOR.BLUE );
+		}
 
 		this.energy += amount;
 		if ( this.energy >= this.MAXIMUM_ENERGY ) {
@@ -482,9 +484,38 @@ var Player = RigidBody.extend({
 		return this.weakJumpVelocity;
 	},
 
+	showGameOverPopup: function() {
+
+		
+		this.gameoverLayer = new cc.LayerColor.create( new cc.Color4B( 0, 0, 0, 0 ) );
+		this.gameoverLayer.init();
+
+		cc.AudioEngine.getInstance().playEffect( 'sounds/checkpoint.mp3');
+		// this.gameoverLayer.setOpacity( 0 );
+		this.getParent().addChild( this.gameoverLayer, 21 )
+		
+		this.nextLevelLabel = cc.LabelTTF.create( 'GAME OVER', 'Arial', 55 );
+		this.nextLevelLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 ) );
+		this.nextLevelLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
+		this.gameoverLayer.addChild( this.nextLevelLabel );
+
+		this.enterLabel = cc.LabelTTF.create( 'Enter to try again..', 'Arial', 30 );
+		this.enterLabel.setPosition( new cc.Point( SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 40 ) );
+		this.enterLabel.enableStroke( new cc.Color3B( 0, 0, 0 ), 3 );
+		this.gameoverLayer.addChild( this.enterLabel );
+
+
+		this.map.collectedCoin = 0;
+		this.getParent().state = GameLayer.STATE.OVER;
+		this.unscheduleUpdate();
+		this.getParent().unscheduleUpdate();
+		// console.log( this.getParent().state );
+	},
+
 	takeDamage: function( direction ) {
-		this.increaseHealth( -150 );
-		this.setVelocityX( 20 * direction );
+		cc.AudioEngine.getInstance().playEffect( 'sounds/whack.mp3');
+		this.increaseHealth( -20 );
+		this.setVelocityX( 100 * direction );
 		this.setVelocityY( 30 );
 		this.scheduleOnce(function(){
 			this.decreaseSpeedRight = true;
@@ -492,6 +523,11 @@ var Player = RigidBody.extend({
 		}, 0.5);
 
 		this.flashScreen( 0.1 );
+
+		if ( this.health <= 0 ) {
+			// console.log( "GAME OVER" )
+			this.showGameOverPopup();
+		}
 		
 	},
 

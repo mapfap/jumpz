@@ -32,10 +32,10 @@ var Map = cc.Node.extend({
 			'_______________________',
 			'_______________________',
 			'_______________________',
-			'_______________________',
+			'___________________o___',
 			'__________________#____',
-			'________^_________o____',
-			'____________o__________',
+			'_______o####_________^_',
+			'_______#####___________',
 			'#######################',
 		],
 
@@ -394,6 +394,7 @@ var Map = cc.Node.extend({
 			this.collectedCoin = 0;
 			this.availableCoin = 0;
 			this.timeUsed = 0; // seconds
+
 			
 		}
 
@@ -548,7 +549,9 @@ var Map = cc.Node.extend({
 					switch ( this.map[ r ][ c ] ) {
 					case 'o':
 						if ( this.monsterFirstTime[r + "," + c] == null ) {
-							console.log("CREATE MONSTER!")
+							var x = ( c - this.shiftValueColumn ) * BLOCK_PIXEL;
+							var y = ( BLOCK_HEIGHT_NUMBER - ( r - this.shiftValueRow ) - 1 ) * BLOCK_PIXEL;
+							this.getParent().spawnMonster(x, y);
 							this.monsterFirstTime[r + "," + c] = true;
 						}
 					case '_':
